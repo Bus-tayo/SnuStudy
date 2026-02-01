@@ -1,0 +1,8 @@
+{
+  "/(mentee)/mentee/feedback/page": "app/(mentee)/mentee/feedback/page.js",
+  "/(mentee)/mentee/my/page": "app/(mentee)/mentee/my/page.js",
+  "/(mentee)/mentee/page": "app/(mentee)/mentee/page.js",
+  "/(mentee)/mentee/planner/page": "app/(mentee)/mentee/planner/page.js",
+  "/(mentee)/mentee/tasks/[taskId]/page": "app/(mentee)/mentee/tasks/[taskId]/page.js",
+  "/page": "app/page.js"
+}

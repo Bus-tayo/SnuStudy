@@ -1,0 +1,433 @@
+[00:00:02.631] Server  LOG     ✓ Ready in 1709ms
+[00:00:11.433] Server  ERROR   ⨯ ./app/layout.js:1:1
+Module not found: Can't resolve './globals.css'
+> 1 | import "./globals.css";
+    | ^^^^^^^^^^^^^^^^^^^^^^^
+  2 |
+  3 | export const metadata = {
+  4 |   title: "SNU Study MVP",
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:00:14.485] Server  ERROR   ⨯ ./app/layout.js:1:1
+Module not found: Can't resolve './globals.css'
+> 1 | import "./globals.css";
+    | ^^^^^^^^^^^^^^^^^^^^^^^
+  2 |
+  3 | export const metadata = {
+  4 |   title: "SNU Study MVP",
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:00:15.430] Browser ERROR   uncaughtError: Error: ./app/layout.js:1:1
+Module not found: Can't resolve './globals.css'
+> 1 | import "./globals.css";
+    | ^^^^^^^^^^^^^^^^^^^^^^^
+  2 |
+  3 | export const metadata = {
+  4 |   title: "SNU Study MVP",
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:00:15.996] Browser ERROR   ./app/layout.js:1:1
+Module not found: Can't resolve './globals.css'
+> 1 | import "./globals.css";
+    | ^^^^^^^^^^^^^^^^^^^^^^^
+  2 |
+  3 | export const metadata = {
+  4 |   title: "SNU Study MVP",
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:16.179] Browser ERROR   ./app/layout.js:1:1
+Module not found: Can't resolve './globals.css'
+> 1 | import "./globals.css";
+    | ^^^^^^^^^^^^^^^^^^^^^^^
+  2 |
+  3 | export const metadata = {
+  4 |   title: "SNU Study MVP",
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:28.714] Server  ERROR   ⨯ ./app/layout.js:1:1
+Module not found: Can't resolve './global.css'
+> 1 | import "./global.css";
+    | ^^^^^^^^^^^^^^^^^^^^^^
+  2 |
+  3 | export const metadata = {
+  4 |   title: "SNU Study MVP",
+
+
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:00:29.394] Browser ERROR   ./app/layout.js:1:1
+Module not found: Can't resolve './global.css'
+> 1 | import "./global.css";
+    | ^^^^^^^^^^^^^^^^^^^^^^
+  2 |
+  3 | export const metadata = {
+  4 |   title: "SNU Study MVP",
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:29.394] Browser ERROR   ./app/layout.js:1:1
+Module not found: Can't resolve './global.css'
+> 1 | import "./global.css";
+    | ^^^^^^^^^^^^^^^^^^^^^^
+  2 |
+  3 | export const metadata = {
+  4 |   title: "SNU Study MVP",
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:41.283] Server  LOG     ✓ Compiled in 2.8s
+[00:00:44.346] Server  ERROR   ⨯ ./components/mentee/planner/PlannerScreen.jsx:4:1
+Module not found: Can't resolve './TaskChecklist'
+  2 | import WeekMiniCalendar from "./WeekMiniCalendar";
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+> 4 | import TaskChecklist from "./TaskChecklist";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 | import { getISODate } from "@/lib/utils/date";
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+
+
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+
+./components/mentee/planner/PlannerScreen.jsx:5:1
+Module not found: Can't resolve '@/lib/utils/date'
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+  4 | import TaskChecklist from "./TaskChecklist";
+> 5 | import { getISODate } from "@/lib/utils/date";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+  8 | export default function PlannerScreen({ initialDate }) {
+
+Import map: aliased to relative './lib/utils/date' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:00:44.651] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:4:1
+Module not found: Can't resolve './TaskChecklist'
+  2 | import WeekMiniCalendar from "./WeekMiniCalendar";
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+> 4 | import TaskChecklist from "./TaskChecklist";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 | import { getISODate } from "@/lib/utils/date";
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:44.656] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:5:1
+Module not found: Can't resolve '@/lib/utils/date'
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+  4 | import TaskChecklist from "./TaskChecklist";
+> 5 | import { getISODate } from "@/lib/utils/date";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+  8 | export default function PlannerScreen({ initialDate }) {
+
+Import map: aliased to relative './lib/utils/date' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:45.538] Browser ERROR   uncaughtError: Error: ./components/mentee/planner/PlannerScreen.jsx:4:1
+Module not found: Can't resolve './TaskChecklist'
+  2 | import WeekMiniCalendar from "./WeekMiniCalendar";
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+> 4 | import TaskChecklist from "./TaskChecklist";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 | import { getISODate } from "@/lib/utils/date";
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+
+
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:00:45.823] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:4:1
+Module not found: Can't resolve './TaskChecklist'
+  2 | import WeekMiniCalendar from "./WeekMiniCalendar";
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+> 4 | import TaskChecklist from "./TaskChecklist";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 | import { getISODate } from "@/lib/utils/date";
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:45.823] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:5:1
+Module not found: Can't resolve '@/lib/utils/date'
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+  4 | import TaskChecklist from "./TaskChecklist";
+> 5 | import { getISODate } from "@/lib/utils/date";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+  8 | export default function PlannerScreen({ initialDate }) {
+
+Import map: aliased to relative './lib/utils/date' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:45.936] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:4:1
+Module not found: Can't resolve './TaskChecklist'
+  2 | import WeekMiniCalendar from "./WeekMiniCalendar";
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+> 4 | import TaskChecklist from "./TaskChecklist";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  5 | import { getISODate } from "@/lib/utils/date";
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+[00:00:45.936] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:5:1
+Module not found: Can't resolve '@/lib/utils/date'
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+  4 | import TaskChecklist from "./TaskChecklist";
+> 5 | import { getISODate } from "@/lib/utils/date";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+  8 | export default function PlannerScreen({ initialDate }) {
+
+Import map: aliased to relative './lib/utils/date' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+[00:01:13.372] Server  ERROR   ⨯ ./components/mentee/planner/PlannerScreen.jsx:5:1
+Module not found: Can't resolve '@/lib/utils/date'
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+  4 | import TaskChecklist from "./TaskChecklist";
+> 5 | import { getISODate } from "@/lib/utils/date";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+  8 | export default function PlannerScreen({ initialDate }) {
+
+Import map: aliased to relative './lib/utils/date' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:01:13.374] Server  ERROR   ⨯ ./components/mentee/planner/PlannerScreen.jsx:5:1
+Module not found: Can't resolve '@/lib/utils/date'
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+  4 | import TaskChecklist from "./TaskChecklist";
+> 5 | import { getISODate } from "@/lib/utils/date";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+  8 | export default function PlannerScreen({ initialDate }) {
+
+Import map: aliased to relative './lib/utils/date' inside of [project]/
+
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:01:14.438] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:5:1
+Module not found: Can't resolve '@/lib/utils/date'
+  3 | import PlannerNoteInput from "./PlannerNoteInput";
+  4 | import TaskChecklist from "./TaskChecklist";
+> 5 | import { getISODate } from "@/lib/utils/date";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { mockPlannerBundle } from "@/lib/mock/mockData.js";
+  7 |
+  8 | export default function PlannerScreen({ initialDate }) {
+
+Import map: aliased to relative './lib/utils/date' inside of [project]/
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+[00:01:34.688] Server  LOG     ✓ Compiled in 57ms
+[00:01:36.161] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:47.972] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:03:29.564] Server  ERROR   ⨯ ./components/mentee/my/MyPageScreen.jsx:1:1
+Module not found: Can't resolve './SubjectProgressCards'
+> 1 | import SubjectProgressCards from "./SubjectProgressCards";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2 | import FloatingConsultButton from "./FloatingConsultButton";
+  3 |
+  4 | export default function MyPageScreen() {
+
+
+
+Import trace:
+  Server Component:
+    ./components/mentee/my/MyPageScreen.jsx
+    ./app/(mentee)/mentee/my/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:03:29.678] Server  ERROR   ⨯ ./components/mentee/my/MyPageScreen.jsx:1:1
+Module not found: Can't resolve './SubjectProgressCards'
+> 1 | import SubjectProgressCards from "./SubjectProgressCards";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2 | import FloatingConsultButton from "./FloatingConsultButton";
+  3 |
+  4 | export default function MyPageScreen() {
+
+
+
+Import trace:
+  Server Component:
+    ./components/mentee/my/MyPageScreen.jsx
+    ./app/(mentee)/mentee/my/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:03:29.685] Browser ERROR   ./components/mentee/my/MyPageScreen.jsx:1:1
+Module not found: Can't resolve './SubjectProgressCards'
+> 1 | import SubjectProgressCards from "./SubjectProgressCards";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2 | import FloatingConsultButton from "./FloatingConsultButton";
+  3 |
+  4 | export default function MyPageScreen() {
+
+Import trace:
+  Server Component:
+    ./components/mentee/my/MyPageScreen.jsx
+    ./app/(mentee)/mentee/my/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+[00:03:29.772] Server  ERROR   ⨯ ./components/mentee/my/MyPageScreen.jsx:1:1
+Module not found: Can't resolve './SubjectProgressCards'
+> 1 | import SubjectProgressCards from "./SubjectProgressCards";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2 | import FloatingConsultButton from "./FloatingConsultButton";
+  3 |
+  4 | export default function MyPageScreen() {
+
+
+
+Import trace:
+  Server Component:
+    ./components/mentee/my/MyPageScreen.jsx
+    ./app/(mentee)/mentee/my/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:03:30.453] Browser ERROR   uncaughtError: Error: ./components/mentee/my/MyPageScreen.jsx:1:1
+Module not found: Can't resolve './SubjectProgressCards'
+> 1 | import SubjectProgressCards from "./SubjectProgressCards";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2 | import FloatingConsultButton from "./FloatingConsultButton";
+  3 |
+  4 | export default function MyPageScreen() {
+
+
+
+Import trace:
+  Server Component:
+    ./components/mentee/my/MyPageScreen.jsx
+    ./app/(mentee)/mentee/my/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+[00:03:31.022] Browser ERROR   ./components/mentee/my/MyPageScreen.jsx:1:1
+Module not found: Can't resolve './SubjectProgressCards'
+> 1 | import SubjectProgressCards from "./SubjectProgressCards";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2 | import FloatingConsultButton from "./FloatingConsultButton";
+  3 |
+  4 | export default function MyPageScreen() {
+
+Import trace:
+  Server Component:
+    ./components/mentee/my/MyPageScreen.jsx
+    ./app/(mentee)/mentee/my/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+[00:03:31.022] Browser ERROR   ./components/mentee/my/MyPageScreen.jsx:1:1
+Module not found: Can't resolve './SubjectProgressCards'
+> 1 | import SubjectProgressCards from "./SubjectProgressCards";
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  2 | import FloatingConsultButton from "./FloatingConsultButton";
+  3 |
+  4 | export default function MyPageScreen() {
+
+Import trace:
+  Server Component:
+    ./components/mentee/my/MyPageScreen.jsx
+    ./app/(mentee)/mentee/my/page.js
+
+https://nextjs.org/docs/messages/module-not-found
+[00:03:45.795] Server  LOG     ✓ Compiled in 63ms
+[00:03:46.922] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
