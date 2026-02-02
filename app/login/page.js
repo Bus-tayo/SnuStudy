@@ -6,9 +6,9 @@ import { supabase } from '@/lib/supabase/client';
 import { getAppUserFromSession } from '@/lib/auth/session';
 
 const PRESET_ACCOUNTS = [
-  { label: '멘티1', email: 'mentee1@test.com' },
-  { label: '멘티2', email: 'mentee2@test.com' },
-  { label: '멘토1', email: 'mentor1@test.com' },
+  { label: '멘티1', email: 'mentee1@gmail.com' },
+  { label: '멘티2', email: 'mentee2@gmail.com' },
+  { label: '멘토1', email: 'mentor1@gmail.com' },
 ];
 
 export default function LoginPage() {
