@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import PlannerHeader from './PlannerHeader';
@@ -14,31 +14,31 @@ import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
 import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
 import { fetchTimeLogsForTasksInDay, sumSecondsByTaskId } from '@/lib/repositories/timeLogsRepo';
 
+const MENTOR_ID = 100; // ✅ 요구사항: mentor는 무조건 mentor1
+
 export default function PlannerScreen() {
   const router = useRouter();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const [loading, setLoading] = useState(true);
+  const [menteeId, setMenteeId] = useState(() => getMenteeIdFromStorage());
+  const [bootstrapped, setBootstrapped] = useState(false); // ✅ 초기 1회 로딩 완료 여부(화면 출력 결정)
   const [errorMsg, setErrorMsg] = useState('');
 
   const [headerNote, setHeaderNote] = useState('');
   const [tasks, setTasks] = useState([]);
   const [secondsByTaskId, setSecondsByTaskId] = useState(new Map());
 
-  // storage 기반 menteeId (AuthGate가 보통 채워줌)
-  const menteeIdFromStorage = useMemo(() => getMenteeIdFromStorage(), []);
+  const inflightRef = useRef(0);
 
-  const [menteeId, setMenteeId] = useState(menteeIdFromStorage);
-
-  // ✅ 1) 혹시 storage가 비었거나 잘못됐으면 세션으로 보정
+  // 1) menteeId가 없으면 세션으로 보정 (UI 로딩표시 없음, 최초엔 null 리턴)
   useEffect(() => {
     let alive = true;
 
     (async () => {
       try {
         if (menteeId && Number.isFinite(Number(menteeId))) {
-          setLoading(false);
+          if (alive) setBootstrapped(true);
           return;
         }
 
@@ -58,10 +58,10 @@ export default function PlannerScreen() {
 
         if (alive) {
           setMenteeId(Number(appUser.appUserId));
-          setLoading(false);
+          setBootstrapped(true);
         }
       } catch (e) {
-        console.error('[PlannerScreen]', e);
+        console.error('[PlannerScreen/bootstrap]', e);
         setErrorMsg(e?.message ?? '세션 정보를 확인하지 못했습니다.');
         router.replace('/login');
       }
@@ -73,44 +73,47 @@ export default function PlannerScreen() {
   }, [router, menteeId]);
 
   async function reloadAll(date, mid) {
-    setLoading(true);
-    setErrorMsg('');
-
+    const ticket = ++inflightRef.current; // 최신 요청만 반영
     try {
       const planner = await fetchDailyPlanner({ menteeId: mid, date });
+      if (inflightRef.current !== ticket) return;
       setHeaderNote(planner?.header_note ?? '');
 
       const t = await fetchTasksByDate({ menteeId: mid, date });
+      if (inflightRef.current !== ticket) return;
       setTasks(t);
 
       const ids = t.map((x) => x.id);
       const logs = await fetchTimeLogsForTasksInDay({ taskIds: ids, date });
+      if (inflightRef.current !== ticket) return;
       setSecondsByTaskId(sumSecondsByTaskId(logs));
+
+      setErrorMsg('');
     } catch (e) {
+      console.error('[PlannerScreen/reloadAll]', e);
       setErrorMsg(e?.message ?? '플래너 데이터를 불러오지 못했습니다.');
-    } finally {
-      setLoading(false);
     }
   }
 
-  // ✅ 2) menteeId 확정되면 날짜 기준으로 fetch
+  // 2) bootstrapped + menteeId 준비되면 최초/날짜 변경마다 fetch (UI 로딩 표시 없음)
   useEffect(() => {
-    if (!menteeId) return;
+    if (!bootstrapped || !menteeId) return;
     reloadAll(selectedDate, menteeId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedDate, menteeId]);
+  }, [bootstrapped, menteeId, selectedDate]);
 
   if (errorMsg) {
     return <div className="p-4 text-sm text-red-600">{errorMsg}</div>;
   }
 
-  // 첫 진입/보정 중
-  if (!menteeId && loading) return null;
+  // ✅ 로딩 문구 없이: 초기 로딩 중엔 화면을 비움
+  if (!bootstrapped || !menteeId) return null;
 
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
       <PlannerHeader
         menteeId={menteeId}
+        mentorId={MENTOR_ID}
         date={selectedDate}
         headerNote={headerNote}
         onChangeHeaderNote={setHeaderNote}
@@ -120,17 +123,14 @@ export default function PlannerScreen() {
 
       <WeekMiniCalendar selectedDate={selectedDate} onSelectDate={setSelectedDate} />
 
-      {loading ? (
-        <div className="text-sm text-gray-500">로딩중...</div>
-      ) : (
-        <TaskChecklist
-          menteeId={menteeId}
-          date={selectedDate}
-          tasks={tasks}
-          secondsByTaskId={secondsByTaskId}
-          onMutated={() => reloadAll(selectedDate, menteeId)}
-        />
-      )}
+      <TaskChecklist
+        menteeId={menteeId}
+        mentorId={MENTOR_ID}
+        date={selectedDate}
+        tasks={tasks}
+        secondsByTaskId={secondsByTaskId}
+        onMutated={() => reloadAll(selectedDate, menteeId)}
+      />
     </div>
   );
 }
