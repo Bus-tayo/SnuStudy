@@ -1,2 +1,234 @@
-[00:00:03.087] Server  LOG     ✓ Ready in 2s
-[00:00:09.229] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:02.789] Server  LOG     ✓ Ready in 1730ms
+[00:00:03.321] Server  ERROR   ⨯ ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-client] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+
+
+./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-ssr] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+
+[00:00:05.279] Browser ERROR   uncaughtError: Error: ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-client] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+
+[00:00:05.862] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-client] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+[00:00:05.862] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-ssr] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+[00:00:06.011] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-client] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+[00:00:06.011] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-ssr] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+[00:01:08.266] Browser ERROR   uncaughtError: Error: ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-client] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+
+
+[00:01:08.785] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-client] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+[00:01:08.786] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-ssr] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+[00:01:08.899] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-client] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+[00:01:08.900] Browser ERROR   ./components/mentee/planner/PlannerScreen.jsx:9:1
+Export getAppUserFromSession doesn't exist in target module
+   7 |
+   8 | import { useRouter } from 'next/navigation';
+>  9 | import { getAuthSession, getAppUserFromSession } from '@/lib/auth/session';
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  10 |
+  11 | import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+  12 | import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
+
+The export getAppUserFromSession was not found in module [project]/lib/auth/session.js [app-ssr] (ecmascript).
+Did you mean to import resolveAppUserFromSession?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import trace:
+  Server Component:
+    ./components/mentee/planner/PlannerScreen.jsx
+    ./app/(mentee)/mentee/page.js
+[00:05:20.669] Server  LOG     ✓ Compiled in 1849ms
+[00:05:23.182] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:42.856] Browser LOG     [ADD] menteeId= 101 type= number
+[00:05:42.856] Browser LOG     [ADD] localStorage ss_user_id= 101
+[00:05:43.103] Browser LOG     [TASK INSERT PAYLOAD] {"created_at":"2026-02-03T12:13:57.180Z","created_by":101,"date":"2026-02-03","is_fixed_by_mentor":false,"mentee_id":101,"sort_order":1,"status":"TODO","subject":"ETC","time":"00:00","title":"영단어 외우기","updated_at":"2026-02-03T12:13:57.180Z"}
+[00:09:33.192] Browser LOG     [ADD] menteeId= 101 type= number
+[00:09:33.193] Browser LOG     [ADD] localStorage ss_user_id= 101
+[00:09:33.422] Browser LOG     [TASK INSERT PAYLOAD] {"created_at":"2026-02-03T12:17:47.495Z","created_by":101,"date":"2026-02-03","is_fixed_by_mentor":false,"mentee_id":101,"sort_order":2,"status":"TODO","subject":"ETC","time":"00:00","title":"영단어! 외우기!!","updated_at":"2026-02-03T12:17:47.495Z"}

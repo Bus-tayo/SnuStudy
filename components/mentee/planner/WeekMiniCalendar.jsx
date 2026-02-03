@@ -1,9 +1,28 @@
-export default function WeekMiniCalendar({ selectedDateStr }) {
-  // 지금은 UI 자리만. 나중에 “주 단위/월간 전환” 컴포넌트로 확장
+'use client';
+
+import { startOfWeek, addDays, format, isSameDay } from 'date-fns';
+
+export default function WeekMiniCalendar({ selectedDate, onSelectDate }) {
+  const start = startOfWeek(selectedDate, { weekStartsOn: 1 });
+
   return (
-    <div className="border rounded p-3">
-      <div className="text-sm font-semibold">주간 캘린더</div>
-      <div className="text-sm text-neutral-500">선택 날짜: {selectedDateStr}</div>
+    <div className="flex justify-between">
+      {Array.from({ length: 7 }).map((_, i) => {
+        const d = addDays(start, i);
+        const active = isSameDay(d, selectedDate);
+
+        return (
+          <button
+            key={i}
+            onClick={() => onSelectDate(d)}
+            className={`text-xs ${
+              active ? 'font-bold underline' : ''
+            }`}
+          >
+            {format(d, 'dd')}
+          </button>
+        );
+      })}
     </div>
   );
 }

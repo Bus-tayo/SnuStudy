@@ -1,20 +1,28 @@
-// components/auth/LogoutButton.jsx
 'use client';
 
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase/client';
 
-export default function LogoutButton() {
+export default function LogoutButton({ className = '', children = '로그아웃' }) {
   const router = useRouter();
 
   const onLogout = async () => {
-    await supabase.auth.signOut();
-    router.replace('/login');
+    try {
+      await supabase.auth.signOut();
+    } finally {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('ss_user_id');
+        localStorage.removeItem('ss_role');
+        localStorage.removeItem('ss_mentor_id');
+        localStorage.removeItem('ss_name');
+      }
+      router.replace('/login');
+    }
   };
 
   return (
-    <button className="text-sm underline" onClick={onLogout}>
-      로그아웃
+    <button onClick={onLogout} className={className}>
+      {children}
     </button>
   );
 }
