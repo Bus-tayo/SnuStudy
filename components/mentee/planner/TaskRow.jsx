@@ -1,16 +1,21 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { updateTaskStatus } from '@/lib/repositories/tasksRepo';
 import { overwriteManualMinutesForTaskInDay } from '@/lib/repositories/timeLogsRepo';
 
 export default function TaskRow({ task, studiedSeconds, date, onMutated }) {
-  const studiedMinutes = useMemo(() => Math.floor((studiedSeconds ?? 0) / 60), [studiedSeconds]);
+  const studiedMinutes = useMemo(() => Math.floor((Number(studiedSeconds ?? 0) || 0) / 60), [studiedSeconds]);
+
   const [minutes, setMinutes] = useState(String(studiedMinutes));
   const [saving, setSaving] = useState(false);
 
+  useEffect(() => {
+    setMinutes(String(studiedMinutes));
+  }, [studiedMinutes]);
+
   const isDone = task.status === 'DONE';
-  const locked = task.is_fixed_by_mentor === true; // 멘토 고정 과제: 제목 수정/삭제 잠금 같은 확장 가능
+  const locked = task.is_fixed_by_mentor === true;
 
   async function toggleDone() {
     setSaving(true);
@@ -18,7 +23,8 @@ export default function TaskRow({ task, studiedSeconds, date, onMutated }) {
       await updateTaskStatus({ taskId: task.id, status: isDone ? 'TODO' : 'DONE' });
       onMutated?.();
     } catch (e) {
-      console.error(e);
+      console.error('[TaskRow/toggleDone]', e);
+      alert(e?.message ?? '상태 변경 실패');
     } finally {
       setSaving(false);
     }
@@ -31,7 +37,8 @@ export default function TaskRow({ task, studiedSeconds, date, onMutated }) {
       await overwriteManualMinutesForTaskInDay({ taskId: task.id, date, minutes: m });
       onMutated?.();
     } catch (e) {
-      console.error(e);
+      console.error('[TaskRow/saveMinutes]', e);
+      alert(e?.message ?? '공부시간 저장 실패');
     } finally {
       setSaving(false);
     }
