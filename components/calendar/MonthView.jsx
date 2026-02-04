@@ -9,7 +9,7 @@ import { CalendarDayCell } from './CalendarDayCell';
 import { CalendarWeekHeader } from './CalendarWeekHeader';
 
 export function MonthView({ onDateSelect, height: propHeight }) {
-    const { currentDate, selectedDate, setSelectedDate, tasks, setIsModalOpen, direction, useModal, onDateClick, height: contextHeight } = useCalendar();
+    const { currentDate, selectedDate, setSelectedDate, tasks, direction, onDateClick, height: contextHeight } = useCalendar();
 
     const finalHeight = propHeight || contextHeight;
 
@@ -75,9 +75,7 @@ export function MonthView({ onDateSelect, height: propHeight }) {
                                         }
 
                                         setSelectedDate(d);
-                                        if (useModal) {
-                                            setIsModalOpen(true);
-                                        } else if (onDateClick) {
+                                        if (onDateClick) {
                                             onDateClick(d);
                                         }
                                     }}

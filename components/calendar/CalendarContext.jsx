@@ -9,14 +9,12 @@ export function CalendarProvider({
     children,
     tasks = [],
     title,
-    useModal = true,
     onDateClick,
     height = 'auto'
 }) {
     const [currentDate, setCurrentDate] = useState(startOfToday());
     const [selectedDate, setSelectedDate] = useState(startOfToday());
     const [viewMode, setViewMode] = useState('week');
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [direction, setDirection] = useState(0);
 
     return (
@@ -30,11 +28,8 @@ export function CalendarProvider({
                 setViewMode,
                 tasks,
                 calendarTitle: title,
-                isModalOpen,
-                setIsModalOpen,
                 direction,
                 setDirection,
-                useModal,
                 onDateClick,
                 height
             }}

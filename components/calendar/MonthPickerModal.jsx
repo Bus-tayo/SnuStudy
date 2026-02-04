@@ -113,7 +113,7 @@ function WheelPicker({ viewDate, onSelect, onCancel }) {
 }
 
 export function MonthPickerModal({ isOpen, onClose }) {
-    const { selectedDate, setSelectedDate, currentDate, setCurrentDate, tasks } = useCalendar();
+    const { selectedDate, setSelectedDate, currentDate, setCurrentDate, tasks, onDateClick } = useCalendar();
     const [mounted, setMounted] = useState(false);
     const [viewDate, setViewDate] = useState(currentDate);
     const [tempSelectedDate, setTempSelectedDate] = useState(selectedDate);
@@ -151,6 +151,9 @@ export function MonthPickerModal({ isOpen, onClose }) {
     const handleConfirm = () => {
         setSelectedDate(tempSelectedDate);
         setCurrentDate(tempSelectedDate);
+        if (onDateClick) {
+            onDateClick(tempSelectedDate);
+        }
         onClose();
     };
 

@@ -14,7 +14,7 @@ import { CalendarDayCell } from './CalendarDayCell';
 import { CalendarWeekHeader } from './CalendarWeekHeader';
 
 export function WeekView() {
-    const { currentDate, selectedDate, setSelectedDate, setIsModalOpen, direction, tasks, useModal, onDateClick, height } = useCalendar();
+    const { currentDate, selectedDate, setSelectedDate, direction, tasks, onDateClick, height } = useCalendar();
 
     const startDate = startOfWeek(currentDate);
     const endDate = endOfWeek(currentDate);
@@ -71,9 +71,7 @@ export function WeekView() {
                                     tasks={tasks}
                                     onDayClick={(d) => {
                                         setSelectedDate(d);
-                                        if (useModal) {
-                                            setIsModalOpen(true);
-                                        } else if (onDateClick) {
+                                        if (onDateClick) {
                                             onDateClick(d);
                                         }
                                     }}
