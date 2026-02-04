@@ -79,7 +79,6 @@ export default function CalendarTestPage() {
                 <Calendar
                     tasks={tasks}
                     title="캘린더"
-                    useModal={true}
                     onDateClick={(date) => setSelectedDate(date)}
                 />
 

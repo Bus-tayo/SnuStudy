@@ -69,12 +69,12 @@ export function MonthView({ onDateSelect, height: propHeight }) {
                                     selectedDate={selectedDate}
                                     tasks={tasks}
                                     onDayClick={(d) => {
+                                        setSelectedDate(d);
+
                                         if (onDateSelect) {
                                             onDateSelect(d);
-                                            return;
                                         }
 
-                                        setSelectedDate(d);
                                         if (onDateClick) {
                                             onDateClick(d);
                                         }
