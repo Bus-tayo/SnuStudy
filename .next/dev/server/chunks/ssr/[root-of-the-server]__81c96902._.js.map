@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 14, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/owner/Documents/%EB%8C%802/dev/app/page.js"],"sourcesContent":["import { redirect } from \"next/navigation\";\r\n\r\nexport default function Home() {\r\n  redirect(\"/mentee\");\r\n}\r\n"],"names":[],"mappings":";;;;AAAA;AAAA;;AAEe,SAAS;IACtB,IAAA,iMAAQ,EAAC;AACX"}}]
-}
