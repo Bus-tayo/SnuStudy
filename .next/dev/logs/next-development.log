@@ -1,335 +1,109 @@
-[00:00:03.993] Server  LOG     ✓ Ready in 3s
-[00:00:07.084] Server  LOG     ○ Compiling /mentee ...
-[00:00:10.770] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:10.965] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[00:00:04.323] Server  LOG     ✓ Ready in 3.4s
+[00:00:04.356] Browser ERROR   [PlannerScreen/reloadAll] {}
+[00:00:07.701] Server  LOG     ○ Compiling /mentee/planner ...
+[00:00:16.762] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:17.316] Browser ERROR   [PlannerScreen/reloadAll] {}
+[00:02:10.567] Server  WARN    ⚠ ./components/mentee/planner/PlannerScreen.jsx
+Attempted import error: 'fetchTasksByDate' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByDate').
 
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
+Import trace for requested module:
+./components/mentee/planner/PlannerScreen.jsx
 
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+./components/mentee/planner/PlannerScreen.jsx
+Attempted import error: 'fetchTasksByRange' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByRange').
 
-%s%s https://react.dev/link/hydration-mismatch 
+Import trace for requested module:
+./components/mentee/planner/PlannerScreen.jsx
 
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/mentor" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="ko"
--                         style={{--vsc-domain:"\"localhost\""}}
-                        >
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
+./components/mentee/planner/TaskChecklist.jsx
+Attempted import error: 'addMenteeTask' is not exported from '@/lib/repositories/tasksRepo' (imported as 'addMenteeTask').
 
-[00:00:12.202] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:12.451] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+Import trace for requested module:
+./components/mentee/planner/TaskChecklist.jsx
+./components/mentee/planner/PlannerScreen.jsx
 
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
+./components/mentee/planner/TaskRow.jsx
+Attempted import error: 'updateTaskStatus' is not exported from '@/lib/repositories/tasksRepo' (imported as 'updateTaskStatus').
 
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+Import trace for requested module:
+./components/mentee/planner/TaskRow.jsx
+./components/mentee/planner/TaskChecklist.jsx
+./components/mentee/planner/PlannerScreen.jsx
 
-%s%s https://react.dev/link/hydration-mismatch 
+./components/mentee/planner/PlannerScreen.jsx
+Attempted import error: 'fetchTasksByDate' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByDate').
 
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/mentee" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="ko"
--                         style={{--vsc-domain:"\"localhost\""}}
-                        >
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
+Import trace for requested module:
+./components/mentee/planner/PlannerScreen.jsx
 
-[00:11:32.311] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:11:32.402] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+./components/mentee/planner/PlannerScreen.jsx
+Attempted import error: 'fetchTasksByRange' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByRange').
 
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
+Import trace for requested module:
+./components/mentee/planner/PlannerScreen.jsx
 
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+./components/mentee/planner/TaskChecklist.jsx
+Attempted import error: 'addMenteeTask' is not exported from '@/lib/repositories/tasksRepo' (imported as 'addMenteeTask').
 
-%s%s https://react.dev/link/hydration-mismatch 
+Import trace for requested module:
+./components/mentee/planner/TaskChecklist.jsx
+./components/mentee/planner/PlannerScreen.jsx
 
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/mentor" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="ko"
--                         style={{--vsc-domain:"\"localhost\""}}
-                        >
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
+./components/mentee/planner/TaskRow.jsx
+Attempted import error: 'updateTaskStatus' is not exported from '@/lib/repositories/tasksRepo' (imported as 'updateTaskStatus').
 
-[00:11:34.881] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:11:35.459] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+Import trace for requested module:
+./components/mentee/planner/TaskRow.jsx
+./components/mentee/planner/TaskChecklist.jsx
+./components/mentee/planner/PlannerScreen.jsx
+[00:02:10.939] Browser WARN    ./components/mentee/planner/PlannerScreen.jsx
+Attempted import error: 'fetchTasksByDate' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByDate').
 
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
+Import trace for requested module:
+./components/mentee/planner/PlannerScreen.jsx
+[00:02:10.939] Browser WARN    ./components/mentee/planner/PlannerScreen.jsx
+Attempted import error: 'fetchTasksByRange' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByRange').
 
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+Import trace for requested module:
+./components/mentee/planner/PlannerScreen.jsx
+[00:02:10.939] Browser WARN    ./components/mentee/planner/TaskChecklist.jsx
+Attempted import error: 'addMenteeTask' is not exported from '@/lib/repositories/tasksRepo' (imported as 'addMenteeTask').
 
-%s%s https://react.dev/link/hydration-mismatch 
+Import trace for requested module:
+./components/mentee/planner/TaskChecklist.jsx
+./components/mentee/planner/PlannerScreen.jsx
+[00:02:10.939] Browser WARN    ./components/mentee/planner/TaskRow.jsx
+Attempted import error: 'updateTaskStatus' is not exported from '@/lib/repositories/tasksRepo' (imported as 'updateTaskStatus').
 
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/mentee" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="ko"
--                         style={{--vsc-domain:"\"localhost\""}}
-                        >
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
+Import trace for requested module:
+./components/mentee/planner/TaskRow.jsx
+./components/mentee/planner/TaskChecklist.jsx
+./components/mentee/planner/PlannerScreen.jsx
+[00:02:10.939] Browser WARN    ./components/mentee/planner/PlannerScreen.jsx
+Attempted import error: 'fetchTasksByDate' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByDate').
 
-[00:12:06.162] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:12:06.163] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+Import trace for requested module:
+./components/mentee/planner/PlannerScreen.jsx
+[00:02:10.939] Browser WARN    ./components/mentee/planner/PlannerScreen.jsx
+Attempted import error: 'fetchTasksByRange' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByRange').
 
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
+Import trace for requested module:
+./components/mentee/planner/PlannerScreen.jsx
+[00:02:10.939] Browser WARN    ./components/mentee/planner/TaskChecklist.jsx
+Attempted import error: 'addMenteeTask' is not exported from '@/lib/repositories/tasksRepo' (imported as 'addMenteeTask').
 
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+Import trace for requested module:
+./components/mentee/planner/TaskChecklist.jsx
+./components/mentee/planner/PlannerScreen.jsx
+[00:02:10.940] Browser WARN    ./components/mentee/planner/TaskRow.jsx
+Attempted import error: 'updateTaskStatus' is not exported from '@/lib/repositories/tasksRepo' (imported as 'updateTaskStatus').
 
-%s%s https://react.dev/link/hydration-mismatch 
-
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/mentor/me..." notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="ko"
--                         style={{--vsc-domain:"\"localhost\""}}
-                        >
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
-
-[00:12:07.845] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:12:08.464] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-%s%s https://react.dev/link/hydration-mismatch 
-
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/mentee" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="ko"
--                         style={{--vsc-domain:"\"localhost\""}}
-                        >
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
-
-[00:12:11.355] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:12:11.543] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-%s%s https://react.dev/link/hydration-mismatch 
-
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/mentor/me..." notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="ko"
--                         style={{--vsc-domain:"\"localhost\""}}
-                        >
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
-
-[00:13:25.998] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:13:26.149] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-%s%s https://react.dev/link/hydration-mismatch 
-
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/mentor/me..." notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="ko"
--                         style={{--vsc-domain:"\"localhost\""}}
-                        >
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
-
-[00:13:28.776] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:13:28.943] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
-
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
-
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
-
-%s%s https://react.dev/link/hydration-mismatch 
-
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/mentor" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="ko"
--                         style={{--vsc-domain:"\"localhost\""}}
-                        >
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
-
+Import trace for requested module:
+./components/mentee/planner/TaskRow.jsx
+./components/mentee/planner/TaskChecklist.jsx
+./components/mentee/planner/PlannerScreen.jsx
+[00:02:27.203] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:14:46.044] Server  WARN    ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:14:47.400] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:16:47.436] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:16:59.028] Server  LOG     ○ Compiling /mentor ...
