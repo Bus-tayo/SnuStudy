@@ -1,5 +1,7 @@
 import SubjectProgressCards from "./SubjectProgressCards";
 import FloatingConsultButton from "./FloatingConsultButton";
+import StreakBanner from "@/components/mentee/streak/StreakBanner";
+import HeatmapCalendar from "@/components/mentee/heatmap/HeatmapCalendar";
 
 export default function MyPageScreen() {
   return (
@@ -11,6 +13,9 @@ export default function MyPageScreen() {
 
       <SubjectProgressCards />
 
+      <StreakBanner />
+      <HeatmapCalendar />
+      
       <FloatingConsultButton />
     </div>
   );
