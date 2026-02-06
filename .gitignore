@@ -1,13 +1,45 @@
-@"
+# Dependencies
 node_modules/
+
+# Next.js
 .next/
 out/
 dist/
-coverage/
-*.log
-.DS_Store
 
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Coverage
+coverage/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Env (README: .env.local 절대 커밋 금지)
 .env
 .env.*
 !.env.example
-"@ | Out-File -Encoding utf8 .gitignore
+
+# Vercel / Turborepo (사용 시)
+.vercel/
+.turbo/
+
+# Keys / certs (실수로 올리기 쉬움)
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.jks
+
+# Misc
+*.tsbuildinfo

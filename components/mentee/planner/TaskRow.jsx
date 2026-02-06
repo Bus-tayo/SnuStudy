@@ -1,10 +1,12 @@
 'use client';
 
 import { useMemo, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { updateTaskStatus } from '@/lib/repositories/tasksRepo';
 import { overwriteManualMinutesForTaskInDay } from '@/lib/repositories/timeLogsRepo';
 
 export default function TaskRow({ task, studiedSeconds, date, onMutated }) {
+  const router = useRouter();
   const studiedMinutes = useMemo(() => Math.floor((Number(studiedSeconds ?? 0) || 0) / 60), [studiedSeconds]);
 
   const [minutes, setMinutes] = useState(String(studiedMinutes));
@@ -44,17 +46,22 @@ export default function TaskRow({ task, studiedSeconds, date, onMutated }) {
     }
   }
 
+  function goDetail() {
+    router.push(`/mentee/tasks/${task.id}`);
+  }
+
   return (
     <div className="flex items-start justify-between border rounded p-2 gap-3">
       <div className="flex items-start gap-2">
         <input type="checkbox" checked={isDone} onChange={toggleDone} disabled={saving} />
-        <div className="flex flex-col">
-          <span className="text-sm">{task.title}</span>
+
+        <button type="button" onClick={goDetail} className="flex flex-col text-left">
+          <span className="text-sm underline underline-offset-2">{task.title}</span>
           <span className="text-xs text-gray-500">
             {task.subject}
             {locked ? ' · 멘토 지정' : ''}
           </span>
-        </div>
+        </button>
       </div>
 
       <div className="flex flex-col items-end gap-1">
