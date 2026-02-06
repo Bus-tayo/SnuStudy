@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 [00:00:01.980] Server  LOG     ✓ Ready in 1495ms
 [00:00:14.027] Server  LOG     ○ Compiling /mentee ...
 [00:00:18.309] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
@@ -188,3 +189,9 @@ It can also happen if the client has a browser extension installed which messes 
                   ...
 
 [00:06:54.475] Browser ERROR   [LOGIN] {"__isAuthError":true,"code":"invalid_credentials","name":"AuthApiError","status":400}
+=======
+[00:00:01.228] Server  LOG     ✓ Ready in 995ms
+[00:00:03.603] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:16.925] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:07:00.228] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+>>>>>>> Stashed changes
