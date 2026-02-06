@@ -7,8 +7,15 @@ import { addWeeks, format, startOfWeek } from "date-fns";
 import { getAuthSession, resolveAppUserFromSession, persistAppUserToStorage } from "@/lib/auth/session";
 import { fetchAppUserById } from "@/lib/repositories/usersRepository";
 import { fetchDailyPlanner } from "@/lib/repositories/plannerRepo";
-import { fetchTasksByDate } from "@/lib/repositories/tasksRepo";
+import { fetchTasksByDate, addMentorTask } from "@/lib/repositories/tasksRepo";
 import { fetchTimeLogsForTasksInDay, sumSecondsByTaskId } from "@/lib/repositories/timeLogsRepo";
+
+const SUBJECT_OPTIONS = [
+  { value: "KOR", label: "국어" },
+  { value: "ENG", label: "영어" },
+  { value: "MATH", label: "수학" },
+  { value: "ETC", label: "기타" },
+];
 
 export default function MenteeWeeklyDetail({ menteeId }) {
   const router = useRouter();
@@ -60,10 +67,10 @@ export default function MenteeWeeklyDetail({ menteeId }) {
   }, [router, menteeId]);
 
   useEffect(() => {
-    if (!bootstrapped || !menteeId) return;
+    if (!bootstrapped || !menteeId || !mentorId) return;
     loadWeek(weekStart);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bootstrapped, menteeId, weekStart]);
+  }, [bootstrapped, menteeId, mentorId, weekStart]);
 
   async function loadWeek(base) {
     setLoading(true);
@@ -89,6 +96,24 @@ export default function MenteeWeeklyDetail({ menteeId }) {
             minutesByTaskId: new Map(
               Array.from(map.entries()).map(([k, v]) => [k, Math.floor(v / 60)])
             ),
+            onAddTask: async (title, subject, cb) => {
+              const t = title?.trim();
+              if (!t) return;
+              try {
+                await addMentorTask({
+                  mentorId,
+                  menteeId,
+                  date,
+                  title: t,
+                  subject,
+                });
+                cb?.();
+                await loadWeek(base);
+              } catch (e) {
+                console.error('[MenteeWeeklyDetail/addTask]', e);
+                alert(e?.message ?? '할 일 추가 실패');
+              }
+            },
           };
         })
       );
@@ -148,6 +173,10 @@ export default function MenteeWeeklyDetail({ menteeId }) {
 }
 
 function DayCard({ day }) {
+  const [newTitle, setNewTitle] = useState("");
+  const [newSubject, setNewSubject] = useState("ETC");
+  const [adding, setAdding] = useState(false);
+
   const dateLabel = format(day.date, "MM.dd (EEE)");
   const header = day.planner?.header_note?.trim();
 
@@ -194,6 +223,47 @@ function DayCard({ day }) {
             ))}
           </ul>
         )}
+      </div>
+
+      <div className="flex items-center gap-2 pt-2">
+        <select
+          className="border rounded p-2 text-sm"
+          value={newSubject}
+          onChange={(e) => setNewSubject(e.target.value)}
+          disabled={adding}
+        >
+          {SUBJECT_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+
+        <input
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          placeholder="멘토가 할 일 추가"
+          className="flex-1 border rounded p-2 text-sm"
+          disabled={adding}
+        />
+
+        <button
+          onClick={async () => {
+            setAdding(true);
+            try {
+              await day.onAddTask(newTitle, newSubject, () => {
+                setNewTitle("");
+                setNewSubject("ETC");
+              });
+            } finally {
+              setAdding(false);
+            }
+          }}
+          disabled={adding}
+          className="border rounded px-3 text-sm"
+        >
+          추가
+        </button>
       </div>
     </div>
   );
