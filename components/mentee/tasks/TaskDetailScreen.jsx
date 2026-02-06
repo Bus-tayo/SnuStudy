@@ -1,44 +1,157 @@
 "use client";
 
-import { useState } from "react";
-import { mockTaskDetail } from "@/lib/mock/mockData";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+import { fetchTaskById } from "@/lib/repositories/taskDetailRepo";
+import { fetchTaskPdfMaterial } from "@/lib/repositories/taskMaterialsRepo";
+import { fetchTaskSubmissions, createTaskSubmission } from "@/lib/repositories/taskSubmissionsRepo";
+import { uploadTaskSubmissionImageJpg } from "@/lib/storage/taskSubmissionStorage";
+
+import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+import TaskPdfSection from "./parts/TaskPdfSection";
+import SubmissionCarousel from "./parts/SubmissionCarousel";
+import SubmissionUploadBar from "./parts/SubmissionUploadBar";
+import NoteInput from "./parts/NoteInput";
 
 export default function TaskDetailScreen({ taskId }) {
-  const data = mockTaskDetail(taskId);
-  const [file, setFile] = useState(null);
+  const router = useRouter();
+
+  const menteeId = useMemo(() => getMenteeIdFromStorage(), []);
+  const [task, setTask] = useState(null);
+  const [pdf, setPdf] = useState(null);
+  const [submissions, setSubmissions] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    let alive = true;
+
+    async function load() {
+      try {
+        setErrMsg("");
+        if (!menteeId) {
+          setErrMsg("로그인이 필요합니다.");
+          return;
+        }
+        if (!Number.isFinite(taskId) || taskId <= 0) {
+          setErrMsg("잘못된 taskId 입니다.");
+          return;
+        }
+
+        const [t, p, s] = await Promise.all([
+          fetchTaskById({ taskId }),
+          fetchTaskPdfMaterial({ taskId }).catch(() => null),
+          fetchTaskSubmissions({ taskId, menteeId }).catch(() => []),
+        ]);
+
+        if (!alive) return;
+
+        setTask(t);
+        setPdf(p);
+        setSubmissions(Array.isArray(s) ? s : []);
+        setActiveIndex(0);
+      } catch (e) {
+        if (!alive) return;
+        setErrMsg(e?.message || "불러오기에 실패했습니다.");
+      }
+    }
+
+    load();
+    return () => {
+      alive = false;
+    };
+  }, [taskId, menteeId]);
+
+  const activeSubmission = submissions?.[activeIndex] ?? null;
+
+  const openPicker = () => {
+    setErrMsg("");
+    inputRef.current?.click();
+  };
+
+  const onPickFile = async (file) => {
+    if (!file) return;
+    setErrMsg("");
+
+    try {
+      setBusy(true);
+
+      if (!menteeId) throw new Error("로그인이 필요합니다.");
+
+      const { publicUrl } = await uploadTaskSubmissionImageJpg({
+        file,
+        taskId,
+        menteeId,
+      });
+
+      const inserted = await createTaskSubmission({
+        taskId,
+        menteeId,
+        imageUrl: publicUrl,
+        note: note?.trim() ? note.trim() : null,
+      });
+
+      const next = [inserted, ...submissions];
+      setSubmissions(next);
+      setActiveIndex(0);
+      setNote("");
+    } catch (e) {
+      setErrMsg(e?.message || "업로드에 실패했습니다.");
+    } finally {
+      setBusy(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  };
 
   return (
-    <div className="p-4 space-y-4">
-      <div>
-        <div className="text-lg font-bold">{data.title}</div>
-        <div className="text-sm text-neutral-500">{data.subject}</div>
-      </div>
+    <div className="flex flex-col h-full">
+      <TaskDetailTopBar
+        title={task?.title ?? "과제"}
+        subtitle={task?.date ? `${task.date} · ${task.subject}` : (task?.subject ?? "")}
+        onBack={() => router.back()}
+      />
 
-      <div className="border rounded p-3 space-y-2">
-        <div className="text-sm font-semibold">학습 자료</div>
-        {data.pdfUrl ? (
-          <a className="underline text-sm" href={data.pdfUrl} target="_blank" rel="noreferrer">
-            PDF 다운로드
-          </a>
-        ) : (
-          <div className="text-sm text-neutral-500">PDF 없음</div>
-        )}
-      </div>
+      <div className="flex-1 overflow-y-auto px-4 pb-28 pt-3 space-y-4">
+        {errMsg ? (
+          <div className="text-sm text-red-600">{errMsg}</div>
+        ) : null}
 
-      <div className="border rounded p-3 space-y-2">
-        <div className="text-sm font-semibold">공부 인증 업로드 (jpg)</div>
-        <input
-          type="file"
-          accept="image/jpeg,image/jpg"
-          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+        <TaskPdfSection pdf={pdf} />
+
+        <NoteInput value={note} onChange={setNote} />
+
+        <SubmissionCarousel
+          submissions={submissions}
+          activeIndex={activeIndex}
+          onChangeIndex={setActiveIndex}
         />
-        <button className="px-3 py-2 border rounded text-sm" disabled={!file}>
-          업로드
-        </button>
-        <div className="text-xs text-neutral-500">
-          * 실제 업로드(Supabase Storage) 연결은 다음 단계에서 처리
-        </div>
+
+        {activeSubmission?.submitted_at ? (
+          <div className="text-xs text-neutral-500">
+            최근 제출: {String(activeSubmission.submitted_at).replace("T", " ").slice(0, 19)}
+          </div>
+        ) : null}
       </div>
+
+      <SubmissionUploadBar
+        busy={busy}
+        onCameraOrUpload={openPicker}
+      />
+
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/jpeg,image/jpg"
+        className="hidden"
+        onChange={(e) => onPickFile(e.target.files?.[0] ?? null)}
+      />
     </div>
   );
 }

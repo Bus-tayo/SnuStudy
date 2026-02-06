@@ -1,5 +1,7 @@
-import PlannerScreen from "@/components/mentee/planner/PlannerScreen";
+"use client";
 
-export default function MenteeHome() {
-  return <PlannerScreen initialDate={new Date()} />;
+import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+
+export default function MenteeHomePage() {
+  return <CalendarPlannerScreen />;
 }

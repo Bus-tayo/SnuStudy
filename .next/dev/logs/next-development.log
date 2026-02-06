@@ -1,109 +1,182 @@
-[00:00:04.323] Server  LOG     ✓ Ready in 3.4s
-[00:00:04.356] Browser ERROR   [PlannerScreen/reloadAll] {}
-[00:00:07.701] Server  LOG     ○ Compiling /mentee/planner ...
-[00:00:16.762] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:17.316] Browser ERROR   [PlannerScreen/reloadAll] {}
-[00:02:10.567] Server  WARN    ⚠ ./components/mentee/planner/PlannerScreen.jsx
-Attempted import error: 'fetchTasksByDate' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByDate').
+[00:00:07.638] Server  LOG     ✓ Ready in 6.5s
+[00:00:11.208] Server  LOG     ○ Compiling / ...
+[00:00:23.511] Server  LOG     ○ Compiling /mentee ...
+[00:00:33.221] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:40.951] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:07:14.042] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:07:14.043] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:19:21.940] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:19:21.940] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:20:38.660] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:20:54.544] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:20:54.545] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:26:52.473] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:26:52.473] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:27:02.630] Server  ERROR   ⨯ ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-Import trace for requested module:
-./components/mentee/planner/PlannerScreen.jsx
+https://nextjs.org/docs/messages/module-not-found
+[00:27:02.960] Browser ERROR   ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-./components/mentee/planner/PlannerScreen.jsx
-Attempted import error: 'fetchTasksByRange' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByRange').
+https://nextjs.org/docs/messages/module-not-found
+[00:27:15.267] Browser ERROR   ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-Import trace for requested module:
-./components/mentee/planner/PlannerScreen.jsx
+https://nextjs.org/docs/messages/module-not-found
+[00:27:16.999] Browser ERROR   ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-./components/mentee/planner/TaskChecklist.jsx
-Attempted import error: 'addMenteeTask' is not exported from '@/lib/repositories/tasksRepo' (imported as 'addMenteeTask').
+https://nextjs.org/docs/messages/module-not-found
+[00:27:17.331] Server  LOG     ○ Compiling /_error ...
+[00:27:18.000] Browser ERROR   ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-Import trace for requested module:
-./components/mentee/planner/TaskChecklist.jsx
-./components/mentee/planner/PlannerScreen.jsx
+https://nextjs.org/docs/messages/module-not-found
+[00:27:18.000] Browser ERROR   ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-./components/mentee/planner/TaskRow.jsx
-Attempted import error: 'updateTaskStatus' is not exported from '@/lib/repositories/tasksRepo' (imported as 'updateTaskStatus').
+https://nextjs.org/docs/messages/module-not-found
+[00:27:18.000] Browser ERROR   ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-Import trace for requested module:
-./components/mentee/planner/TaskRow.jsx
-./components/mentee/planner/TaskChecklist.jsx
-./components/mentee/planner/PlannerScreen.jsx
+https://nextjs.org/docs/messages/module-not-found
+[00:27:18.269] Server  ERROR   ⨯ ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-./components/mentee/planner/PlannerScreen.jsx
-Attempted import error: 'fetchTasksByDate' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByDate').
+https://nextjs.org/docs/messages/module-not-found
+[00:27:18.786] Browser ERROR   ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-Import trace for requested module:
-./components/mentee/planner/PlannerScreen.jsx
+https://nextjs.org/docs/messages/module-not-found
+[00:27:20.988] Browser ERROR   uncaughtError: Error: Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-./components/mentee/planner/PlannerScreen.jsx
-Attempted import error: 'fetchTasksByRange' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByRange').
+https://nextjs.org/docs/messages/module-not-found
 
-Import trace for requested module:
-./components/mentee/planner/PlannerScreen.jsx
+[00:27:22.343] Browser ERROR   ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-./components/mentee/planner/TaskChecklist.jsx
-Attempted import error: 'addMenteeTask' is not exported from '@/lib/repositories/tasksRepo' (imported as 'addMenteeTask').
+https://nextjs.org/docs/messages/module-not-found
+[00:27:34.977] Browser ERROR   ./app/(mentee)/mentee/page.js:3:1
+Module not found: Can't resolve '@/components/mentee/planner/CalendarPlannerScreen'
+  1 | "use client";
+  2 |
+> 3 | import CalendarPlannerScreen from "@/components/mentee/planner/CalendarPlannerScreen";
+    | ^
+  4 |
+  5 | export default function MenteeHomePage() {
+  6 |   return <CalendarPlannerScreen />;
 
-Import trace for requested module:
-./components/mentee/planner/TaskChecklist.jsx
-./components/mentee/planner/PlannerScreen.jsx
-
-./components/mentee/planner/TaskRow.jsx
-Attempted import error: 'updateTaskStatus' is not exported from '@/lib/repositories/tasksRepo' (imported as 'updateTaskStatus').
-
-Import trace for requested module:
-./components/mentee/planner/TaskRow.jsx
-./components/mentee/planner/TaskChecklist.jsx
-./components/mentee/planner/PlannerScreen.jsx
-[00:02:10.939] Browser WARN    ./components/mentee/planner/PlannerScreen.jsx
-Attempted import error: 'fetchTasksByDate' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByDate').
-
-Import trace for requested module:
-./components/mentee/planner/PlannerScreen.jsx
-[00:02:10.939] Browser WARN    ./components/mentee/planner/PlannerScreen.jsx
-Attempted import error: 'fetchTasksByRange' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByRange').
-
-Import trace for requested module:
-./components/mentee/planner/PlannerScreen.jsx
-[00:02:10.939] Browser WARN    ./components/mentee/planner/TaskChecklist.jsx
-Attempted import error: 'addMenteeTask' is not exported from '@/lib/repositories/tasksRepo' (imported as 'addMenteeTask').
-
-Import trace for requested module:
-./components/mentee/planner/TaskChecklist.jsx
-./components/mentee/planner/PlannerScreen.jsx
-[00:02:10.939] Browser WARN    ./components/mentee/planner/TaskRow.jsx
-Attempted import error: 'updateTaskStatus' is not exported from '@/lib/repositories/tasksRepo' (imported as 'updateTaskStatus').
-
-Import trace for requested module:
-./components/mentee/planner/TaskRow.jsx
-./components/mentee/planner/TaskChecklist.jsx
-./components/mentee/planner/PlannerScreen.jsx
-[00:02:10.939] Browser WARN    ./components/mentee/planner/PlannerScreen.jsx
-Attempted import error: 'fetchTasksByDate' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByDate').
-
-Import trace for requested module:
-./components/mentee/planner/PlannerScreen.jsx
-[00:02:10.939] Browser WARN    ./components/mentee/planner/PlannerScreen.jsx
-Attempted import error: 'fetchTasksByRange' is not exported from '@/lib/repositories/tasksRepo' (imported as 'fetchTasksByRange').
-
-Import trace for requested module:
-./components/mentee/planner/PlannerScreen.jsx
-[00:02:10.939] Browser WARN    ./components/mentee/planner/TaskChecklist.jsx
-Attempted import error: 'addMenteeTask' is not exported from '@/lib/repositories/tasksRepo' (imported as 'addMenteeTask').
-
-Import trace for requested module:
-./components/mentee/planner/TaskChecklist.jsx
-./components/mentee/planner/PlannerScreen.jsx
-[00:02:10.940] Browser WARN    ./components/mentee/planner/TaskRow.jsx
-Attempted import error: 'updateTaskStatus' is not exported from '@/lib/repositories/tasksRepo' (imported as 'updateTaskStatus').
-
-Import trace for requested module:
-./components/mentee/planner/TaskRow.jsx
-./components/mentee/planner/TaskChecklist.jsx
-./components/mentee/planner/PlannerScreen.jsx
-[00:02:27.203] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:14:46.044] Server  WARN    ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
-[00:14:47.400] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:16:47.436] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:16:59.028] Server  LOG     ○ Compiling /mentor ...
+https://nextjs.org/docs/messages/module-not-found
+[00:27:35.067] Server  WARN    ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:27:39.831] Server  WARN    ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:27:48.853] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:27:49.939] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:27:49.939] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:27:54.952] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:27:54.952] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:30:24.001] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:30:24.934] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:30:24.935] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:30:45.347] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:30:45.347] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:30:57.551] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:30:57.552] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:31:00.011] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:31:00.011] Browser ERROR   A param property was accessed directly with `params.taskId`. `params` is a Promise and must be unwrapped with `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:33:33.217] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:35:48.508] Server  WARN    Error: Route "/mentee/tasks/[taskId]" used `params.taskId`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:38:29.358] Server  WARN    Error: Route "/mentee/tasks/[taskId]" used `params.taskId`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:38:37.323] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:39:24.050] Server  WARN    Error: Route "/mentee/tasks/[taskId]" used `params.taskId`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:43:38.197] Server  WARN    Error: Route "/mentee/tasks/[taskId]" used `params.taskId`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:43:43.932] Server  WARN    Error: Route "/mentee/tasks/[taskId]" used `params.taskId`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:43:45.422] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:44:07.037] Server  WARN    Error: Route "/mentee/tasks/[taskId]" used `params.taskId`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:48:52.328] Server  WARN    Error: Route "/mentee/tasks/[taskId]" used `params.taskId`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:51:02.622] Server  WARN    Error: Route "/mentee/tasks/[taskId]" used `params.taskId`. `params` is a Promise and must be unwrapped with `await` or `React.use()` before accessing its properties. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+[00:51:04.199] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:55:42.274] Server  WARN    ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:55:45.292] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:58:33.687] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:59:02.119] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:59:06.147] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:16:49.974] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:16:53.532] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
