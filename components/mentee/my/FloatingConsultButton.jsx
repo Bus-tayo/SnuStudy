@@ -7,7 +7,7 @@ export default function FloatingConsultButton() {
       className="fixed bottom-20 left-1/2 -translate-x-1/2 w-[390px] max-w-[calc(100%-2rem)]"
     >
       <div className="w-full text-center py-3 rounded border bg-white shadow-sm font-semibold">
-        상담받아보기
+        상담 받아보기
       </div>
     </a>
   );

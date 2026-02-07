@@ -1,3 +1,17 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@import "../util/style/theme.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply bg-background text-foreground font-sans antialiased; }
+}
+
+@layer components {
+  .card-base { @apply bg-white border border-border rounded-xl shadow-sm; }
+  .btn-primary { @apply inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity; }
+  .badge-base { @apply px-2 py-0.5 rounded text-xs font-bold border inline-flex items-center justify-center; }
+}
