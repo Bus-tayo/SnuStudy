@@ -4,11 +4,18 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { addWeeks, format, startOfWeek } from "date-fns";
 
-import { getAuthSession, resolveAppUserFromSession, persistAppUserToStorage } from "@/lib/auth/session";
+import {
+  getAuthSession,
+  resolveAppUserFromSession,
+  persistAppUserToStorage,
+} from "@/lib/auth/session";
 import { fetchAppUserById } from "@/lib/repositories/usersRepository";
 import { fetchDailyPlanner } from "@/lib/repositories/plannerRepo";
 import { fetchTasksByDate, addMentorTask } from "@/lib/repositories/tasksRepo";
-import { fetchTimeLogsForTasksInDay, sumSecondsByTaskId } from "@/lib/repositories/timeLogsRepo";
+import {
+  fetchTimeLogsForTasksInDay,
+  sumSecondsByTaskId,
+} from "@/lib/repositories/timeLogsRepo";
 
 const SUBJECT_OPTIONS = [
   { value: "KOR", label: "국어" },
@@ -24,7 +31,9 @@ export default function MenteeWeeklyDetail({ menteeId }) {
   const [mentee, setMentee] = useState(null);
   const [bootstrapped, setBootstrapped] = useState(false);
 
-  const [weekStart, setWeekStart] = useState(() => startOfWeek(new Date(), { weekStartsOn: 1 }));
+  const [weekStart, setWeekStart] = useState(() =>
+    startOfWeek(new Date(), { weekStartsOn: 1 })
+  );
   const [days, setDays] = useState([]);
 
   const [loading, setLoading] = useState(false);
@@ -39,12 +48,15 @@ export default function MenteeWeeklyDetail({ menteeId }) {
           router.replace("/login");
           return;
         }
+
         const appUser = await resolveAppUserFromSession(session);
         persistAppUserToStorage(appUser);
+
         if (appUser.role !== "MENTOR") {
           router.replace("/login");
           return;
         }
+
         const menteeInfo = await fetchAppUserById(menteeId);
         if (!menteeInfo) {
           setErrorMsg("멘티를 찾을 수 없습니다.");
@@ -110,13 +122,14 @@ export default function MenteeWeeklyDetail({ menteeId }) {
                 cb?.();
                 await loadWeek(base);
               } catch (e) {
-                console.error('[MenteeWeeklyDetail/addTask]', e);
-                alert(e?.message ?? '할 일 추가 실패');
+                console.error("[MenteeWeeklyDetail/addTask]", e);
+                alert(e?.message ?? "할 일 추가 실패");
               }
             },
           };
         })
       );
+
       setDays(ds);
       setErrorMsg("");
     } catch (e) {
@@ -138,28 +151,28 @@ export default function MenteeWeeklyDetail({ menteeId }) {
 
   return (
     <div className="min-h-dvh flex flex-col">
-      <header className="px-4 py-3 border-b">
-        <div className="text-xs text-neutral-500">{weekLabel}</div>
-        <div className="text-lg font-semibold">{mentee.name} 주간 기록</div>
+      <header className="px-4 py-3 border-b border-border">
+        <div className="text-xs text-foreground/60">{weekLabel}</div>
+        <div className="text-lg font-extrabold">{mentee.name} 주간 기록</div>
       </header>
 
       <main className="flex-1 p-4 space-y-4">
         <div className="flex items-center gap-2">
           <button
             onClick={() => setWeekStart(addWeeks(weekStart, -1))}
-            className="px-2 py-1 border rounded text-sm"
+            className="btn-secondary"
             disabled={loading}
           >
             이전 주
           </button>
           <button
             onClick={() => setWeekStart(addWeeks(weekStart, 1))}
-            className="px-2 py-1 border rounded text-sm"
+            className="btn-secondary"
             disabled={loading}
           >
             다음 주
           </button>
-          {loading ? <span className="text-xs text-neutral-500">불러오는 중...</span> : null}
+          {loading ? <span className="text-xs text-foreground/60">불러오는 중...</span> : null}
         </div>
 
         <div className="space-y-3">
@@ -173,6 +186,8 @@ export default function MenteeWeeklyDetail({ menteeId }) {
 }
 
 function DayCard({ day }) {
+  const router = useRouter();
+
   const [newTitle, setNewTitle] = useState("");
   const [newSubject, setNewSubject] = useState("ETC");
   const [adding, setAdding] = useState(false);
@@ -181,43 +196,56 @@ function DayCard({ day }) {
   const header = day.planner?.header_note?.trim();
 
   const hasTasks = (day.tasks ?? []).length > 0;
+
   return (
-    <div className="border rounded-lg p-3 space-y-2">
+    <div className="border border-border rounded-lg p-3 space-y-2 bg-background">
       <div className="flex items-center justify-between">
-        <div className="text-sm font-semibold">{dateLabel}</div>
-        <div className="text-[11px] text-neutral-500">
+        <div className="text-sm font-extrabold">{dateLabel}</div>
+        <div className="text-[11px] text-foreground/60">
           완료 {day.tasks.filter((t) => t.status === "DONE").length} / {day.tasks.length}
         </div>
       </div>
 
-      <div className="text-[11px] text-neutral-500">플래너 메모</div>
+      <div className="text-[11px] text-foreground/60">플래너 메모</div>
       <div className="text-sm">{header ? header : "메모 없음"}</div>
 
       <div className="space-y-1">
-        <div className="text-[11px] text-neutral-500">할 일</div>
+        <div className="text-[11px] text-foreground/60">할 일</div>
+
         {!hasTasks ? (
-          <div className="text-xs text-neutral-500">등록된 할 일이 없습니다.</div>
+          <div className="text-xs text-foreground/60">등록된 할 일이 없습니다.</div>
         ) : (
           <ul className="space-y-1">
             {day.tasks.map((t) => (
               <li
                 key={t.id}
-                className="flex items-center justify-between rounded border px-2 py-1 text-sm"
+                className="flex items-center justify-between rounded border border-border px-2 py-1 text-sm"
               >
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 min-w-0">
                   <StatusDot status={t.status} />
-                  <div>
-                    <div className="leading-tight">{t.title}</div>
-                    <div className="text-[11px] text-neutral-500">
+                  <div className="min-w-0">
+                    <div className="leading-tight truncate">{t.title}</div>
+                    <div className="text-[11px] text-foreground/60">
                       {t.subject} {t.is_fixed_by_mentor ? "· 멘토 지정" : ""}
                     </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-[11px] text-neutral-500">{prettyStatus(t.status)}</div>
-                  <div className="text-[10px] text-neutral-400">
-                    {day.minutesByTaskId.get(t.id) ?? 0}분
+
+                <div className="flex items-center gap-3 shrink-0">
+                  <div className="text-right">
+                    <div className="text-[11px] text-foreground/60">{prettyStatus(t.status)}</div>
+                    <div className="text-[10px] text-foreground/50">
+                      {day.minutesByTaskId.get(t.id) ?? 0}분
+                    </div>
                   </div>
+
+                  <button
+                    type="button"
+                    className="btn-secondary text-xs px-2 py-1"
+                    onClick={() => router.push(`/mentor/tasks/${t.id}`)}
+                  >
+                    피드백
+                  </button>
                 </div>
               </li>
             ))}
@@ -227,7 +255,7 @@ function DayCard({ day }) {
 
       <div className="flex items-center gap-2 pt-2">
         <select
-          className="border rounded p-2 text-sm"
+          className="border border-border rounded-xl p-2 text-sm bg-background"
           value={newSubject}
           onChange={(e) => setNewSubject(e.target.value)}
           disabled={adding}
@@ -243,7 +271,7 @@ function DayCard({ day }) {
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
           placeholder="멘토가 할 일 추가"
-          className="flex-1 border rounded p-2 text-sm"
+          className="flex-1 border border-border rounded-xl p-2 text-sm bg-background"
           disabled={adding}
         />
 
@@ -260,7 +288,7 @@ function DayCard({ day }) {
             }
           }}
           disabled={adding}
-          className="border rounded px-3 text-sm"
+          className="btn-primary px-3 text-sm disabled:opacity-60"
         >
           추가
         </button>
@@ -270,13 +298,13 @@ function DayCard({ day }) {
 }
 
 function StatusDot({ status }) {
-  const color =
+  const cls =
     status === "DONE"
-      ? "bg-green-500"
+      ? "bg-primary"
       : status === "WORKING"
-      ? "bg-amber-500"
-      : "bg-neutral-300";
-  return <span className={`w-2.5 h-2.5 rounded-full ${color}`} />;
+      ? "bg-secondary"
+      : "bg-muted";
+  return <span className={`w-2.5 h-2.5 rounded-full ${cls}`} />;
 }
 
 function prettyStatus(status) {
