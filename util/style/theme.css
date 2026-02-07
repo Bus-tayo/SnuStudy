@@ -1,0 +1,30 @@
+:root {
+
+    --primary: 220 80% 28%; 
+    --primary-foreground: 0 0% 100%; 
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 220 80% 28%;
+
+    /* 과목별 색상 */
+    --subject-kor: 215 25% 47%;
+    --subject-math: 5 95% 53%;
+    --subject-eng: 142 71% 45%;
+    --subject-etc: 262 83% 58%;
+
+    /* 상태 */
+    --status-todo: 0 0% 80%;
+    --status-done: 220 80% 28%;
+    --radius: 0.75rem;
+}

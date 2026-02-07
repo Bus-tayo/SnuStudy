@@ -61,6 +61,22 @@ export default function PlannerScreen() {
     }
   }
 
+  async function handleDeleteSelectedTasks(taskIds) {
+    if (!taskIds || taskIds.length === 0) return;
+    
+    if (!confirm(`${taskIds.length}개의 할 일을 삭제하시겠습니까?`)) return;
+
+    try {
+      // API 호출 (여러 ID를 배열로 받아 처리한다고 가정)
+      await deleteTasks(taskIds); 
+      // 삭제 후 데이터 갱신
+      await reloadAll(selectedDate, menteeId);
+    } catch (e) {
+      console.error('[PlannerScreen/handleDeleteSelectedTasks]', e);
+      alert('삭제 중 오류가 발생했습니다.');
+    }
+  }
+
   useEffect(() => {
     if (!bootstrapped || !menteeId) return;
     reloadAll(selectedDate, menteeId);
@@ -72,6 +88,7 @@ export default function PlannerScreen() {
 
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
+      
       <PlannerHeader
         menteeId={menteeId}
         mentorId={MENTOR_ID}
@@ -91,6 +108,8 @@ export default function PlannerScreen() {
         tasks={tasks}
         secondsByTaskId={secondsByTaskId}
         onMutated={() => reloadAll(selectedDate, menteeId)}
+        // 삭제 함수를 props로 전달
+        onDeleteTasks={handleDeleteSelectedTasks} 
       />
     </div>
   );
