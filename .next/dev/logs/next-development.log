@@ -1,14 +1,30 @@
-[00:00:07.448] Server  LOG     ✓ Ready in 6.3s
-[00:00:10.719] Server  LOG     ○ Compiling /mentor/tasks/[taskId] ...
-[00:00:26.940] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:00.081] Browser ERROR   [MentorTaskFeedbackScreen/save] {"code":"23502","details":null,"hint":null,"message":"null value in column \"created_at\" of relation \"task_feedback_tags\" violates not-null constraint"}
-[00:01:09.483] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:12.972] Browser ERROR   [MentorTaskFeedbackScreen/save] {"code":"23502","details":null,"hint":null,"message":"null value in column \"created_at\" of relation \"task_feedback_tags\" violates not-null constraint"}
-[00:09:50.916] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:10:49.119] Server  LOG     ○ Compiling /mentor/mentee/[menteeId] ...
-[00:10:54.208] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:11:24.702] Server  LOG     ○ Compiling /mentee ...
-[00:11:32.021] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:11:34.861] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:12:21.840] Server  LOG     ○ Compiling /mentee/tasks/[taskId] ...
-[00:12:50.353] Server  LOG     ○ Compiling /mentee/planner ...
+[00:00:01.249] Server  LOG     ✓ Ready in 1061ms
+[00:00:05.646] Server  LOG     ○ Compiling /mentor/tasks/[taskId] ...
+[00:00:07.162] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:10:34.829] Browser ERROR   [MentorTaskFeedbackScreen/uploadPdf] {"message":"Bucket not found","name":"StorageApiError","status":400,"statusCode":"404"}
+[00:16:35.776] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:16:41.987] Browser ERROR   [MentorTaskFeedbackScreen/uploadPdf] {"message":"new row violates row-level security policy","name":"StorageApiError","status":400,"statusCode":"403"}
+[00:22:58.052] Browser ERROR   [MentorTaskFeedbackScreen/uploadPdf] {}
+[00:26:22.825] Server  WARN    ⚠ ./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
+Attempted import error: 'fetchTaskPdfMaterial' is not exported from '@/lib/repositories/taskMaterialsRepo' (imported as 'fetchTaskPdfMaterial').
+
+Import trace for requested module:
+./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
+
+./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
+Attempted import error: 'fetchTaskPdfMaterial' is not exported from '@/lib/repositories/taskMaterialsRepo' (imported as 'fetchTaskPdfMaterial').
+
+Import trace for requested module:
+./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
+[00:26:22.937] Browser WARN    ./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
+Attempted import error: 'fetchTaskPdfMaterial' is not exported from '@/lib/repositories/taskMaterialsRepo' (imported as 'fetchTaskPdfMaterial').
+
+Import trace for requested module:
+./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
+[00:31:15.622] Browser ERROR   [MentorTaskFeedbackScreen/uploadPdf] {}
+[00:55:22.992] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:56:11.592] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:56:12.008] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:57:17.001] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:57:17.443] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:57:29.921] Browser ERROR   [LOGIN] {"__isAuthError":true,"code":"invalid_credentials","name":"AuthApiError","status":400}
