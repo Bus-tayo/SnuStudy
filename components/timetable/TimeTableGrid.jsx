@@ -7,32 +7,8 @@ import {
     generatePlannerHours,
     generateTimeId,
     DEFAULT_STUDY_COLOR,
+    findTaskForSlot,
 } from "@/lib/utils/timeUtils";
-
-/**
- * Check if a slot falls within any task's time range
- * Handles day crossing for early morning hours
- */
-const findTaskForSlot = (tasks, slotTimeId) => {
-    const slotMinutes = timeToMinutes(slotTimeId);
-    const adjustedSlotMinutes = adjustMinutesForPlannerDay(slotMinutes);
-
-    for (const task of tasks) {
-        let startMinutes = adjustMinutesForPlannerDay(timeToMinutes(task.startTime));
-        let endMinutes = adjustMinutesForPlannerDay(timeToMinutes(task.endTime));
-
-        // Handle end time that wraps (e.g., start 23:00, end 01:00 after adjustment)
-        if (endMinutes <= startMinutes) {
-            endMinutes += 24 * 60;
-        }
-
-        // Check if slot is within range [start, end)
-        if (adjustedSlotMinutes >= startMinutes && adjustedSlotMinutes < endMinutes) {
-            return task;
-        }
-    }
-    return null;
-};
 
 /**
  * TimeTableGrid Component
