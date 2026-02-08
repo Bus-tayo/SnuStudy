@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import FeedbackSummaryCard from "./FeedbackSummaryCard";
 import { fetchMenteeFeedbacks } from "@/lib/repositories/feedbacksRepo";
 import { getAuthSession, resolveAppUserFromSession } from "@/lib/auth/session";
-import { Bell } from "lucide-react";
 
 export default function FeedbackScreen() {
   const [items, setItems] = useState([]);
@@ -37,10 +36,7 @@ export default function FeedbackScreen() {
         <h1 className="text-xl font-bold text-foreground">
           멘토 피드백
         </h1>
-        <div className="relative">
-          <Bell className="w-6 h-6 text-foreground" />
-          <span className="absolute top-0 right-0 w-2.5 h-2.5 bg-accent rounded-full border-2 border-white"></span>
-        </div>
+        <div />
       </header>
 
 
