@@ -95,7 +95,7 @@ export default function NotificationCenter() {
   async function handleClickItem(item) {
     if (!item || item.is_read) return;
     try {
-      await markNotificationRead(item.id);
+      await markNotificationRead(item.id, userId);
       setList((prev) => prev.map((n) => (n.id === item.id ? { ...n, is_read: true } : n)));
       setUnread((prev) => Math.max(0, prev - 1));
     } catch (e) {
