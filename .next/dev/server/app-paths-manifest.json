@@ -1,7 +1,6 @@
 {
   "/mentor/mentee/[menteeId]/feedback/[subject]/page": "app/mentor/mentee/[menteeId]/feedback/[subject]/page.js",
   "/login/page": "app/login/page.js",
-  "/(mentee)/mentee/page": "app/(mentee)/mentee/page.js",
-  "/(mentee)/mentee/feedback/page": "app/(mentee)/mentee/feedback/page.js",
-  "/(mentee)/mentee/my/page": "app/(mentee)/mentee/my/page.js"
+  "/mentor/mentee/[menteeId]/page": "app/mentor/mentee/[menteeId]/page.js",
+  "/(mentee)/mentee/feedback/page": "app/(mentee)/mentee/feedback/page.js"
 }
