@@ -1,12 +1,1175 @@
-[00:00:01.570] Server  LOG     ✓ Ready in 1307ms
-[00:00:07.356] Server  LOG     ○ Compiling /mentor/mentee/[menteeId]/feedback/[subject] ...
-[00:00:09.235] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:09.420] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:40.690] Browser ERROR   Failed to submit feedback: {"code":"23505","details":"Key (mentee_id, date, subject)=(101, 2026-02-08, KOR) already exists.","hint":null,"message":"duplicate key value violates unique constraint \"feedbacks_mentee_id_date_subject_key\""}
-[00:01:00.243] Browser ERROR   Failed to submit feedback: {"code":"23505","details":"Key (mentee_id, date, subject)=(101, 2026-02-08, KOR) already exists.","hint":null,"message":"duplicate key value violates unique constraint \"feedbacks_mentee_id_date_subject_key\""}
-[00:05:38.379] Browser LOG     Submitting feedback: {"feedback":"어쩌고1234","menteeId":101,"mentorId":100,"subject":"KOR","summary":"지문 구조 파악"}
-[00:05:46.817] Browser ERROR   Failed to submit feedback: {"code":"23505","details":"Key (mentee_id, date, subject)=(101, 2026-02-08, KOR) already exists.","hint":null,"message":"duplicate key value violates unique constraint \"feedbacks_mentee_id_date_subject_key\""}
-[00:05:46.817] Browser ERROR   Error details: {"code":"23505","details":"Key (mentee_id, date, subject)=(101, 2026-02-08, KOR) already exists.","hint":null,"message":"duplicate key value violates unique constraint \"feedbacks_mentee_id_date_subject_key\""}
-[00:06:39.242] Browser LOG     Submitting feedback: {"feedback":"1234테스트","menteeId":101,"mentorId":100,"subject":"ENG","summary":"영단어 암기"}
-[00:06:49.232] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:06:49.649] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:17.923] Server  LOG     ✓ Ready in 12.5s
+[00:00:28.706] Server  LOG     ○ Compiling / ...
+[00:00:33.634] Server  LOG     ○ Compiling /mentee ...
+[00:00:40.310] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:40.469] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/mentee" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.js">
+                      <SegmentTrieNode>
+                      <link>
+                      <RootLayout>
+                        <html lang="ko">
+                          <body
+-                           style={{overflow-x:"auto",overflow-y:"auto"}}
+                          >
+                  ...
+
+[00:01:08.832] Server  WARN    ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:01:09.364] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:09.484] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/mentor" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.js">
+                      <SegmentTrieNode>
+                      <link>
+                      <RootLayout>
+                        <html
+                          lang="ko"
+-                         style={{--vsc-domain:"\"localhost\""}}
+                        >
+                          <body
+-                           style={{overflow-x:"auto",overflow-y:"auto"}}
+                          >
+                  ...
+
+[00:02:13.087] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:13.241] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/mentor/me..." notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.js">
+                      <SegmentTrieNode>
+                      <link>
+                      <RootLayout>
+                        <html
+                          lang="ko"
+-                         style={{--vsc-domain:"\"localhost\""}}
+                        >
+                          <body
+-                           style={{overflow-x:"auto",overflow-y:"auto"}}
+                          >
+                  ...
+
+[00:02:13.824] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:14.743] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/mentor/me..." notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.js">
+                      <SegmentTrieNode>
+                      <link>
+                      <RootLayout>
+                        <html
+                          lang="ko"
+-                         style={{--vsc-domain:"\"localhost\""}}
+                        >
+                          <body
+-                           style={{overflow-x:"auto",overflow-y:"auto"}}
+                          >
+                  ...
+
+[00:02:24.917] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:25.041] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
+      <AppDevOverlayErrorBoundary globalError={[...]}>
+        <ReplaySsrOnlyErrors>
+        <DevRootHTTPAccessFallbackBoundary>
+          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
+            <HTTPAccessFallbackErrorBoundary pathname="/mentee" notFound={<NotAllowedRootHTTPFallbackError>} ...>
+              <RedirectBoundary>
+                <RedirectErrorBoundary router={{...}}>
+                  <Head>
+                  <__next_root_layout_boundary__>
+                    <SegmentViewNode type="layout" pagePath="layout.js">
+                      <SegmentTrieNode>
+                      <link>
+                      <RootLayout>
+                        <html
+                          lang="ko"
+-                         style={{--vsc-domain:"\"localhost\""}}
+                        >
+                          <body
+-                           style={{overflow-x:"auto",overflow-y:"auto"}}
+                          >
+                  ...
+
+[00:03:31.461] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:31.461] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:31.680] Server  ERROR   ⨯ ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:31.830] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:31.830] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:32.286] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:32.286] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:32.834] Server  ERROR   ⨯ ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:32.841] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:32.841] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.030] Server  LOG     ○ Compiling /_not-found ...
+[00:03:33.735] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.735] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.742] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.742] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.742] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.742] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.742] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.742] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.742] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.742] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.742] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:33.742] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:34.140] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:34.140] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:34.746] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:34.746] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:34.746] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:34.746] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:34.966] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:34.966] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:35.392] Server  ERROR   ⨯ ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.109] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.109] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.110] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.110] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.110] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.110] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.110] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.110] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.110] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.110] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.110] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.110] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.671] Browser ERROR   uncaughtError: Error: Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.672] Browser ERROR   uncaughtError: Error: Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.790] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:38.790] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:39.725] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:39.725] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:39.725] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:39.725] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:55.560] Browser ERROR   uncaughtError: Error: Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:55.693] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:55.693] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:55.726] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:55.726] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:56.523] Browser ERROR   uncaughtError: Error: Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:56.636] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:56.636] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:56.726] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:56.726] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:57.412] Browser ERROR   uncaughtError: Error: Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:57.528] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:57.528] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:57.749] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:57.749] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:57.989] Browser ERROR   uncaughtError: Error: Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:58.106] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:58.106] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:58.737] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:16:1
+Module not found: Can't resolve 'react-markdown'
+  14 | import { fetchFeedbackTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+  15 |
+> 16 | import ReactMarkdown from "react-markdown";
+     | ^
+  17 | import remarkGfm from "remark-gfm";
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
+[00:03:58.737] Browser ERROR   ./components/mentee/tasks/TaskDetailScreen.jsx:17:1
+Module not found: Can't resolve 'remark-gfm'
+  15 |
+  16 | import ReactMarkdown from "react-markdown";
+> 17 | import remarkGfm from "remark-gfm";
+     | ^
+  18 |
+  19 | import TaskDetailTopBar from "./parts/TaskDetailTopBar";
+  20 | import TaskPdfSection from "./parts/TaskPdfSection";
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./app/(mentee)/mentee/tasks/[taskId]/page.js
