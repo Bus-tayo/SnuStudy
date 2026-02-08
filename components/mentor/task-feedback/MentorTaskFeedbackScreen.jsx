@@ -14,6 +14,7 @@ import { fetchTaskFeedback, upsertTaskFeedback } from "@/lib/repositories/taskFe
 
 import { fetchAllTags, upsertTagByName } from "@/lib/repositories/tagsRepo";
 import { fetchFeedbackTags, syncAutoTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
+import { fetchTaskPdfMaterials, uploadTaskMaterialPdf, deleteTaskMaterial } from "@/lib/repositories/taskMaterialsRepo";
 
 import { addPointLedger } from "@/lib/repositories/pointsRepo";
 
@@ -64,6 +65,7 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
 
   const [task, setTask] = useState(null);
   const [feedback, setFeedback] = useState(null);
+  const [pdfs, setPdfs] = useState([]);
 
   const [difficulty, setDifficulty] = useState("BRONZE");
   const [body, setBody] = useState("");
@@ -73,7 +75,10 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
   const [manualTagIds, setManualTagIds] = useState([]);
 
   const [saving, setSaving] = useState(false);
+  const [uploadingPdf, setUploadingPdf] = useState(false);
+  const [deletingPdf, setDeletingPdf] = useState(false);
   const [err, setErr] = useState("");
+  const [pdfErr, setPdfErr] = useState("");
 
   // auth bootstrap
   useEffect(() => {
@@ -120,16 +125,18 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
       try {
         setErr("");
 
-        const [t, f, tags] = await Promise.all([
+        const [t, f, tags, pList] = await Promise.all([
           fetchTaskById({ taskId: taskIdNum }),
           fetchTaskFeedback({ taskId: taskIdNum }).catch(() => null),
           fetchAllTags().catch(() => []),
+          fetchTaskPdfMaterials({ taskId: taskIdNum }).catch(() => []),
         ]);
 
         if (!alive) return;
 
         setTask(t);
         setFeedback(f);
+        setPdfs(pList);
 
         setBody(f?.body ?? "");
         setDifficulty(f?.difficulty ?? "BRONZE");
@@ -237,6 +244,50 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
     }
   };
 
+  const onUploadPdf = async (file) => {
+    if (!file) return;
+    if (!mentorId) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("파일 크기는 10MB 이하여야 합니다.");
+      return;
+    }
+
+    try {
+      setUploadingPdf(true);
+      setPdfErr("");
+
+      const newPdf = await uploadTaskMaterialPdf({
+        taskId: taskIdNum,
+        file,
+        uploaderId: mentorId,
+      });
+      setPdfs((prev) => [newPdf, ...prev]);
+    } catch (e) {
+      console.error("[MentorTaskFeedbackScreen/uploadPdf]", e);
+      setPdfErr(e?.message ?? "PDF 업로드 실패");
+    } finally {
+      setUploadingPdf(false);
+    }
+  };
+
+  const onDeletePdf = async (materialId) => {
+    if (!mentorId) return;
+    if (!confirm("정말 이 자료를 삭제하시겠습니까?")) return;
+
+    try {
+      setDeletingPdf(true);
+      setPdfErr("");
+      await deleteTaskMaterial({ materialId, uploaderId: mentorId });
+      setPdfs((prev) => prev.filter((x) => x.id !== materialId));
+    } catch (e) {
+      console.error("[MentorTaskFeedbackScreen/deletePdf]", e);
+      setPdfErr(e?.message ?? "자료 삭제 실패");
+    } finally {
+      setDeletingPdf(false);
+    }
+  };
+
   if (!boot) return null;
 
   const saveDisabled = saving || !task?.id;
@@ -279,6 +330,58 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
           </div>
           <MarkdownEditor value={body} onChange={setBody} />
         </div>
+
+        <div className="card-base p-3 space-y-3">
+          <div className="text-sm font-extrabold">학습 자료 (PDF)</div>
+
+          {pdfErr ? <div className="text-xs text-red-600 bg-red-50 p-2 rounded">{pdfErr}</div> : null}
+
+          {pdfs.length > 0 ? (
+            <div className="space-y-2">
+              {pdfs.map((pdf) => (
+                <div key={pdf.id} className="flex items-center justify-between border p-2 rounded bg-neutral-50 px-3">
+                  <a
+                    href={pdf.file_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm text-blue-600 underline truncate flex-1 min-w-0 mr-2"
+                  >
+                    {pdf.title}
+                  </a>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-neutral-400 whitespace-nowrap">등록됨</span>
+                    <button
+                      type="button"
+                      onClick={() => onDeletePdf(pdf.id)}
+                      className="text-xs text-red-500 hover:opacity-80 font-bold px-1"
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-sm text-neutral-500">등록된 PDF가 없습니다.</div>
+          )}
+
+          <div className="flex items-center gap-2">
+            <input
+              type="file"
+              accept="application/pdf"
+              disabled={uploadingPdf}
+              onChange={(e) => {
+                if (e.target.files?.[0]) {
+                  onUploadPdf(e.target.files[0]);
+                  e.target.value = ""; // reset
+                }
+              }}
+              className="text-sm w-full file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:opacity-90 transition-opacity"
+            />
+          </div>
+          {uploadingPdf && <div className="text-xs text-blue-500">업로드 중...</div>}
+        </div>
+
 
         <div className="card-base p-3 space-y-2">
           <div className="text-sm font-extrabold">태그</div>
