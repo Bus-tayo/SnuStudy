@@ -1,4 +1,5 @@
 import "./global.css";
+import "../util/style/theme.css";
 
 export const metadata = {
   title: "SNU Study MVP",
