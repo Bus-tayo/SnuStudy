@@ -1,30 +1,12 @@
-[00:00:01.249] Server  LOG     ✓ Ready in 1061ms
-[00:00:05.646] Server  LOG     ○ Compiling /mentor/tasks/[taskId] ...
-[00:00:07.162] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:10:34.829] Browser ERROR   [MentorTaskFeedbackScreen/uploadPdf] {"message":"Bucket not found","name":"StorageApiError","status":400,"statusCode":"404"}
-[00:16:35.776] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:16:41.987] Browser ERROR   [MentorTaskFeedbackScreen/uploadPdf] {"message":"new row violates row-level security policy","name":"StorageApiError","status":400,"statusCode":"403"}
-[00:22:58.052] Browser ERROR   [MentorTaskFeedbackScreen/uploadPdf] {}
-[00:26:22.825] Server  WARN    ⚠ ./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
-Attempted import error: 'fetchTaskPdfMaterial' is not exported from '@/lib/repositories/taskMaterialsRepo' (imported as 'fetchTaskPdfMaterial').
-
-Import trace for requested module:
-./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
-
-./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
-Attempted import error: 'fetchTaskPdfMaterial' is not exported from '@/lib/repositories/taskMaterialsRepo' (imported as 'fetchTaskPdfMaterial').
-
-Import trace for requested module:
-./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
-[00:26:22.937] Browser WARN    ./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
-Attempted import error: 'fetchTaskPdfMaterial' is not exported from '@/lib/repositories/taskMaterialsRepo' (imported as 'fetchTaskPdfMaterial').
-
-Import trace for requested module:
-./components/mentor/task-feedback/MentorTaskFeedbackScreen.jsx
-[00:31:15.622] Browser ERROR   [MentorTaskFeedbackScreen/uploadPdf] {}
-[00:55:22.992] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:56:11.592] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:56:12.008] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:57:17.001] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:57:17.443] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:57:29.921] Browser ERROR   [LOGIN] {"__isAuthError":true,"code":"invalid_credentials","name":"AuthApiError","status":400}
+[00:00:01.570] Server  LOG     ✓ Ready in 1307ms
+[00:00:07.356] Server  LOG     ○ Compiling /mentor/mentee/[menteeId]/feedback/[subject] ...
+[00:00:09.235] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:09.420] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:40.690] Browser ERROR   Failed to submit feedback: {"code":"23505","details":"Key (mentee_id, date, subject)=(101, 2026-02-08, KOR) already exists.","hint":null,"message":"duplicate key value violates unique constraint \"feedbacks_mentee_id_date_subject_key\""}
+[00:01:00.243] Browser ERROR   Failed to submit feedback: {"code":"23505","details":"Key (mentee_id, date, subject)=(101, 2026-02-08, KOR) already exists.","hint":null,"message":"duplicate key value violates unique constraint \"feedbacks_mentee_id_date_subject_key\""}
+[00:05:38.379] Browser LOG     Submitting feedback: {"feedback":"어쩌고1234","menteeId":101,"mentorId":100,"subject":"KOR","summary":"지문 구조 파악"}
+[00:05:46.817] Browser ERROR   Failed to submit feedback: {"code":"23505","details":"Key (mentee_id, date, subject)=(101, 2026-02-08, KOR) already exists.","hint":null,"message":"duplicate key value violates unique constraint \"feedbacks_mentee_id_date_subject_key\""}
+[00:05:46.817] Browser ERROR   Error details: {"code":"23505","details":"Key (mentee_id, date, subject)=(101, 2026-02-08, KOR) already exists.","hint":null,"message":"duplicate key value violates unique constraint \"feedbacks_mentee_id_date_subject_key\""}
+[00:06:39.242] Browser LOG     Submitting feedback: {"feedback":"1234테스트","menteeId":101,"mentorId":100,"subject":"ENG","summary":"영단어 암기"}
+[00:06:49.232] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:06:49.649] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold

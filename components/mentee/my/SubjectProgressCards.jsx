@@ -92,13 +92,24 @@ function PointsCard({ points, loading }) {
   );
 }
 
-export default function SubjectProgressCards() {
-  const menteeId = useMemo(() => getMenteeIdFromStorage(), []);
+export default function SubjectProgressCards(props) {
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState("");
   const [rates, setRates] = useState(null);
   const [points, setPoints] = useState(0);
   const [pointsLoading, setPointsLoading] = useState(true);
+
+  // menteeId 결정 (prop이 우선, 없으면 스토리지)
+  const [resolvedMenteeId, setResolvedMenteeId] = useState(props.menteeId || null);
+
+  useEffect(() => {
+    if (props.menteeId) {
+      setResolvedMenteeId(props.menteeId);
+    } else {
+      const stored = getMenteeIdFromStorage();
+      setResolvedMenteeId(stored);
+    }
+  }, [props.menteeId]);
 
   useEffect(() => {
     let alive = true;
@@ -106,8 +117,14 @@ export default function SubjectProgressCards() {
       try {
         setErr("");
         setLoading(true);
-        if (!menteeId) throw new Error("로그인이 필요합니다.");
-        const r = await fetchSubjectRates30d(menteeId);
+        if (!resolvedMenteeId) {
+          if (props.menteeId === undefined && !getMenteeIdFromStorage()) {
+            throw new Error("로그인이 필요합니다.");
+          }
+          return;
+        }
+
+        const r = await fetchSubjectRates30d(resolvedMenteeId);
         if (!alive) return;
         setRates(r);
       } catch (e) {
@@ -118,15 +135,15 @@ export default function SubjectProgressCards() {
       }
     })();
     return () => { alive = false; };
-  }, [menteeId]);
+  }, [resolvedMenteeId, props.menteeId]);
 
   useEffect(() => {
     let alive = true;
     (async () => {
       try {
         setPointsLoading(true);
-        if (!menteeId) return;
-        const total = await fetchTotalPoints({ menteeId });
+        if (!resolvedMenteeId) return;
+        const total = await fetchTotalPoints({ menteeId: resolvedMenteeId });
         if (!alive) return;
         setPoints(Number(total) || 0);
       } finally {
@@ -134,7 +151,7 @@ export default function SubjectProgressCards() {
       }
     })();
     return () => { alive = false; };
-  }, [menteeId]);
+  }, [resolvedMenteeId]);
 
   const entries = useMemo(() => {
     const r = rates ?? {};
@@ -157,7 +174,10 @@ export default function SubjectProgressCards() {
         {entries.map((it) => {
           const color = subjectHslVar(it.subject);
           return (
-            <div key={it.subject} className="card-base p-3 space-y-2">
+            <div
+              key={it.subject}
+              className="card-base p-3 space-y-2 relative group"
+            >
               <div className="flex items-center justify-between">
                 <div className="text-xs text-foreground/60">{SUBJECT_LABEL[it.subject] ?? it.subject}</div>
                 <div className="badge-base border-border bg-background" style={{ borderColor: color, color }}>
@@ -174,8 +194,22 @@ export default function SubjectProgressCards() {
                 />
               </div>
 
-              <div className="text-xs text-foreground/60">
-                {it.done}/{it.total} 완료
+              <div className="flex items-center justify-between mt-1">
+                <div className="text-xs text-foreground/60">
+                  {it.done}/{it.total} 완료
+                </div>
+
+                {props.onClickSubject && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      props.onClickSubject(it.subject);
+                    }}
+                    className="text-xs px-2 py-1 rounded-md bg-primary/10 text-primary hover:bg-primary/20 transition-colors font-semibold"
+                  >
+                    피드백 작성하기
+                  </button>
+                )}
               </div>
             </div>
           );
