@@ -1,7 +1,7 @@
 :root {
 
-    --primary: 220 80% 28%; 
-    --primary-foreground: 0 0% 100%; 
+    --primary: 220 80% 28%;
+    --primary-foreground: 0 0% 100%;
 
     --accent: 217 91% 60%;
     --accent-foreground: 0 0% 100%;
@@ -27,4 +27,24 @@
     --status-todo: 0 0% 80%;
     --status-done: 220 80% 28%;
     --radius: 0.75rem;
+
+    /* Main Background */
+    --calendar-bg: #6374ae;
+
+    /* Text Colors */
+    --calendar-text: #ffffff;
+    --calendar-text-secondary: rgba(255, 255, 255, 0.7);
+
+    /* Selection Colors */
+    --calendar-selected-bg: #ffffff;
+    --calendar-selected-text: #6374ae;
+
+    /* Weekend Colors */
+    --calendar-saturday: #B3D9FF;
+    /* Light Blue */
+    --calendar-sunday: #FFB3B3;
+    /* Light Red/Pink */
+
+    /* Other Month / Disabled */
+    --calendar-disabled-text: rgba(255, 255, 255, 0.3);
 }

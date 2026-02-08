@@ -6,12 +6,140 @@
 @tailwind utilities;
 
 @layer base {
-  * { @apply border-border; }
-  body { @apply bg-background text-foreground font-sans antialiased; }
+  :root {
+    --nav-height: 4rem;
+    /* 64px - navigation bar height */
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
 }
 
 @layer components {
-  .card-base { @apply bg-white border border-border rounded-xl shadow-sm; }
-  .btn-primary { @apply inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity; }
-  .badge-base { @apply px-2 py-0.5 rounded text-xs font-bold border inline-flex items-center justify-center; }
+  .card-base {
+    @apply bg-white border border-border rounded-xl shadow-sm;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:opacity-90 transition-opacity;
+  }
+
+  .badge-base {
+    @apply px-2 py-0.5 rounded text-xs font-bold border inline-flex items-center justify-center;
+  }
+}
+
+/* Animations */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+/* Overlay animations - iOS-like smooth transitions */
+@keyframes overlay-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0.8;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes overlay-slide-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100%);
+    opacity: 0.8;
+  }
+}
+
+@keyframes overlay-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes content-fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* Smooth iOS-like spring easing */
+.animate-overlay-slide-in {
+  animation: overlay-slide-in 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-overlay-slide-out {
+  animation: overlay-slide-out 0.3s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+}
+
+.animate-overlay-fade-in {
+  animation: overlay-fade-in 0.3s ease-out forwards;
+}
+
+.animate-content-fade-in {
+  animation: content-fade-in 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.05s both;
+}
+
+/* Timetable block animations */
+@keyframes block-appear {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  to {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+
+.animate-block-appear {
+  animation: block-appear 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }

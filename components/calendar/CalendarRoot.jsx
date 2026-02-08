@@ -18,8 +18,7 @@ function CalendarContent() {
         {viewMode === "month" ? <MonthView /> : <WeekView />}
       </div>
 
-      {/* ✅ 이게 없으면 "과제 리스트/상세로 이동" UI가 아예 없음 */}
-      <DailyDetail />
+      {/* <DailyDetail /> */}
     </div>
   );
 }
@@ -27,7 +26,13 @@ function CalendarContent() {
 export function CalendarRoot({ tasks, title, onDateClick, height }) {
   return (
     <CalendarProvider tasks={tasks} title={title} onDateClick={onDateClick} height={height}>
-      <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col h-auto min-h-[50px] p-0 sm:p-5">
+      <div
+        className="rounded-b-xl shadow-md overflow-hidden flex flex-col h-auto min-h-[50px] p-0 sm:p-5 transition-colors duration-300"
+        style={{
+          backgroundColor: 'var(--calendar-bg)',
+          color: 'var(--calendar-text)'
+        }}
+      >
         <CalendarContent />
       </div>
     </CalendarProvider>

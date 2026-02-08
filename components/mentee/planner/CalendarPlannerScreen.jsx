@@ -7,6 +7,8 @@ import { CalendarRoot } from "@/components/calendar/CalendarRoot";
 import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
 import { fetchTasksByDate } from "@/lib/repositories/tasksRepo";
 
+import TimeTableContainer from "@/components/timetable/TimeTableContainer";
+
 export default function CalendarPlannerScreen() {
   const menteeId = useMemo(() => getMenteeIdFromStorage(), []);
   const [tasks, setTasks] = useState([]);
@@ -61,6 +63,18 @@ export default function CalendarPlannerScreen() {
 
       {/* viewMode는 CalendarHeader에서 바뀌는 구조라면 CalendarContext 쪽에 setViewMode 연결이 필요함.
           지금은 기본 week로만이라도 동작하게 해둠. */}
+      {/* 하단 영역: 좌측 = Task List, 우측 = TimeTable */}
+      <div className="flex-1 flex flex-row gap-2 px-2 pb-20 mt-4">
+        {/* 좌측: Task List Area */}
+        <div className="w-1/2 bg-white/50 rounded-2xl border border-white/20 p-4 min-h-[300px]">
+          <p className="text-slate-400 text-center mt-10">Task List Area</p>
+        </div>
+
+        {/* 우측: TimeTable */}
+        <div className="w-1/2 overflow-hidden relative">
+          <TimeTableContainer selectedDate={anchorDate} />
+        </div>
+      </div>
     </div>
   );
 }

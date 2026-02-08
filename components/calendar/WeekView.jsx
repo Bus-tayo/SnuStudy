@@ -35,13 +35,13 @@ export function WeekView() {
         overflow: 'hidden',
         perspective: '1200px',
         position: 'relative',
-        height: height,
+        height: 'auto',
         transition: 'height 0.3s ease',
       }}
     >
-      <CalendarWeekHeader />
 
-      <div style={{ position: 'relative', height: 'calc(100% - 40px)', width: '100%' }}>
+
+      <div style={{ position: 'relative', height: '100%', width: '100%' }}>
         <AnimatePresence mode="popLayout" custom={direction}>
           <motion.div
             key={format(currentDate, 'yyyy-w')}
@@ -51,7 +51,7 @@ export function WeekView() {
             animate="center"
             exit="exit"
             transition={{ type: 'tween', ease: 'easeInOut', duration: 0.35 }}
-            className="grid grid-cols-7 w-full h-full border-l border-t border-gray-200"
+            className="grid grid-cols-7 w-full"
             style={{ width: '100%' }}
           >
             {days.map((day) => (
