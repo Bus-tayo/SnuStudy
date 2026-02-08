@@ -2,6 +2,6 @@
   "/mentor/page": "app/mentor/page.js",
   "/login/page": "app/login/page.js",
   "/mentor/mentee/[menteeId]/page": "app/mentor/mentee/[menteeId]/page.js",
-  "/(mentee)/mentee/my/page": "app/(mentee)/mentee/my/page.js",
-  "/(mentee)/mentee/page": "app/(mentee)/mentee/page.js"
+  "/(mentee)/mentee/page": "app/(mentee)/mentee/page.js",
+  "/(mentee)/mentee/tasks/[taskId]/page": "app/(mentee)/mentee/tasks/[taskId]/page.js"
 }

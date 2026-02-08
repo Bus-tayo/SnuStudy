@@ -11,7 +11,7 @@ import {
 import { getAppUserIdFromStorage } from '@/lib/utils/appUser';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { Bell, CheckCheck, Inbox, Loader2 } from 'lucide-react';
+import { Bell, CheckCheck, Inbox, Loader2, X } from 'lucide-react';
 
 const TYPE_LABEL = {
   TASK_TODAY: '오늘의 할 일',
@@ -118,25 +118,39 @@ export default function NotificationCenter() {
     if (!open) return null;
 
     return (
-      <div className="fixed top-3 right-3 z-50 w-[94vw] max-w-[430px] shadow-2xl">
-        <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b">
+      <div className="fixed inset-0 z-50 flex items-start justify-end sm:justify-center px-3 sm:px-4 py-4 bg-black/20 backdrop-blur-sm">
+        <div className="w-full max-w-[430px] shadow-2xl rounded-2xl overflow-hidden border border-slate-200 bg-gradient-to-b from-white to-slate-50">
+          <div className="flex items-center justify-between px-4 py-3 border-b bg-white/70 backdrop-blur">
             <div className="flex items-center gap-2">
-              <Bell className="w-5 h-5 text-slate-700" />
-              <span className="text-sm font-semibold text-slate-800">알림함</span>
+              <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Bell className="w-5 h-5 text-primary" />
+              </div>
+              <div className="flex flex-col leading-tight">
+                <span className="text-sm font-semibold text-slate-900">알림함</span>
+                <span className="text-[11px] text-slate-500">실시간으로 새 소식을 받아보세요</span>
+              </div>
               {hasUnread ? (
-                <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                <span className="ml-1 text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
                   {unread} 새 알림
                 </span>
               ) : null}
             </div>
-            <button
-              onClick={handleMarkAll}
-              className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700"
-            >
-              <CheckCheck className="w-4 h-4" />
-              모두 읽음
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleMarkAll}
+                className="flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 px-2 py-1 rounded-lg hover:bg-slate-100 transition-colors"
+              >
+                <CheckCheck className="w-4 h-4" />
+                모두 읽음
+              </button>
+              <button
+                onClick={() => setOpen(false)}
+                aria-label="알림 닫기"
+                className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
           </div>
 
           <div className="max-h-[70vh] overflow-y-auto divide-y divide-slate-100">
