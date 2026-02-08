@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
 import { fetchTaskById } from "@/lib/repositories/taskDetailRepo";
-import { fetchTaskPdfMaterial } from "@/lib/repositories/taskMaterialsRepo";
+import { fetchTaskPdfMaterials } from "@/lib/repositories/taskMaterialsRepo";
 import { fetchTaskSubmissions, createTaskSubmission } from "@/lib/repositories/taskSubmissionsRepo";
 import { uploadTaskSubmissionImageJpg } from "@/lib/storage/taskSubmissionStorage";
 
@@ -36,7 +36,7 @@ export default function TaskDetailScreen({ taskId }) {
 
   const menteeId = useMemo(() => getMenteeIdFromStorage(), []);
   const [task, setTask] = useState(null);
-  const [pdf, setPdf] = useState(null);
+  const [pdfs, setPdfs] = useState([]);
   const [submissions, setSubmissions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -68,9 +68,9 @@ export default function TaskDetailScreen({ taskId }) {
           return;
         }
 
-        const [t, p, s, f, tags] = await Promise.all([
+        const [t, pList, s, f, tags] = await Promise.all([
           fetchTaskById({ taskId }),
-          fetchTaskPdfMaterial({ taskId }).catch(() => null),
+          fetchTaskPdfMaterials({ taskId }).catch(() => []),
           fetchTaskSubmissions({ taskId, menteeId }).catch(() => []),
           fetchTaskFeedback({ taskId }).catch(() => null),
           fetchAllTags().catch(() => []),
@@ -79,7 +79,7 @@ export default function TaskDetailScreen({ taskId }) {
         if (!alive) return;
 
         setTask(t);
-        setPdf(p);
+        setPdfs(pList);
         setSubmissions(Array.isArray(s) ? s : []);
         setActiveIndex(0);
         setFeedback(f);
@@ -209,7 +209,7 @@ export default function TaskDetailScreen({ taskId }) {
       <div className="flex-1 overflow-y-auto px-4 pb-28 pt-3 space-y-4">
         {errMsg ? <div className="text-sm text-red-600">{errMsg}</div> : null}
 
-        <TaskPdfSection pdf={pdf} />
+        <TaskPdfSection pdfs={pdfs} />
 
         {/* ✅ 멘토 피드백 */}
         <div className="card-base p-3 space-y-2">
