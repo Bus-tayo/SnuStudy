@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { addWeeks, format, startOfWeek } from "date-fns";
 
+import SubjectProgressCards from "@/components/mentee/my/SubjectProgressCards";
+
 import {
   getAuthSession,
   resolveAppUserFromSession,
@@ -154,6 +156,14 @@ export default function MenteeWeeklyDetail({ menteeId }) {
       <header className="px-4 py-3 border-b border-border">
         <div className="text-xs text-foreground/60">{weekLabel}</div>
         <div className="text-lg font-extrabold">{mentee.name} 주간 기록</div>
+        <div className="mt-4">
+          <SubjectProgressCards
+            menteeId={menteeId}
+            onClickSubject={(subject) => {
+              router.push(`/mentor/mentee/${menteeId}/feedback/${subject}`);
+            }}
+          />
+        </div>
       </header>
 
       <main className="flex-1 p-4 space-y-4">
@@ -302,8 +312,8 @@ function StatusDot({ status }) {
     status === "DONE"
       ? "bg-primary"
       : status === "WORKING"
-      ? "bg-secondary"
-      : "bg-muted";
+        ? "bg-secondary"
+        : "bg-muted";
   return <span className={`w-2.5 h-2.5 rounded-full ${cls}`} />;
 }
 
