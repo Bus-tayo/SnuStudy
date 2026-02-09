@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import PlannerHeader from './PlannerHeader';
@@ -23,8 +23,10 @@ export default function PlannerScreen() {
   const [errorMsg, setErrorMsg] = useState('');
 
   const [headerNote, setHeaderNote] = useState('');
-  const [tasks, setTasks] = useState([]);
+
+  const [tasksForDay, setTasksForDay] = useState([]);
   const [secondsByTaskId, setSecondsByTaskId] = useState(new Map());
+  const [isTaskListLoading, setIsTaskListLoading] = useState(false);
 
   const inflightRef = useRef(0);
 
@@ -38,42 +40,38 @@ export default function PlannerScreen() {
     setBootstrapped(true);
   }, [router]);
 
+  async function loadTasks(date, mid) {
+    const t = await fetchTasksByDate({ menteeId: mid, date }).catch(() => []);
+    const ids = t.map((x) => x.id);
+    const logs =
+      ids.length > 0
+        ? await fetchTimeLogsForTasksInDay({ taskIds: ids, date }).catch(() => [])
+        : [];
+    return { tasks: t, secondsByTaskId: sumSecondsByTaskId(logs) };
+  }
+
   async function reloadAll(date, mid) {
     const ticket = ++inflightRef.current;
+    setIsTaskListLoading(true);
+
     try {
-      const planner = await fetchDailyPlanner({ menteeId: mid, date });
+      const [planner, dayBundle] = await Promise.all([
+        fetchDailyPlanner({ menteeId: mid, date }),
+        loadTasks(date, mid),
+      ]);
+
       if (inflightRef.current !== ticket) return;
+
       setHeaderNote(planner?.header_note ?? '');
-
-      const t = await fetchTasksByDate({ menteeId: mid, date });
-      if (inflightRef.current !== ticket) return;
-      setTasks(t);
-
-      const ids = t.map((x) => x.id);
-      const logs = await fetchTimeLogsForTasksInDay({ taskIds: ids, date });
-      if (inflightRef.current !== ticket) return;
-      setSecondsByTaskId(sumSecondsByTaskId(logs));
-
+      setTasksForDay(dayBundle.tasks);
+      setSecondsByTaskId(dayBundle.secondsByTaskId);
       setErrorMsg('');
     } catch (e) {
       console.error('[PlannerScreen/reloadAll]', e);
+      if (inflightRef.current !== ticket) return;
       setErrorMsg(e?.message ?? '플래너 데이터를 불러오지 못했습니다.');
-    }
-  }
-
-  async function handleDeleteSelectedTasks(taskIds) {
-    if (!taskIds || taskIds.length === 0) return;
-    
-    if (!confirm(`${taskIds.length}개의 할 일을 삭제하시겠습니까?`)) return;
-
-    try {
-      // API 호출 (여러 ID를 배열로 받아 처리한다고 가정)
-      await deleteTasks(taskIds); 
-      // 삭제 후 데이터 갱신
-      await reloadAll(selectedDate, menteeId);
-    } catch (e) {
-      console.error('[PlannerScreen/handleDeleteSelectedTasks]', e);
-      alert('삭제 중 오류가 발생했습니다.');
+    } finally {
+      if (inflightRef.current === ticket) setIsTaskListLoading(false);
     }
   }
 
@@ -87,8 +85,7 @@ export default function PlannerScreen() {
   if (!bootstrapped || !menteeId) return null;
 
   return (
-    <div className="flex flex-col gap-4 px-4 py-4">
-      
+    <div className="w-full overflow-x-hidden flex flex-col gap-4 px-4 py-4">
       <PlannerHeader
         menteeId={menteeId}
         mentorId={MENTOR_ID}
@@ -101,16 +98,19 @@ export default function PlannerScreen() {
 
       <WeekMiniCalendar selectedDate={selectedDate} onSelectDate={setSelectedDate} />
 
-      <TaskChecklist
-        menteeId={menteeId}
-        mentorId={MENTOR_ID}
-        date={selectedDate}
-        tasks={tasks}
-        secondsByTaskId={secondsByTaskId}
-        onMutated={() => reloadAll(selectedDate, menteeId)}
-        // 삭제 함수를 props로 전달
-        onDeleteTasks={handleDeleteSelectedTasks} 
-      />
+      <div className="w-full min-w-0 overflow-x-hidden bg-white/50 rounded-2xl border border-white/20 p-4">
+        <TaskChecklist
+          menteeId={menteeId}
+          date={selectedDate}
+          tasks={tasksForDay}
+          secondsByTaskId={secondsByTaskId}
+          onMutated={() => reloadAll(selectedDate, menteeId)}
+          mode="manage"
+          title="할 일 관리"
+          comment={headerNote}
+          loading={isTaskListLoading}
+        />
+      </div>
     </div>
   );
 }

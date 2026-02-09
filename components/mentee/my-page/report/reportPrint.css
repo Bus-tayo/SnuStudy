@@ -1,0 +1,411 @@
+.report-pages-host{
+  position: fixed;
+  left: -100000px;
+  top: 0;
+  width: 794px;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.report-page{
+  width: 794px;
+  height: 1123px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0b1220;
+  box-sizing: border-box;
+  padding: 42px 48px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic", sans-serif;
+}
+
+.report-bg{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(520px 260px at 15% 0%, rgba(124,58,237,.16), transparent 60%),
+    radial-gradient(520px 260px at 95% 10%, rgba(34,197,94,.12), transparent 60%),
+    rgba(15,23,42,.02);
+  z-index:0;
+}
+
+.report-watermark{
+  position:absolute;
+  right: -30px;
+  top: 78px;
+  transform: rotate(18deg);
+  font-size: 54px;
+  font-weight: 1000;
+  letter-spacing: -2px;
+  color: rgba(15,23,42,.05);
+  user-select:none;
+  pointer-events:none;
+  white-space:nowrap;
+  z-index:0;
+}
+
+.report-top{
+  position: relative;
+  z-index: 2;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(15,23,42,.10);
+}
+
+.report-brand{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+}
+
+.report-logo{
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(124,58,237,.95), rgba(34,197,94,.85));
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.7);
+}
+
+.report-meta{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.report-meta .name{
+  font-weight: 900;
+  letter-spacing: -0.3px;
+  font-size: 14px;
+}
+
+.report-meta .tag{
+  font-size: 11px;
+  color: rgba(15,23,42,.65);
+}
+
+.report-docmeta{
+  text-align:right;
+  display:flex;
+  flex-direction:column;
+  gap: 4px;
+  font-size: 11px;
+  color: rgba(15,23,42,.65);
+}
+
+.report-pill{
+  display:inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(124,58,237,.10);
+  color: rgba(88,28,135,.95);
+  font-weight: 800;
+  align-self:flex-end;
+}
+
+.report-title{
+  position: relative;
+  z-index: 2;
+  margin-top: 14px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap: 14px;
+}
+
+.report-title h1{
+  margin:0;
+  font-size: 22px;
+  letter-spacing: -0.6px;
+  line-height: 1.1;
+}
+
+.report-title .sub{
+  margin-top: 6px;
+  font-size: 12px;
+  color: rgba(15,23,42,.65);
+  max-width: 520px;
+}
+
+.report-badges{
+  display:flex;
+  gap: 6px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.report-badge{
+  font-size: 10px;
+  font-weight: 800;
+  padding: 5px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(15,23,42,.12);
+  background: rgba(15,23,42,.03);
+  color: rgba(15,23,42,.78);
+}
+
+.report-badge.primary{
+  background: rgba(124,58,237,.10);
+  color: rgba(88,28,135,.95);
+  border-color: rgba(124,58,237,.18);
+}
+
+.report-badge.green{
+  background: rgba(34,197,94,.10);
+  color: rgba(20,83,45,.95);
+  border-color: rgba(34,197,94,.18);
+}
+
+/* 프로필 row */
+.report-profileRow{
+  position: relative;
+  z-index: 2;
+  margin-top: 14px;
+  display:grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 12px;
+}
+
+.report-profileCard{
+  display:flex;
+  gap: 12px;
+  align-items:center;
+  border: 1px solid rgba(15,23,42,.10);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(255,255,255,.55);
+}
+
+.report-avatar{
+  width: 46px;
+  height: 46px;
+  border-radius: 16px;
+  overflow:hidden;
+  flex: 0 0 auto;
+  border: 1px solid rgba(15,23,42,.10);
+  background: rgba(15,23,42,.04);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.report-avatar img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  display:block;
+}
+
+.report-avatarFallback{
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  background: rgba(124,58,237,.25);
+}
+
+.report-profileMeta{
+  display:flex;
+  flex-direction:column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.report-profileName{
+  font-size: 14px;
+  font-weight: 1000;
+  letter-spacing: -0.3px;
+  color: rgba(15,23,42,.86);
+}
+
+.report-profileSub{
+  font-size: 11px;
+  color: rgba(15,23,42,.62);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.report-kpiCard{
+  border: 1px solid rgba(15,23,42,.10);
+  border-radius: 16px;
+  padding: 12px;
+  background: rgba(255,255,255,.55);
+}
+
+.report-kpiGrid{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.report-kpiItem .label{
+  font-size: 10.5px;
+  font-weight: 900;
+  color: rgba(15,23,42,.70);
+}
+
+.report-kpiItem .value{
+  font-size: 16px;
+  font-weight: 1000;
+  letter-spacing: -0.6px;
+  margin-top: 2px;
+}
+
+.report-kpiItem .hint{
+  font-size: 10px;
+  color: rgba(15,23,42,.55);
+  margin-top: 2px;
+}
+
+/* 본문 grid */
+.report-grid{
+  position: relative;
+  z-index: 2;
+  margin-top: 12px;
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.report-card{
+  border: 1px solid rgba(15,23,42,.10);
+  border-radius: 14px;
+  padding: 12px;
+  background: linear-gradient(180deg, rgba(15,23,42,.02), rgba(15,23,42,.01));
+}
+
+.report-card h2{
+  margin:0 0 8px 0;
+  font-size: 12px;
+  letter-spacing: -0.2px;
+  color: rgba(15,23,42,.82);
+}
+
+.report-card p{
+  margin:0;
+  font-size: 11px;
+  line-height: 1.55;
+  color: rgba(15,23,42,.70);
+}
+
+.report-twoCol{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.report-miniTitle{
+  font-size: 10.5px;
+  font-weight: 900;
+  color: rgba(15,23,42,.70);
+  margin-bottom: 6px;
+}
+
+.report-list{
+  margin:0;
+  padding-left: 16px;
+  font-size: 10.8px;
+  color: rgba(15,23,42,.70);
+  line-height: 1.5;
+}
+
+.report-chart{
+  height: 210px;
+  border-radius: 12px;
+  border: 1px solid rgba(15,23,42,.10);
+  background: rgba(255,255,255,.55);
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.report-chart img{
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display:block;
+}
+
+/* rank table */
+.report-table{
+  width:100%;
+  border-collapse: collapse;
+  font-size: 10.5px;
+  border-radius: 12px;
+  overflow:hidden;
+  border: 1px solid rgba(15,23,42,.10);
+}
+
+.report-table th,
+.report-table td{
+  padding: 8px 8px;
+  border-bottom: 1px solid rgba(15,23,42,.08);
+  text-align:left;
+  color: rgba(15,23,42,.72);
+}
+
+.report-table th{
+  font-weight: 900;
+  color: rgba(15,23,42,.82);
+  background: rgba(15,23,42,.03);
+}
+
+.report-tier{
+  display:inline-block;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-weight: 900;
+  border: 1px solid rgba(15,23,42,.10);
+  background: rgba(15,23,42,.03);
+  color: rgba(15,23,42,.78);
+}
+
+.report-tier.다이아{
+  background: rgba(124,58,237,.10);
+  border-color: rgba(124,58,237,.18);
+  color: rgba(88,28,135,.95);
+}
+
+.report-tier.플래티넘{
+  background: rgba(34,197,94,.10);
+  border-color: rgba(34,197,94,.18);
+  color: rgba(20,83,45,.95);
+}
+
+.report-tier.골드{
+  background: rgba(234,179,8,.14);
+  border-color: rgba(234,179,8,.24);
+  color: rgba(133,77,14,.95);
+}
+
+.report-tier.실버{
+  background: rgba(100,116,139,.12);
+  border-color: rgba(100,116,139,.22);
+  color: rgba(51,65,85,.95);
+}
+
+.report-tier.브론즈{
+  background: rgba(180,83,9,.12);
+  border-color: rgba(180,83,9,.22);
+  color: rgba(120,53,15,.95);
+}
+
+.report-footer{
+  position:absolute;
+  left: 48px;
+  right: 48px;
+  bottom: 28px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(15,23,42,.10);
+  font-size: 10px;
+  color: rgba(15,23,42,.55);
+  z-index:2;
+}

@@ -82,59 +82,7 @@ export default function CalendarTestPage() {
                     onDateClick={(date) => setSelectedDate(date)}
                 />
 
-                {/* 5. External Task List (with padding) */}
-                <div className="mt-8 px-8">
-                    <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-xl font-bold text-slate-700 m-0">
-                            Tasks for {format(selectedDate, 'yyyy-MM-dd')}
-                        </h3>
-                        <button
-                            onClick={addTask}
-                            className="px-4 py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors"
-                        >
-                            + Add Task
-                        </button>
-                    </div>
 
-                    {activeTasks.length > 0 ? (
-                        <div className="flex flex-col gap-3">
-                            {activeTasks.map(task => (
-                                <div key={task.id} className={`
-                                    p-4 bg-white rounded-xl shadow-sm flex items-center gap-4 border-l-4
-                                    ${task.isCompleted ? 'border-green-500' : 'border-blue-500'}
-                                `}>
-                                    <input
-                                        type="checkbox"
-                                        checked={task.isCompleted}
-                                        readOnly
-                                        className="w-5 h-5 accent-blue-500"
-                                    />
-                                    <div className="flex-1">
-                                        <div className="font-semibold text-slate-800">{task.content}</div>
-                                        <div className="text-sm text-slate-500 mt-0.5">
-                                            {task.category}
-                                        </div>
-                                        {task.feedback && (
-                                            <div className="mt-2 text-sm bg-green-50 p-2 rounded-md text-green-800">
-                                                💡 {task.feedback}
-                                            </div>
-                                        )}
-                                    </div>
-                                    <button
-                                        onClick={() => deleteTask(task.id)}
-                                        className="px-3 py-1.5 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition-colors"
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="p-8 text-center text-slate-400 bg-white rounded-xl border-2 border-dashed border-slate-200">
-                            No tasks scheduled for this day.
-                        </div>
-                    )}
-                </div>
             </div>
         </main >
     );
