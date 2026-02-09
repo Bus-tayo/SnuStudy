@@ -128,11 +128,6 @@ export default function NotificationCenter() {
                   <span className="text-sm font-semibold text-slate-900">알림함</span>
                   <span className="text-[11px] text-slate-500">실시간으로 새 소식을 받아보세요</span>
                 </div>
-                {hasUnread ? (
-                  <span className="ml-1 text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                    {unread} 새 알림
-                  </span>
-                ) : null}
               </div>
               <div className="flex items-center gap-2">
                 <button
@@ -198,7 +193,7 @@ export default function NotificationCenter() {
         </div>
       </div>
     );
-  }, [open, list, unread, loading, hasUnread]);
+  }, [open, list, unread, loading]);
 
   if (!userId) return null;
 
