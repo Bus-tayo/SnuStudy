@@ -1,72 +1,297 @@
-[00:00:01.834] Server  LOG     ✓ Ready in 1458ms
-[00:00:06.668] Server  LOG     ○ Compiling /mentee ...
-[00:00:13.049] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:13.561] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+[00:00:05.967] Server  LOG     ✓ Ready in 5s
+[00:01:38.158] Server  LOG     ○ Compiling / ...
+[00:01:50.403] Server  LOG     ○ Compiling /mentee ...
+[00:02:02.984] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:02:04.757] Browser ERROR   {"__isAuthError":true,"code":"refresh_token_not_found","name":"AuthApiError","status":400}
+[00:02:36.028] Server  LOG     ○ Compiling /mentee/feedback ...
+[00:36:06.853] Server  WARN    ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+[00:36:14.303] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:36:16.665] Browser ERROR   [NotificationCenter] 초기화 실패 {"code":"","details":"TypeError: Failed to fetch\n    at eval (webpack-internal:///(app-pages-browser)/./node_modules/@supabase/supabase-js/dist/index.mjs:157:22)\n    at eval (webpack-internal:///(app-pages-browser)/./node_modules/@supabase/supabase-js/dist/index.mjs:171:10)\n    at async fetchNotifications (webpack-internal:///(app-pages-browser)/./lib/repositories/notificationsRepo.js:15:29)\n    at async Promise.all (index 0)\n    at async bootstrap (webpack-internal:///(app-pages-browser)/./components/notifications/NotificationCenter.jsx:66:52)","hint":"","message":"TypeError: Failed to fetch"}
+[00:38:12.971] Server  LOG     ○ Compiling /mentee/tasks/[taskId] ...
+[00:44:54.043] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:44:54.050] Browser ERROR   uncaughtError: Error: The `style` prop expects a mapping from style properties to values, not a string. For example, style={{marginRight: spacing + 'em'}} when using JSX.
+[00:44:55.921] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:44:56.496] Browser ERROR   uncaughtError: Error: The `style` prop expects a mapping from style properties to values, not a string. For example, style={{marginRight: spacing + 'em'}} when using JSX.
+[00:45:03.482] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:45:04.418] Browser ERROR   uncaughtError: Error: The `style` prop expects a mapping from style properties to values, not a string. For example, style={{marginRight: spacing + 'em'}} when using JSX.
+[00:45:33.478] Browser ERROR   ./components/mentee/my/MyPageScreen.jsx
+Error:   × Expected '</', got 'ident'
+    ╭─[C:\Users\owner\Documents\대2\dev\components\mentee\my\MyPageScreen.jsx:20:1]
+ 17 │       <HeatmapCalendar />
+ 18 │ 
+ 19 │       <FloatingConsultButton />
+ 20 │       <div style={{height:15px;}}></div>
+    ·                             ──
+ 21 │     </div>
+ 22 │   );
+ 22 │ }
+    ╰────
 
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
+Caused by:
+    Syntax Error
 
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+./app/(mentee)/mentee/my/page.js
+[00:45:35.492] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:45:39.947] Browser ERROR   ./components/mentee/my/MyPageScreen.jsx
+Error:   × Expected '</', got 'ident'
+    ╭─[C:\Users\owner\Documents\대2\dev\components\mentee\my\MyPageScreen.jsx:20:1]
+ 17 │       <HeatmapCalendar />
+ 18 │ 
+ 19 │       <FloatingConsultButton />
+ 20 │       <div style={{height:15px;}}></div>
+    ·                             ──
+ 21 │     </div>
+ 22 │   );
+ 22 │ }
+    ╰────
 
-%s%s https://react.dev/link/hydration-mismatch 
+Caused by:
+    Syntax Error
 
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/mentee" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html
-                          lang="ko"
--                         style={{--vsc-domain:"\"localhost\""}}
-                        >
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+./app/(mentee)/mentee/my/page.js
+[00:45:41.330] Browser ERROR   ./components/mentee/my/MyPageScreen.jsx
+Error:   × Expected '</', got 'ident'
+    ╭─[C:\Users\owner\Documents\대2\dev\components\mentee\my\MyPageScreen.jsx:20:1]
+ 17 │       <HeatmapCalendar />
+ 18 │ 
+ 19 │       <FloatingConsultButton />
+ 20 │       <div style={{height:15px,}}></div>
+    ·                             ──
+ 21 │     </div>
+ 22 │   );
+ 22 │ }
+    ╰────
 
-[00:00:13.630] Browser ERROR   A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+Caused by:
+    Syntax Error
 
-- A server/client branch `if (typeof window !== 'undefined')`.
-- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
-- Date formatting in a user's locale which doesn't match the server.
-- External changing data without sending a snapshot of it along with the HTML.
-- Invalid HTML tag nesting.
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+./app/(mentee)/mentee/my/page.js
+[00:45:42.023] Server  ERROR   ⨯ ./components/mentee/my/MyPageScreen.jsx
+Error:   × Expected '</', got 'ident'
+    ╭─[C:\Users\owner\Documents\대2\dev\components\mentee\my\MyPageScreen.jsx:20:1]
+ 17 │       <HeatmapCalendar />
+ 18 │ 
+ 19 │       <FloatingConsultButton />
+ 20 │       <div style={{height:15px,}}></div>
+    ·                             ──
+ 21 │     </div>
+ 22 │   );
+ 22 │ }
+    ╰────
 
-It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+Caused by:
+    Syntax Error
 
-%s%s https://react.dev/link/hydration-mismatch 
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+./app/(mentee)/mentee/my/page.js
+[00:45:45.216] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:45:47.731] Server  LOG     ○ Compiling /_error ...
+[00:45:48.922] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:45:50.496] Browser ERROR   ./components/mentee/my/MyPageScreen.jsx
+Error:   × Expected '</', got 'ident'
+    ╭─[C:\Users\owner\Documents\대2\dev\components\mentee\my\MyPageScreen.jsx:20:1]
+ 17 │       <HeatmapCalendar />
+ 18 │ 
+ 19 │       <FloatingConsultButton />
+ 20 │       <div style={{height:15px,}}></div>
+    ·                             ──
+ 21 │     </div>
+ 22 │   );
+ 22 │ }
+    ╰────
 
-  ...
-    <HotReload globalError={[...]} webSocket={WebSocket} staticIndicatorState={{pathname:null, ...}}>
-      <AppDevOverlayErrorBoundary globalError={[...]}>
-        <ReplaySsrOnlyErrors>
-        <DevRootHTTPAccessFallbackBoundary>
-          <HTTPAccessFallbackBoundary notFound={<NotAllowedRootHTTPFallbackError>}>
-            <HTTPAccessFallbackErrorBoundary pathname="/login" notFound={<NotAllowedRootHTTPFallbackError>} ...>
-              <RedirectBoundary>
-                <RedirectErrorBoundary router={{...}}>
-                  <Head>
-                  <__next_root_layout_boundary__>
-                    <SegmentViewNode type="layout" pagePath="layout.js">
-                      <SegmentTrieNode>
-                      <link>
-                      <RootLayout>
-                        <html lang="ko">
-                          <body
--                           style={{overflow-x:"auto",overflow-y:"auto"}}
-                          >
-                  ...
+Caused by:
+    Syntax Error
 
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+./app/(mentee)/mentee/my/page.js
+[00:45:52.055] Browser ERROR   ./components/mentee/my/MyPageScreen.jsx
+Error:   × Expected '</', got 'ident'
+    ╭─[C:\Users\owner\Documents\대2\dev\components\mentee\my\MyPageScreen.jsx:20:1]
+ 17 │       <HeatmapCalendar />
+ 18 │ 
+ 19 │       <FloatingConsultButton />
+ 20 │       <div style={{height:15px,}}></div>
+    ·                             ──
+ 21 │     </div>
+ 22 │   );
+ 22 │ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+./app/(mentee)/mentee/my/page.js
+[00:45:52.333] Server  ERROR   ⨯ ./components/mentee/my/MyPageScreen.jsx
+Error:   × Expected '</', got 'ident'
+    ╭─[C:\Users\owner\Documents\대2\dev\components\mentee\my\MyPageScreen.jsx:20:1]
+ 17 │       <HeatmapCalendar />
+ 18 │ 
+ 19 │       <FloatingConsultButton />
+ 20 │       <div style={{height:15px,}}></div>
+    ·                             ──
+ 21 │     </div>
+ 22 │   );
+ 22 │ }
+    ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+./app/(mentee)/mentee/my/page.js
+[00:45:57.631] Browser ERROR   uncaughtError: ModuleBuildError: Module build failed (from ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js):
+Error:   × Expected '</', got 'ident'
+    ╭─[C:\Users\owner\Documents\대2\dev\components\mentee\my\MyPageScreen.jsx:20:1]
+ 17 │       <HeatmapCalendar />
+ 18 │ 
+ 19 │       <FloatingConsultButton />
+ 20 │       <div style={{height:15px,}}></div>
+    ·                             ──
+ 21 │     </div>
+ 22 │   );
+ 22 │ }
+    ╰────
+
+
+Caused by:
+    Syntax Error
+[00:45:58.671] Browser ERROR   ./components/mentee/my/MyPageScreen.jsx
+Error:   × Expected '</', got 'ident'
+    ╭─[C:\Users\owner\Documents\대2\dev\components\mentee\my\MyPageScreen.jsx:20:1]
+ 17 │       <HeatmapCalendar />
+ 18 │ 
+ 19 │       <FloatingConsultButton />
+ 20 │       <div style={{height:15px,}}></div>
+    ·                             ──
+ 21 │     </div>
+ 22 │   );
+ 22 │ }
+    ╰────
+
+Caused by:
+    Syntax Error
+[00:46:40.510] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:46:40.940] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:46:49.234] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:46:58.448] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:07:23.067] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:10:11.898] Server  LOG     ○ Compiling /_not-found ...
+[01:10:18.542] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:10:20.503] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:16:30.670] Browser WARN    ./components/mentee/streak/StreakBanner.jsx
+Attempted import error: 'recalcUserStreak' is not exported from '@/lib/repositories/tasksRepo' (imported as 'recalcUserStreak').
+
+Import trace for requested module:
+./components/mentee/streak/StreakBanner.jsx
+./components/mentee/my/MyPageScreen.jsx
+[01:16:30.925] Server  WARN    ⚠ ./components/mentee/streak/StreakBanner.jsx
+Attempted import error: 'recalcUserStreak' is not exported from '@/lib/repositories/tasksRepo' (imported as 'recalcUserStreak').
+
+Import trace for requested module:
+./components/mentee/streak/StreakBanner.jsx
+./components/mentee/my/MyPageScreen.jsx
+
+./components/mentee/streak/StreakBanner.jsx
+Attempted import error: 'recalcUserStreak' is not exported from '@/lib/repositories/tasksRepo' (imported as 'recalcUserStreak').
+
+Import trace for requested module:
+./components/mentee/streak/StreakBanner.jsx
+./components/mentee/my/MyPageScreen.jsx
+[01:16:31.651] Browser WARN    ./components/mentee/streak/StreakBanner.jsx
+Attempted import error: 'recalcUserStreak' is not exported from '@/lib/repositories/tasksRepo' (imported as 'recalcUserStreak').
+
+Import trace for requested module:
+./components/mentee/streak/StreakBanner.jsx
+./components/mentee/my/MyPageScreen.jsx
+[01:42:29.928] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:56:55.025] Browser ERROR   Error adding study session: {"code":"22001","details":null,"hint":null,"message":"value too long for type character varying(7)"}
+[01:56:55.025] Browser ERROR   {"code":"22001","details":null,"hint":null,"message":"value too long for type character varying(7)"}
+[01:58:31.752] Browser ERROR   Error adding study session: {"code":"22001","details":null,"hint":null,"message":"value too long for type character varying(7)"}
+[01:58:31.752] Browser ERROR   {"code":"22001","details":null,"hint":null,"message":"value too long for type character varying(7)"}
+[02:05:42.471] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:14:41.976] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:21:12.248] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:24:12.849] Browser ERROR   ./components/timetable/TimeTableOverlay.jsx
+Error:   × Expected '</', got '<eof>'
+     ╭─[C:\Users\owner\Documents\대2\dev\components\timetable\TimeTableOverlay.jsx:125:37]
+ 123 │                         <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: bg }} />
+ 124 │                         <div className="flex-1 min-w-0">
+ 125 │                           <div cla
+     ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/timetable/TimeTableOverlay.jsx
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[02:30:10.899] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:41:34.998] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:44:49.842] Browser WARN    ./components/timetable/StudyInputModal.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/StudyInputModal.jsx
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[02:44:49.842] Browser WARN    ./components/timetable/StudyInputModal.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/StudyInputModal.jsx
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[02:44:49.842] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[02:44:49.842] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[02:44:50.572] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[02:44:50.573] Browser ERROR   uncaughtError: Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+
+Check the render method of `TimeTableContainer`.
+[02:45:00.452] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[02:45:06.689] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[03:11:39.276] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[03:11:54.368] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[03:16:21.719] Browser ERROR   ./components/timetable/TimeTableOverlay.jsx
+Module parse failed: Shorthand property assignments are valid only in destructuring patterns (399:45)
+|                                 /*#__PURE__*/ _jsxDEV("div", {
+|                                     style: {
+>                                         width="64px"
+|                                     }
+|                                 }, void 0, false, {
+
+Import trace for requested module:
+./components/timetable/TimeTableOverlay.jsx
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[03:22:00.689] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[03:57:31.269] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[04:07:55.654] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold

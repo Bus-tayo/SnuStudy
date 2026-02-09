@@ -75,9 +75,7 @@ export default function NotificationCenter() {
       },
       onUpdate: (row) => {
         setList((prev) => prev.map((n) => (n.id === row.id ? row : n)));
-        if (row.is_read) {
-          setUnread((prev) => Math.max(0, prev - 1));
-        }
+        if (row.is_read) setUnread((prev) => Math.max(0, prev - 1));
       },
       onDelete: (row) => {
         setList((prev) => prev.filter((n) => n.id !== row.id));
@@ -118,84 +116,84 @@ export default function NotificationCenter() {
     if (!open) return null;
 
     return (
-      <div className="fixed inset-0 z-50 flex items-start justify-end sm:justify-center px-3 sm:px-4 py-4 bg-black/20 backdrop-blur-sm">
-        <div className="w-full max-w-[430px] shadow-2xl rounded-2xl overflow-hidden border border-slate-200 bg-gradient-to-b from-white to-slate-50">
-          <div className="flex items-center justify-between px-4 py-3 border-b bg-white/70 backdrop-blur">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Bell className="w-5 h-5 text-primary" />
+      <div className="fixed left-1/2 top-0 bottom-0 -translate-x-1/2 w-full max-w-[430px] z-[100]">
+        <div className="absolute inset-0 flex items-start justify-end sm:justify-center px-3 sm:px-4 py-4 bg-black/20 backdrop-blur-sm">
+          <div className="w-full max-w-[430px] shadow-2xl rounded-2xl overflow-hidden border border-slate-200 bg-gradient-to-b from-white to-slate-50">
+            <div className="flex items-center justify-between px-4 py-3 border-b bg-white/70 backdrop-blur">
+              <div className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Bell className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex flex-col leading-tight">
+                  <span className="text-sm font-semibold text-slate-900">알림함</span>
+                  <span className="text-[11px] text-slate-500">실시간으로 새 소식을 받아보세요</span>
+                </div>
+                {hasUnread ? (
+                  <span className="ml-1 text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                    {unread} 새 알림
+                  </span>
+                ) : null}
               </div>
-              <div className="flex flex-col leading-tight">
-                <span className="text-sm font-semibold text-slate-900">알림함</span>
-                <span className="text-[11px] text-slate-500">실시간으로 새 소식을 받아보세요</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleMarkAll}
+                  className="flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 px-2 py-1 rounded-lg hover:bg-slate-100 transition-colors"
+                >
+                  <CheckCheck className="w-4 h-4" />
+                  모두 읽음
+                </button>
+                <button
+                  onClick={() => setOpen(false)}
+                  aria-label="알림 닫기"
+                  className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
-              {hasUnread ? (
-                <span className="ml-1 text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">
-                  {unread} 새 알림
-                </span>
-              ) : null}
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handleMarkAll}
-                className="flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 px-2 py-1 rounded-lg hover:bg-slate-100 transition-colors"
-              >
-                <CheckCheck className="w-4 h-4" />
-                모두 읽음
-              </button>
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="알림 닫기"
-                className="p-2 rounded-lg hover:bg-slate-100 text-slate-500 hover:text-slate-800 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
 
-          <div className="max-h-[70vh] overflow-y-auto divide-y divide-slate-100">
-            {loading ? (
-              <div className="py-10 flex flex-col items-center justify-center text-sm text-slate-500 gap-2">
-                <Loader2 className="w-5 h-5 animate-spin" />
-                불러오는 중...
-              </div>
-            ) : list.length === 0 ? (
-              <div className="py-10 flex flex-col items-center justify-center text-sm text-slate-500 gap-2">
-                <Inbox className="w-6 h-6" />
-                아직 알림이 없습니다.
-              </div>
-            ) : (
-              list.map((n) => {
-                const badgeCls = TYPE_BADGE[n.type] ?? 'bg-slate-100 text-slate-600 border-slate-200';
-                const label = TYPE_LABEL[n.type] ?? n.type;
-                return (
-                  <button
-                    key={n.id}
-                    onClick={() => handleClickItem(n)}
-                    className={`w-full text-left px-4 py-3 transition-colors ${
-                      n.is_read ? 'bg-white' : 'bg-primary/5'
-                    } hover:bg-primary/10`}
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="mt-0.5">
-                        <div className={`text-[11px] font-semibold px-2 py-1 rounded-full border ${badgeCls}`}>
-                          {label}
+            <div className="max-h-[70vh] overflow-y-auto divide-y divide-slate-100">
+              {loading ? (
+                <div className="py-10 flex flex-col items-center justify-center text-sm text-slate-500 gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  불러오는 중...
+                </div>
+              ) : list.length === 0 ? (
+                <div className="py-10 flex flex-col items-center justify-center text-sm text-slate-500 gap-2">
+                  <Inbox className="w-6 h-6" />
+                  아직 알림이 없습니다.
+                </div>
+              ) : (
+                list.map((n) => {
+                  const badgeCls = TYPE_BADGE[n.type] ?? 'bg-slate-100 text-slate-600 border-slate-200';
+                  const label = TYPE_LABEL[n.type] ?? n.type;
+                  return (
+                    <button
+                      key={n.id}
+                      onClick={() => handleClickItem(n)}
+                      className={`w-full text-left px-4 py-3 transition-colors ${
+                        n.is_read ? 'bg-white' : 'bg-primary/5'
+                      } hover:bg-primary/10`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className="mt-0.5">
+                          <div className={`text-[11px] font-semibold px-2 py-1 rounded-full border ${badgeCls}`}>
+                            {label}
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <div className="text-sm font-semibold text-slate-900">{n.title}</div>
+                          <div className="text-xs text-slate-600 mt-1 whitespace-pre-wrap leading-relaxed">
+                            {n.body}
+                          </div>
+                          <div className="text-[11px] text-slate-400 mt-2">{fromNow(n.created_at)}</div>
                         </div>
                       </div>
-                      <div className="flex-1">
-                        <div className="text-sm font-semibold text-slate-900">{n.title}</div>
-                        <div className="text-xs text-slate-600 mt-1 whitespace-pre-wrap leading-relaxed">
-                          {n.body}
-                        </div>
-                        <div className="text-[11px] text-slate-400 mt-2">
-                          {fromNow(n.created_at)}
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                );
-              })
-            )}
+                    </button>
+                  );
+                })
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -206,20 +204,24 @@ export default function NotificationCenter() {
 
   return (
     <>
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
-        <button
-          onClick={() => setOpen((v) => !v)}
-          className="relative rounded-full bg-white shadow-md border border-slate-200 p-2 hover:shadow-lg transition-shadow"
-          aria-label="알림 보기"
-        >
-          <Bell className="w-6 h-6 text-slate-800" />
-          {hasUnread ? (
-            <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full bg-red-500 text-[10px] text-white font-bold flex items-center justify-center px-1">
-              {unread}
-            </span>
-          ) : null}
-        </button>
+      {/* ✅ 버튼: nav보다 “Y좌표로 위”에 고정 */}
+      <div className="fixed left-1/2 -translate-x-1/2 top-0 bottom-0 w-full max-w-[430px] z-[90] pointer-events-none">
+        <div className="absolute right-4 pointer-events-auto bottom-[calc(16px+env(safe-area-inset-bottom)+88px)]">
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="relative rounded-full bg-white shadow-md border border-slate-200 p-2 hover:shadow-lg transition-shadow"
+            aria-label="알림 보기"
+          >
+            <Bell className="w-6 h-6 text-slate-800" />
+            {hasUnread ? (
+              <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] rounded-full bg-red-500 text-[10px] text-white font-bold flex items-center justify-center px-1">
+                {unread}
+              </span>
+            ) : null}
+          </button>
+        </div>
       </div>
+
       {panel}
     </>
   );
