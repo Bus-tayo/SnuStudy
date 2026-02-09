@@ -5,44 +5,143 @@ import { X, Check, AlertCircle } from "lucide-react";
 
 const HEX7_RE = /^#([0-9A-Fa-f]{6})$/;
 
-const TOKEN_TO_CSS = {
-  KOR: "hsl(var(--subject-kor))",
-  MATH: "hsl(var(--subject-math))",
-  ENG: "hsl(var(--subject-eng))",
-  ETC: "hsl(var(--subject-etc))",
+const SUBJECT_TOKEN_TO_CSS_VAR = {
+  KOR: "--subject-kor",
+  MATH: "--subject-math",
+  ENG: "--subject-eng",
+  ETC: "--subject-etc",
 };
 
-const SUBJECT_COLORS = {
-  KOR: "#EF4444",
-  MATH: "#3B82F6",
-  ENG: "#22C55E",
-  ETC: "#6366F1",
-};
+function clamp01(x) {
+  return Math.min(1, Math.max(0, x));
+}
 
-const PRESET_COLORS = [
-  { name: "인디고", value: "#6366F1" },
-  { name: "파랑", value: "#3B82F6" },
-  { name: "청록", value: "#14B8A6" },
-  { name: "초록", value: "#22C55E" },
-  { name: "노랑", value: "#EAB308" },
-  { name: "주황", value: "#F97316" },
-  { name: "빨강", value: "#EF4444" },
-  { name: "분홍", value: "#EC4899" },
-  { name: "보라", value: "#A855F7" },
-  { name: "슬레이트", value: "#64748B" },
-];
+function hslToRgb(h, s, l) {
+  const hh = ((Number(h) % 360) + 360) % 360;
+  const ss = clamp01(Number(s) / 100);
+  const ll = clamp01(Number(l) / 100);
 
-function resolveCssColor(token, subject) {
-  if (typeof token === "string" && HEX7_RE.test(token)) return token;
-  if (typeof subject === "string" && HEX7_RE.test(subject)) return subject;
+  const c = (1 - Math.abs(2 * ll - 1)) * ss;
+  const x = c * (1 - Math.abs(((hh / 60) % 2) - 1));
+  const m = ll - c / 2;
 
-  if (token && TOKEN_TO_CSS[token]) return TOKEN_TO_CSS[token];
-  if (subject && TOKEN_TO_CSS[subject]) return TOKEN_TO_CSS[subject];
+  let r1 = 0;
+  let g1 = 0;
+  let b1 = 0;
 
-  if (typeof token === "string" && SUBJECT_COLORS[token]) return SUBJECT_COLORS[token];
-  if (typeof subject === "string" && SUBJECT_COLORS[subject]) return SUBJECT_COLORS[subject];
+  if (hh < 60) {
+    r1 = c;
+    g1 = x;
+  } else if (hh < 120) {
+    r1 = x;
+    g1 = c;
+  } else if (hh < 180) {
+    g1 = c;
+    b1 = x;
+  } else if (hh < 240) {
+    g1 = x;
+    b1 = c;
+  } else if (hh < 300) {
+    r1 = x;
+    b1 = c;
+  } else {
+    r1 = c;
+    b1 = x;
+  }
 
-  return SUBJECT_COLORS.ETC;
+  const r = Math.round((r1 + m) * 255);
+  const g = Math.round((g1 + m) * 255);
+  const b = Math.round((b1 + m) * 255);
+  return { r, g, b };
+}
+
+function rgbToHex7(r, g, b) {
+  const to2 = (n) => String(Math.max(0, Math.min(255, n)).toString(16)).padStart(2, "0");
+  return `#${to2(r)}${to2(g)}${to2(b)}`.toUpperCase();
+}
+
+function parseHslTriplet(str) {
+  if (!str) return null;
+  const s = String(str).trim();
+  const cleaned = s
+    .replace(/^hsl\(/i, "")
+    .replace(/\)$/g, "")
+    .replace(/\s*\/\s*/g, " ")
+    .replace(/,/g, " ")
+    .trim();
+
+  const parts = cleaned.split(/\s+/).filter(Boolean);
+  if (parts.length < 3) return null;
+
+  const h = Number(parts[0]);
+  const sPct = Number(String(parts[1]).replace("%", ""));
+  const lPct = Number(String(parts[2]).replace("%", ""));
+  if (!Number.isFinite(h) || !Number.isFinite(sPct) || !Number.isFinite(lPct)) return null;
+  return { h, s: sPct, l: lPct };
+}
+
+function cssVarToHex7(varName) {
+  if (typeof window === "undefined") return null;
+  if (!varName) return null;
+  const v = String(varName).trim();
+  const key = v.startsWith("--") ? v : `--${v}`;
+  const raw = window.getComputedStyle(document.documentElement).getPropertyValue(key);
+  const triplet = parseHslTriplet(raw);
+  if (!triplet) return null;
+  const { r, g, b } = hslToRgb(triplet.h, triplet.s, triplet.l);
+  return rgbToHex7(r, g, b);
+}
+
+function normalizeToHex7(value) {
+  if (!value) return null;
+  if (typeof value === "string" && HEX7_RE.test(value)) return value.toUpperCase();
+
+  const v = String(value).trim();
+
+  // subject/token (KOR/ENG/MATH/ETC) -> HEX
+  if (SUBJECT_TOKEN_TO_CSS_VAR[v]) {
+    return cssVarToHex7(SUBJECT_TOKEN_TO_CSS_VAR[v]);
+  }
+
+  // "hsl(var(--subject-kor))" / "var(--subject-kor)" / "--subject-kor" / "subject-kor" -> HEX
+  const varMatch = v.match(/var\(\s*(--[A-Za-z0-9_-]+)\s*\)/);
+  if (varMatch?.[1]) {
+    return cssVarToHex7(varMatch[1]);
+  }
+
+  if (v.startsWith("--")) {
+    return cssVarToHex7(v);
+  }
+
+  // raw triplet like "215 25% 47%"
+  const triplet = parseHslTriplet(v);
+  if (triplet) {
+    const { r, g, b } = hslToRgb(triplet.h, triplet.s, triplet.l);
+    return rgbToHex7(r, g, b);
+  }
+
+  return null;
+}
+
+function getPresetColors() {
+  // 반드시 theme.css(var(--...)) 기반으로 HEX를 만든다. (HSL/hsl() 절대 반환 안 함)
+  const list = [
+    { name: "국어", var: "--subject-kor" },
+    { name: "수학", var: "--subject-math" },
+    { name: "영어", var: "--subject-eng" },
+    { name: "기타", var: "--subject-etc" },
+    { name: "Primary", var: "--primary" },
+    { name: "Accent", var: "--accent" },
+  ];
+  return list
+    .map((x) => ({ name: x.name, value: cssVarToHex7(x.var) }))
+    .filter((x) => typeof x.value === "string" && HEX7_RE.test(x.value));
+}
+
+function resolveColorHex(token, subject) {
+  const direct = normalizeToHex7(token) || normalizeToHex7(subject);
+  if (direct) return direct;
+  return cssVarToHex7("--subject-etc") || "#000000";
 }
 
 export function StudyInputModal({
@@ -54,17 +153,28 @@ export function StudyInputModal({
   initialColor = null,
 }) {
   const [selectedTaskId, setSelectedTaskId] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[0].value);
+  const [presetColors, setPresetColors] = useState([]);
+  const [selectedColor, setSelectedColor] = useState(null);
+
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const presets = getPresetColors();
+    setPresetColors(presets);
+    if (!selectedColor && presets[0]?.value) setSelectedColor(presets[0].value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
 
   React.useEffect(() => {
     if (isOpen) {
       setSelectedTaskId(initialTaskId);
 
       if (initialColor) {
-        setSelectedColor(resolveCssColor(initialColor, null));
-      } else {
-        setSelectedColor(PRESET_COLORS[0].value);
+        setSelectedColor(resolveColorHex(initialColor, null));
+        return;
       }
+
+      const presets = getPresetColors();
+      if (presets[0]?.value) setSelectedColor(presets[0].value);
     }
   }, [isOpen, initialTaskId, initialColor]);
 
@@ -75,16 +185,17 @@ export function StudyInputModal({
     const task = tasks.find((t) => t.id === taskId);
 
     // 과목 자동색: legacy hex도 유지
-    const autoColor = resolveCssColor(task?.color, task?.subject);
+    const autoColor = resolveColorHex(task?.color, task?.subject);
     if (autoColor) setSelectedColor(autoColor);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedTaskId) return;
-    onConfirm(selectedTaskId, selectedColor);
+    const safeHex = resolveColorHex(selectedColor, null);
+    onConfirm(selectedTaskId, safeHex);
     setSelectedTaskId(null);
-    setSelectedColor(PRESET_COLORS[0].value);
+    setSelectedColor(presetColors[0]?.value || null);
   };
 
   return (
@@ -104,7 +215,7 @@ export function StudyInputModal({
             {tasks.length > 0 ? (
               tasks.map((task) => {
                 const isSelected = selectedTaskId === task.id;
-                const taskColor = resolveCssColor(task?.color, task?.subject);
+                const taskColor = resolveColorHex(task?.color, task?.subject);
 
                 return (
                   <button
@@ -113,7 +224,7 @@ export function StudyInputModal({
                     onClick={() => handleTaskSelect(task.id)}
                     className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
                       isSelected
-                        ? "border-indigo-500 bg-indigo-50"
+                        ? "border-[hsl(var(--primary))] bg-[hsl(var(--primary)/0.08)]"
                         : "border-slate-100 hover:border-slate-200 hover:bg-slate-50"
                     }`}
                   >
@@ -123,12 +234,12 @@ export function StudyInputModal({
                     />
                     <span
                       className={`flex-1 text-sm font-medium ${
-                        isSelected ? "text-indigo-700" : "text-slate-700"
+                        isSelected ? "text-[hsl(var(--primary))]" : "text-slate-700"
                       }`}
                     >
                       {task.title}
                     </span>
-                    {isSelected && <Check size={18} className="text-indigo-600" />}
+                    {isSelected && <Check size={18} className="text-[hsl(var(--primary))]" />}
                   </button>
                 );
               })
@@ -145,7 +256,7 @@ export function StudyInputModal({
             <div className="px-4 pb-2 space-y-2 border-t border-slate-100 pt-3">
               <label className="text-xs font-medium text-slate-500">색상 변경 (선택)</label>
               <div className="flex flex-wrap gap-1.5">
-                {PRESET_COLORS.map((color) => (
+                {presetColors.map((color) => (
                   <button
                     key={color.value}
                     type="button"
@@ -175,7 +286,7 @@ export function StudyInputModal({
               type="submit"
               disabled={!selectedTaskId}
               className="flex-1 py-3 text-white rounded-xl font-bold shadow-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-transform active:scale-95"
-              style={{ backgroundColor: resolveCssColor(selectedColor, null) }}
+              style={{ backgroundColor: resolveColorHex(selectedColor, null) }}
             >
               확인
             </button>
