@@ -118,7 +118,15 @@
 .animate-overlay-slide-out {
   animation: overlay-slide-out 0.3s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
 }
+/* 스크롤은 가능하지만 스크롤바는 숨김 */
+.scrollbar-hide {
+  -ms-overflow-style: none;   /* IE, Edge */
+  scrollbar-width: none;      /* Firefox */
+}
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;              /* Chrome, Safari */
+}
 .animate-overlay-fade-in {
   animation: overlay-fade-in 0.3s ease-out forwards;
 }

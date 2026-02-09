@@ -1,24 +1,33 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
 
 import { CalendarRoot } from "@/components/calendar/CalendarRoot";
 import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
 import { fetchTasksByDate } from "@/lib/repositories/tasksRepo";
+import { fetchTimeLogsForTasksInDay, sumSecondsByTaskId } from "@/lib/repositories/timeLogsRepo";
+import { fetchDailyPlanner } from "@/lib/repositories/plannerRepo";
 
+import TaskChecklist from "./TaskChecklist";
 import TimeTableContainer from "@/components/timetable/TimeTableContainer";
 
 export default function CalendarPlannerScreen() {
   const menteeId = useMemo(() => getMenteeIdFromStorage(), []);
-  const [tasks, setTasks] = useState([]);
-  const [viewMode, setViewMode] = useState("week"); // CalendarContext 기본이 week라 맞춤
+  const [tasksForCalendar, setTasksForCalendar] = useState([]);
+  const [tasksForDay, setTasksForDay] = useState([]);
+  const [secondsByTaskId, setSecondsByTaskId] = useState(new Map());
+  const [viewMode, setViewMode] = useState("week");
   const [anchorDate, setAnchorDate] = useState(new Date());
   const [err, setErr] = useState("");
 
-  async function loadRange(date, mode) {
-    if (!menteeId) return;
+  const [isTaskListLoading, setIsTaskListLoading] = useState(false);
+  const [todayComment, setTodayComment] = useState("");
 
+  const inflightRef = useRef(0);
+
+  async function loadRange(date, mode) {
+    if (!menteeId) return [];
     const start = mode === "month" ? startOfMonth(date) : startOfWeek(date);
     const end = mode === "month" ? endOfMonth(date) : endOfWeek(date);
     const days = eachDayOfInterval({ start, end });
@@ -26,55 +35,104 @@ export default function CalendarPlannerScreen() {
     const results = await Promise.all(
       days.map((d) => fetchTasksByDate({ menteeId, date: d }).catch(() => []))
     );
-
     return results.flat();
   }
 
+  async function loadDay(date) {
+    if (!menteeId) return { tasks: [], secondsByTaskId: new Map() };
+
+    const t = await fetchTasksByDate({ menteeId, date }).catch(() => []);
+    const ids = t.map((x) => x.id);
+
+    const logs =
+      ids.length > 0
+        ? await fetchTimeLogsForTasksInDay({ taskIds: ids, date }).catch(() => [])
+        : [];
+
+    return { tasks: t, secondsByTaskId: sumSecondsByTaskId(logs) };
+  }
+
+  async function reloadAll(date, mode) {
+    const ticket = ++inflightRef.current;
+
+    setIsTaskListLoading(true);
+    try {
+      setErr("");
+      if (!menteeId) return;
+
+      const [rangeTasks, dayBundle, planner] = await Promise.all([
+        loadRange(date, mode),
+        loadDay(date),
+        fetchDailyPlanner({ menteeId, date }).catch(() => null),
+      ]);
+
+      if (inflightRef.current !== ticket) return;
+
+      setTasksForCalendar(rangeTasks);
+      setTasksForDay(dayBundle.tasks);
+      setSecondsByTaskId(dayBundle.secondsByTaskId);
+      setTodayComment(planner?.header_note ?? "");
+    } catch (e) {
+      if (inflightRef.current !== ticket) return;
+      setErr(e?.message || "캘린더 데이터를 불러오지 못했습니다.");
+    } finally {
+      if (inflightRef.current === ticket) setIsTaskListLoading(false);
+    }
+  }
+
   useEffect(() => {
-    let alive = true;
-    (async () => {
-      try {
-        setErr("");
-        if (!menteeId) return;
-        const all = await loadRange(anchorDate, viewMode);
-        if (!alive) return;
-        setTasks(all);
-      } catch (e) {
-        if (!alive) return;
-        setErr(e?.message || "캘린더 데이터를 불러오지 못했습니다.");
-      }
-    })();
-    return () => { alive = false; };
+    if (!menteeId) return;
+    reloadAll(anchorDate, viewMode);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menteeId, anchorDate, viewMode]);
 
+  // ✅ 하단 고정 네비 높이(대략). “캘린더 아래~nav 위”를 딱 채우기 위해 뺌.
+  // 실제와 다르면 이 값만 조절하면 됨.
+  const NAV_PX = 96;
+
   return (
-    <div className="h-full">
+    <div
+      className="w-full overflow-hidden flex flex-col"
+      style={{ height: `calc(100dvh - ${NAV_PX}px - env(safe-area-inset-bottom))` }}
+    >
       {err ? <div className="p-4 text-sm text-red-600">{err}</div> : null}
 
-      <CalendarRoot
-        tasks={tasks}
-        title="플래너"
-        height={"420px"}
-        onDateClick={(d) => {
-          // 날짜 클릭 시: 일단 anchorDate를 그 날짜로 맞춰서 주간/월간 fetch 기준도 같이 자연스럽게 움직이게 함
-          setAnchorDate(d);
-        }}
-      />
-
-      {/* viewMode는 CalendarHeader에서 바뀌는 구조라면 CalendarContext 쪽에 setViewMode 연결이 필요함.
-          지금은 기본 week로만이라도 동작하게 해둠. */}
-      {/* 하단 영역: 좌측 = Task List, 우측 = TimeTable */}
-      <div className="flex-1 flex flex-row gap-2 px-2 pb-20 mt-4">
-        {/* 좌측: Task List Area */}
-        <div className="w-1/2 bg-white/50 rounded-2xl border border-white/20 p-4 min-h-[300px]">
-          <p className="text-slate-400 text-center mt-10">Task List Area</p>
-        </div>
-
-        {/* 우측: TimeTable */}
-        <div className="w-1/2 overflow-hidden relative">
-          <TimeTableContainer selectedDate={anchorDate} />
-        </div>
+      {/* 캘린더는 고정 높이(420px) */}
+      <div className="w-full overflow-x-hidden shrink-0">
+        <CalendarRoot
+          tasks={tasksForCalendar}
+          title="플래너"
+          height={"420px"}
+          onDateClick={(d) => setAnchorDate(d)}
+        />
       </div>
+
+      {/* ✅ 캘린더 아래 영역을 남은 높이로 딱 채움 */}
+      {/* ✅ 캘린더 아래 영역 */}
+<div className="mt-4 flex flex-1 min-h-0 w-full flex-row gap-2 px-2 overflow-hidden">
+  {/* ✅ 왼쪽: 할일목록은 스크롤 가능 */}
+  <div className="basis-0 flex-1 min-w-0 min-h-0 bg-white/50 rounded-2xl border border-white/20 p-4 overflow-hidden">
+    <div className="h-full min-h-0 overflow-y-auto pr-2 custom-scrollbar scrollbar-hide">
+      <TaskChecklist
+        menteeId={menteeId}
+        date={anchorDate}
+        tasks={tasksForDay}
+        secondsByTaskId={secondsByTaskId}
+        onMutated={() => reloadAll(anchorDate, viewMode)}
+        mode="view"
+        title="오늘의 할 일"
+        comment={todayComment}
+        loading={isTaskListLoading}
+      />
+    </div>
+  </div>
+
+  {/* ✅ 오른쪽: 타임테이블은 스크롤 없음(부모 높이를 꽉 채움) */}
+  <div className="basis-0 flex-1 min-w-0 min-h-0 overflow-hidden relative">
+    <TimeTableContainer selectedDate={anchorDate} />
+  </div>
+</div>
+
     </div>
   );
 }

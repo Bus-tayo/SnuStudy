@@ -17,6 +17,7 @@ export default function MyPageScreen() {
       <HeatmapCalendar />
 
       <FloatingConsultButton />
+      <div style={{height:'64px'}}></div>
     </div>
   );
 }

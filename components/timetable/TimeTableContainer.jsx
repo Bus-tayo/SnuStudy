@@ -6,285 +6,276 @@ import { TimeTableGrid } from "./TimeTableGrid";
 import { TimeTableOverlay } from "./TimeTableOverlay";
 import { StudyInputModal } from "./StudyInputModal";
 import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
-import { fetchStudySessions, addStudySession, deleteStudySession, updateStudySession } from "@/lib/repositories/studySessionsRepo";
+import {
+  fetchStudySessions,
+  addStudySession,
+  deleteStudySession,
+  updateStudySession,
+} from "@/lib/repositories/studySessionsRepo";
 import { fetchTasksByDate } from "@/lib/repositories/tasksRepo";
 import {
-    createIsoDateForPlannerTime,
-    dateToGridTime,
-    DEFAULT_STUDY_COLOR,
-    findTaskForSlot,
-    timeToMinutes,
-    adjustMinutesForPlannerDay
+  createIsoDateForPlannerTime,
+  dateToGridTime,
+  findTaskForSlot,
+  timeToMinutes,
+  adjustMinutesForPlannerDay,
 } from "@/lib/utils/timeUtils";
 
+const DEFAULT_COLOR_TOKEN = "ETC";
+
+function minutesToTimeId(totalMinutes) {
+  const m = ((totalMinutes % 1440) + 1440) % 1440;
+  const hh = String(Math.floor(m / 60)).padStart(2, "0");
+  const mm = String(m % 60).padStart(2, "0");
+  return `${hh}:${mm}`;
+}
+
 export default function TimeTableContainer({ selectedDate }) {
-    // State Machine: 'IDLE', 'OVERLAY_OPEN', 'INPUT_MODAL', 'SELECT_START', 'SELECT_END', 'EDIT_MODAL'
-    const [mode, setMode] = useState("IDLE");
-    const isProcessing = useRef(false);
+  const [mode, setMode] = useState("IDLE");
+  const isProcessing = useRef(false);
 
-    // Data State
-    const [tasks, setTasks] = useState([]); // Study sessions
-    const [dailyTasks, setDailyTasks] = useState([]); // Planner tasks for selection
-    const [tempTaskId, setTempTaskId] = useState(null);
-    const [tempColor, setTempColor] = useState(DEFAULT_STUDY_COLOR);
-    const [tempStart, setTempStart] = useState(null);
-    const [editingSessionId, setEditingSessionId] = useState(null); // ID of session being edited
-    const currentDate = selectedDate || new Date(); // Use prop or fallback to today
+  const [tasks, setTasks] = useState([]);
+  const [dailyTasks, setDailyTasks] = useState([]);
+  const [tempTaskId, setTempTaskId] = useState(null);
+  const [tempColor, setTempColor] = useState(DEFAULT_COLOR_TOKEN); // token
+  const [tempStart, setTempStart] = useState(null);
+  const [editingSessionId, setEditingSessionId] = useState(null);
+  const currentDate = selectedDate || new Date();
 
-    const menteeId = useMemo(() => getMenteeIdFromStorage(), []);
+  const menteeId = useMemo(() => getMenteeIdFromStorage(), []);
 
-    // Load Data
-    useEffect(() => {
-        if (!menteeId) return;
+  useEffect(() => {
+    if (!menteeId) return;
 
-        const loadData = async () => {
-            try {
-                // Parallel fetch: Study Sessions & Daily Tasks
-                const [sessionsData, tasksData] = await Promise.all([
-                    fetchStudySessions({ menteeId, date: currentDate }),
-                    fetchTasksByDate({ menteeId, date: currentDate })
-                ]);
+    const loadData = async () => {
+      try {
+        const [sessionsData, tasksData] = await Promise.all([
+          fetchStudySessions({ menteeId, date: currentDate }),
+          fetchTasksByDate({ menteeId, date: currentDate }),
+        ]);
 
-                // Transform sessions for Grid
-                const formattedSessions = sessionsData.map(d => ({
-                    ...d,
-                    startTime: dateToGridTime(new Date(d.startTime)),
-                    endTime: dateToGridTime(new Date(d.endTime)),
-                }));
-                setTasks(formattedSessions);
+        const formattedSessions = sessionsData.map((d) => ({
+          ...d,
+          startTime: dateToGridTime(new Date(d.startTime)),
+          endTime: dateToGridTime(new Date(d.endTime)),
+        }));
+        setTasks(formattedSessions);
 
-                // Set daily tasks for selection modal
-                setDailyTasks(tasksData);
-
-            } catch (e) {
-                console.error("Failed to load data", e);
-            }
-        };
-
-        loadData();
-    }, [menteeId, currentDate]);
-
-    // Handlers
-    const handleMainGridClick = () => {
-        // Main grid click always opens overlay
-        setMode("OVERLAY_OPEN");
+        setDailyTasks(tasksData);
+      } catch (e) {
+        console.error("Failed to load data", e);
+      }
     };
 
-    const handleOverlayGridClick = async (timeId) => {
-        // OVERLAY_OPEN -> Check if clicking existing task or empty slot
-        if (mode === "OVERLAY_OPEN") {
-            const existingTask = findTaskForSlot(tasks, timeId);
+    loadData();
+  }, [menteeId, currentDate]);
 
-            if (existingTask) {
-                // Edit Mode
-                setEditingSessionId(existingTask.id);
-                setTempTaskId(existingTask.taskId);
-                setTempColor(existingTask.color);
-                setMode("EDIT_MODAL");
-            }
-            // Do nothing on empty slot click (must use Add button)
-            return;
-            return;
+  const handleMainGridClick = () => {
+    setMode("OVERLAY_OPEN");
+  };
+
+  const handleOverlayGridClick = async (timeId) => {
+    if (mode === "OVERLAY_OPEN") {
+      const existingTask = findTaskForSlot(tasks, timeId);
+      if (existingTask) {
+        setEditingSessionId(existingTask.id);
+        setTempTaskId(existingTask.taskId);
+        setTempColor(existingTask.color || DEFAULT_COLOR_TOKEN);
+        setMode("EDIT_MODAL");
+      }
+      return;
+    }
+
+    if (mode === "SELECT_START") {
+      setTempStart(timeId);
+      setMode("SELECT_END");
+      return;
+    }
+
+    if (mode === "SELECT_END") {
+      if (isProcessing.current) return;
+      isProcessing.current = true;
+
+      try {
+        if (!tempStart) return;
+
+        const startMinutes = adjustMinutesForPlannerDay(timeToMinutes(tempStart));
+        const endMinutesExclusive = adjustMinutesForPlannerDay(timeToMinutes(timeId)) + 10;
+
+        if (endMinutesExclusive <= startMinutes) {
+          alert("종료 시간은 시작 시간보다 이후여야 합니다.");
+          return;
         }
 
-        // SELECT_START -> Store Start, Move to SELECT_END (Logic moved to above for simplification in overlay)
-        // Actually, logic flow: 
-        // 1. Click "+" -> INPUT_MODAL -> Select Task -> SELECT_START
-        // 2. Click Grid (Empty) -> SELECT_START (if we want direct click-to-add without picking task first? No, current flow is Task First)
+        const hasOverlap = tasks.some((task) => {
+          const taskStart = adjustMinutesForPlannerDay(timeToMinutes(task.startTime));
+          const taskEnd = adjustMinutesForPlannerDay(timeToMinutes(task.endTime));
+          return startMinutes < taskEnd && endMinutesExclusive > taskStart;
+        });
 
-        // Wait, current flow in handleGridClick was:
-        // IDLE -> OVERLAY (Main)
-        // IDLE -> Edit/Overlay (Overlay)
-
-        // Let's refine handleOverlayGridClick based on current mode:
-
-        if (mode === "SELECT_START") {
-            setTempStart(timeId);
-            setMode("SELECT_END");
-            return;
+        if (hasOverlap) {
+          alert("이미 존재하는 공부 시간과 겹칩니다.");
+          return;
         }
 
-        if (mode === "SELECT_END") {
-            if (isProcessing.current) return;
-            isProcessing.current = true;
-
-            try {
-                if (!tempStart) return;
-
-                // Validate Time Range
-                const startMinutes = adjustMinutesForPlannerDay(timeToMinutes(tempStart));
-                const endMinutes = adjustMinutesForPlannerDay(timeToMinutes(timeId));
-
-                if (endMinutes <= startMinutes) {
-                    alert("종료 시간은 시작 시간보다 이후여야 합니다.");
-                    return;
-                }
-
-                // Validate Overlap with existing tasks
-                const hasOverlap = tasks.some(task => {
-                    const taskStart = adjustMinutesForPlannerDay(timeToMinutes(task.startTime));
-                    const taskEnd = adjustMinutesForPlannerDay(timeToMinutes(task.endTime));
-
-                    // Check intersection: (NewStart < OldEnd) && (NewEnd > OldStart)
-                    // Using strictly less than/greater than because start/end times can touch (e.g. 10:00-11:00 and 11:00-12:00 is fine)
-                    return (startMinutes < taskEnd) && (endMinutes > taskStart);
-                });
-
-                if (hasOverlap) {
-                    alert("이미 존재하는 공부 시간과 겹칩니다.");
-                    return;
-                }
-
-                // Create ISO strings
-                const startTimeIso = createIsoDateForPlannerTime(tempStart, currentDate);
-                const endTimeIso = createIsoDateForPlannerTime(timeId, currentDate);
-
-                try {
-                    const saved = await addStudySession({
-                        menteeId,
-                        taskId: tempTaskId,
-                        startTime: startTimeIso,
-                        endTime: endTimeIso,
-                        color: tempColor
-                    });
-
-                    // Optimistic UI Update or Refetch
-                    const newTask = {
-                        id: saved.id,
-                        taskId: saved.taskId,
-                        content: saved.content,
-                        subject: saved.subject,
-                        startTime: tempStart, // Grid ID format
-                        endTime: timeId,      // Grid ID format
-                        color: saved.color,
-                    };
-                    setTasks(prev => [...prev, newTask]);
-
-                } catch (e) {
-                    alert("Failed to save session");
-                    console.error(e);
-                }
-
-                // Reset
-                setTempStart(null);
-                setTempTaskId(null);
-                setTempColor(DEFAULT_STUDY_COLOR);
-                // We want to stay in Overlay. 
-                // If mode is IDLE, Overlay is closed.
-                // If we are in Overlay, mode should be 'OVERLAY_OPEN'.
-                setMode("OVERLAY_OPEN");
-            } finally {
-                // Add cooldown to prevent rapid double-clicks triggering multiple alerts
-                setTimeout(() => {
-                    isProcessing.current = false;
-                }, 300);
-            }
-        }
-    };
-
-    const handleAddClick = () => {
-        setMode("INPUT_MODAL");
-    };
-
-    const handleInputConfirm = (taskId, color) => {
-        setTempTaskId(taskId);
-        setTempColor(color);
-        setMode("SELECT_START");
-    };
-
-    const handleEditConfirm = async (taskId, color) => {
-        if (!editingSessionId) return;
+        const startTimeIso = createIsoDateForPlannerTime(tempStart, currentDate);
+        const endTimeIdForDb = minutesToTimeId(timeToMinutes(timeId) + 10);
+        const endTimeIso = createIsoDateForPlannerTime(endTimeIdForDb, currentDate);
 
         try {
-            const updated = await updateStudySession({
-                sessionId: editingSessionId,
-                taskId,
-                color
-            });
+          const saved = await addStudySession({
+            menteeId,
+            taskId: tempTaskId,
+            startTime: startTimeIso,
+            endTime: endTimeIso,
+            color: tempColor,
+          });
 
-            // Update UI
-            setTasks(prev => prev.map(t =>
-                t.id === editingSessionId
-                    ? { ...t, taskId: updated.taskId, content: updated.content, subject: updated.subject, color: updated.color }
-                    : t
-            ));
+          const newTask = {
+            id: saved.id,
+            taskId: saved.taskId,
+            content: saved.content,
+            subject: saved.subject,
+            startTime: tempStart,
+            endTime: endTimeIdForDb,
+            color: saved.color,
+          };
+          setTasks((prev) => [...prev, newTask]);
         } catch (e) {
-            alert("Failed to update session");
-            console.error(e);
+          alert("Failed to save session");
+          console.error(e);
         }
 
-        setMode("OVERLAY_OPEN"); // Return to overlay, not main screen
-        setEditingSessionId(null);
+        setTempStart(null);
         setTempTaskId(null);
-    };
-
-    const handleInputCancel = () => {
-        // Return to overlay if cancelling edit or add
+        setTempColor(DEFAULT_COLOR_TOKEN);
         setMode("OVERLAY_OPEN");
-        setEditingSessionId(null);
-    };
+      } finally {
+        setTimeout(() => {
+          isProcessing.current = false;
+        }, 300);
+      }
+    }
+  };
 
-    const handleOverlayClose = () => {
-        setMode("IDLE");
-    };
+  const handleAddClick = () => {
+    setMode("INPUT_MODAL");
+  };
 
-    const handleDeleteTask = async (id) => {
-        try {
-            await deleteStudySession(id);
-            setTasks(prev => prev.filter(t => t.id !== id));
-        } catch (e) {
-            alert("Failed to delete session");
-            console.error(e);
-        }
-    };
+  const handleInputConfirm = (taskId, colorToken) => {
+    setTempTaskId(taskId);
+    setTempColor(colorToken || DEFAULT_COLOR_TOKEN);
+    setMode("SELECT_START");
+  };
 
-    return (
-        <div className="relative w-full h-full flex flex-col items-center bg-transparent">
-            {/* Toast Message for Selection Mode */}
-            {(mode === "SELECT_START" || mode === "SELECT_END") && (
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full mt-[-10px] bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm whitespace-nowrap animate-in fade-in slide-in-from-bottom-2">
-                    {mode === "SELECT_START" ? "시작 시간을 선택해주세요" : "종료 시간을 선택해주세요"}
-                </div>
-            )}
+  const handleEditConfirm = async (taskId, colorToken) => {
+    if (!editingSessionId) return;
 
-            {/* Grid View (Main) */}
-            <div className="w-full h-full overflow-y-auto pr-2 custom-scrollbar">
-                <TimeTableGrid
-                    data={tasks}
-                    onSlotClick={handleMainGridClick}
-                    selectedStart={tempStart}
-                />
-            </div>
+    try {
+      const updated = await updateStudySession({
+        sessionId: editingSessionId,
+        taskId,
+        color: colorToken || DEFAULT_COLOR_TOKEN,
+      });
 
-            {/* Overlay - Full Screen with Grid */}
-            <TimeTableOverlay
-                isOpen={mode !== "IDLE" && mode !== "INPUT_MODAL" && mode !== "EDIT_MODAL"}
-                onClose={handleOverlayClose}
-                tasks={tasks}
-                onAddClick={handleAddClick}
-                onDeleteTask={handleDeleteTask}
-                onSlotClick={handleOverlayGridClick}
-                selectedStart={tempStart}
-                selectionMode={mode === "SELECT_START" || mode === "SELECT_END" ? mode : null}
-            />
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === editingSessionId
+            ? {
+                ...t,
+                taskId: updated.taskId,
+                content: updated.content,
+                subject: updated.subject,
+                color: updated.color,
+              }
+            : t
+        )
+      );
+    } catch (e) {
+      alert("Failed to update session");
+      console.error(e);
+    }
 
-            {/* Input Modal (Add) */}
-            <StudyInputModal
-                isOpen={mode === "INPUT_MODAL"}
-                onClose={handleInputCancel}
-                onConfirm={handleInputConfirm}
-                tasks={dailyTasks}
-            />
+    setMode("OVERLAY_OPEN");
+    setEditingSessionId(null);
+    setTempTaskId(null);
+  };
 
-            {/* Input Modal (Edit) */}
-            <StudyInputModal
-                isOpen={mode === "EDIT_MODAL"}
-                onClose={handleInputCancel}
-                onConfirm={handleEditConfirm}
-                tasks={dailyTasks}
-                initialTaskId={tempTaskId}
-                initialColor={tempColor}
-            />
+  const handleEditDelete = async () => {
+    if (!editingSessionId) return;
+
+    try {
+      await deleteStudySession(editingSessionId);
+      setTasks((prev) => prev.filter((t) => t.id !== editingSessionId));
+    } catch (e) {
+      alert("Failed to delete session");
+      console.error(e);
+      return;
+    }
+
+    setMode("OVERLAY_OPEN");
+    setEditingSessionId(null);
+    setTempTaskId(null);
+  };
+
+  const handleInputCancel = () => {
+    setMode("OVERLAY_OPEN");
+    setEditingSessionId(null);
+  };
+
+  const handleOverlayClose = () => {
+    setMode("IDLE");
+  };
+
+  const handleDeleteTask = async (id) => {
+    try {
+      await deleteStudySession(id);
+      setTasks((prev) => prev.filter((t) => t.id !== id));
+    } catch (e) {
+      alert("Failed to delete session");
+      console.error(e);
+    }
+  };
+
+  return (
+    <div className="relative w-full h-full flex flex-col items-center bg-transparent">
+      {(mode === "SELECT_START" || mode === "SELECT_END") && (
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full mt-[-10px] bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg z-50 text-sm whitespace-nowrap animate-in fade-in slide-in-from-bottom-2">
+          {mode === "SELECT_START" ? "시작 시간을 선택해주세요" : "종료 시간을 선택해주세요"}
         </div>
-    );
+      )}
+
+      <div className="w-full h-full overflow-y-auto pr-2 custom-scrollbar">
+        <TimeTableGrid data={tasks} onSlotClick={handleMainGridClick} selectedStart={tempStart} />
+      </div>
+
+      <TimeTableOverlay
+        isOpen={mode !== "IDLE"}
+        onClose={handleOverlayClose}
+        tasks={tasks}
+        onAddClick={handleAddClick}
+        onDeleteTask={handleDeleteTask}
+        onSlotClick={handleOverlayGridClick}
+        selectedStart={tempStart}
+        selectionMode={mode === "SELECT_START" || mode === "SELECT_END" ? mode : null}
+      />
+
+      <StudyInputModal
+        isOpen={mode === "INPUT_MODAL"}
+        onClose={handleInputCancel}
+        onConfirm={handleInputConfirm}
+        tasks={dailyTasks}
+      />
+
+      <StudyInputModal
+        isOpen={mode === "EDIT_MODAL"}
+        onClose={handleInputCancel}
+        onConfirm={handleEditConfirm}
+        onDelete={handleEditDelete}   // ✅ 여기만 추가
+        tasks={dailyTasks}
+        initialTaskId={tempTaskId}
+        initialColor={tempColor}
+      />
+    </div>
+  );
 }
