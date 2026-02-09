@@ -122,6 +122,8 @@ export default function MenteeCard({ mentee, snapshot }) {
               e.stopPropagation(); 
               setIsOpen(!isOpen);
             }}
+            aria-label={`할 일 목록 ${isOpen ? "접기" : "펼치기"}`}
+            aria-expanded={isOpen}
             className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none"
           >
             <svg 
