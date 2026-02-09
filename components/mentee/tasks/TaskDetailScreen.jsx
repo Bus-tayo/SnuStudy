@@ -20,7 +20,6 @@ import TaskDetailTopBar from "./parts/TaskDetailTopBar";
 import TaskPdfSection from "./parts/TaskPdfSection";
 import SubmissionCarousel from "./parts/SubmissionCarousel";
 import SubmissionUploadBar from "./parts/SubmissionUploadBar";
-// NoteInput은 이제 별도 카드 내부에 직접 구현하므로 import 제거 혹은 미사용
 
 function difficultyLabel(v) {
   if (v === "DIAMOND") return "다이아";
@@ -47,10 +46,9 @@ export default function TaskDetailScreen({ taskId }) {
   const [manualTagIds, setManualTagIds] = useState([]);
   const [newTagName, setNewTagName] = useState("");
 
-  // ✅ New States for Draft Mode
-  const [selectedFile, setSelectedFile] = useState(null); // 선택된 파일
-  const [previewUrl, setPreviewUrl] = useState(null);     // 미리보기 URL
-  const [note, setNote] = useState("");                   // 코멘트
+  const [selectedFile, setSelectedFile] = useState(null); 
+  const [previewUrl, setPreviewUrl] = useState(null);     
+  const [note, setNote] = useState("");                   
 
   const [busy, setBusy] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -116,20 +114,17 @@ export default function TaskDetailScreen({ taskId }) {
     inputRef.current?.click();
   };
 
-  // ✅ 파일 선택 핸들러: 즉시 업로드하지 않고 미리보기 상태로 전환
   const onPickFile = (file) => {
     if (!file) return;
     setErrMsg("");
     
-    // 이전 미리보기 URL 해제 (메모리 누수 방지)
     if (previewUrl) URL.revokeObjectURL(previewUrl);
 
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
-    setNote(""); // 새 파일 선택 시 노트 초기화
+    setNote(""); 
   };
 
-  // ✅ 취소 핸들러
   const onCancelDraft = () => {
     setSelectedFile(null);
     setPreviewUrl(null);
@@ -137,7 +132,6 @@ export default function TaskDetailScreen({ taskId }) {
     if (inputRef.current) inputRef.current.value = "";
   };
 
-  // ✅ 최종 제출 핸들러
   const onSubmitDraft = async () => {
     if (!selectedFile) return;
 
@@ -145,14 +139,12 @@ export default function TaskDetailScreen({ taskId }) {
       setBusy(true);
       if (!menteeId) throw new Error("로그인이 필요합니다.");
 
-      // 1. 스토리지 업로드
       const { publicUrl } = await uploadTaskSubmissionImageJpg({
         file: selectedFile,
         taskId,
         menteeId,
       });
 
-      // 2. DB Insert
       const inserted = await createTaskSubmission({
         taskId,
         menteeId,
@@ -160,12 +152,10 @@ export default function TaskDetailScreen({ taskId }) {
         note: note?.trim() ? note.trim() : null,
       });
 
-      // 3. UI 업데이트
       const next = [inserted, ...submissions];
       setSubmissions(next);
       setActiveIndex(0);
       
-      // 4. 상태 초기화 (드래프트 모드 종료)
       onCancelDraft(); 
 
     } catch (e) {
@@ -183,7 +173,6 @@ export default function TaskDetailScreen({ taskId }) {
   }, [allTags, tagRows]);
 
   const onAddManualTag = async () => {
-    // ... (기존 태그 로직 동일)
     if (!feedback?.id) { setErrMsg("피드백이 아직 없어서 태그를 달 수 없어요."); return; }
     const name = newTagName.trim();
     if (!name) return;
@@ -200,7 +189,6 @@ export default function TaskDetailScreen({ taskId }) {
   };
 
   const onRemoveManualTag = async (tagId) => {
-     // ... (기존 태그 로직 동일)
     if (!feedback?.id) return;
     try {
       const next = (manualTagIds ?? []).filter((x) => x !== tagId);
@@ -219,7 +207,6 @@ export default function TaskDetailScreen({ taskId }) {
         onBack={() => router.back()}
       />
 
-      {/* pb-64: 드래프트 카드가 열렸을 때 가려지지 않도록 여유 공간 확보 */}
       <div className="flex-1 overflow-y-auto px-4 pb-64 pt-3 space-y-4">
         {errMsg ? <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{errMsg}</div> : null}
 
@@ -260,7 +247,7 @@ export default function TaskDetailScreen({ taskId }) {
                 ))
               )}
             </div>
-            {/* 수동 태그 UI 생략 (기존 코드 유지) */}
+            
             <div className="flex items-center gap-2 mt-1">
               <input
                 className="flex-1 border border-border rounded-xl px-3 py-2 text-sm bg-background focus:outline-none focus:border-blue-500 transition-colors"
@@ -280,8 +267,6 @@ export default function TaskDetailScreen({ taskId }) {
           </div>
         </div>
 
-        {/* ✅ NoteInput 제거됨 -> 드래프트 카드로 이동 */}
-
         <SubmissionCarousel
           submissions={submissions}
           activeIndex={activeIndex}
@@ -295,9 +280,7 @@ export default function TaskDetailScreen({ taskId }) {
         ) : null}
       </div>
 
-      {/* ✅ 하단 UI 영역 (조건부 렌더링) */}
       {!selectedFile ? (
-        // [CASE 1] 파일 선택 전: 기존 업로드 플로팅 버튼
         <div className="fixed bottom-[90px] left-0 right-0 z-50 flex justify-center pointer-events-none">
           <div className="w-full max-w-[430px] px-4 pointer-events-auto">
             <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-gray-100/50 p-2.5 active:scale-[0.97] transition-transform">
@@ -306,21 +289,17 @@ export default function TaskDetailScreen({ taskId }) {
           </div>
         </div>
       ) : (
-        // [CASE 2] 파일 선택 후: 작성 카드 (드래프트 모드)
         <div className="fixed bottom-[90px] left-0 right-0 z-50 flex justify-center pointer-events-none">
           <div className="w-full max-w-[430px] px-4 pointer-events-auto">
             <div className="bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.2)] border border-gray-100 p-4 animate-in slide-in-from-bottom-5 fade-in duration-300">
               
-              {/* 상단: 미리보기 및 입력창 */}
               <div className="flex gap-4 mb-4">
-                {/* 이미지 썸네일 */}
                 <div className="relative w-24 h-24 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
                   {previewUrl && (
                     <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
                   )}
                 </div>
                 
-                {/* 코멘트 입력 (NoteInput 대체) */}
                 <textarea
                   className="flex-1 bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 resize-none"
                   placeholder="코멘트를 적어주세요 (선택)"
@@ -330,7 +309,6 @@ export default function TaskDetailScreen({ taskId }) {
                 />
               </div>
 
-              {/* 하단: 버튼 영역 (좌: 취소 / 우: 제출) */}
               <div className="flex gap-3">
                 <button
                   onClick={onCancelDraft}
