@@ -250,7 +250,7 @@ export default function TimeTableContainer({ selectedDate }) {
       </div>
 
       <TimeTableOverlay
-        isOpen={mode !== "IDLE" && mode !== "INPUT_MODAL" && mode !== "EDIT_MODAL"}
+        isOpen={mode !== "IDLE"}
         onClose={handleOverlayClose}
         tasks={tasks}
         onAddClick={handleAddClick}

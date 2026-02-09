@@ -1,62 +1,70 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Check, AlertCircle, Trash2 } from "lucide-react";
+import { X, Check, AlertCircle } from "lucide-react";
 
-// DB subject enum: KOR, ENG, MATH, ETC
-// DB color는 varchar(7) 이라 token(<=7)만 저장
-const SUBJECT_TO_TOKEN = {
-  KOR: "KOR",
-  MATH: "MATH",
-  ENG: "ENG",
-  ETC: "ETC",
-};
+const HEX7_RE = /^#([0-9A-Fa-f]{6})$/;
 
-// token -> theme.css 기반 실제 색상
 const TOKEN_TO_CSS = {
   KOR: "hsl(var(--subject-kor))",
   MATH: "hsl(var(--subject-math))",
   ENG: "hsl(var(--subject-eng))",
   ETC: "hsl(var(--subject-etc))",
-  ACCENT: "hsl(var(--accent))",
-  PRIMARY: "hsl(var(--primary))",
-  DONE: "hsl(var(--status-done))",
-  SUB: "hsl(var(--secondary-foreground))",
+};
+
+const SUBJECT_COLORS = {
+  KOR: "#EF4444",
+  MATH: "#3B82F6",
+  ENG: "#22C55E",
+  ETC: "#6366F1",
 };
 
 const PRESET_COLORS = [
-  { name: "국어", value: "KOR" },
-  { name: "수학", value: "MATH" },
-  { name: "영어", value: "ENG" },
-  { name: "기타", value: "ETC" },
-  { name: "포인트", value: "ACCENT" },
-  { name: "프라이머리", value: "PRIMARY" },
-  { name: "완료", value: "DONE" },
-  { name: "보조", value: "SUB" },
+  { name: "인디고", value: "#6366F1" },
+  { name: "파랑", value: "#3B82F6" },
+  { name: "청록", value: "#14B8A6" },
+  { name: "초록", value: "#22C55E" },
+  { name: "노랑", value: "#EAB308" },
+  { name: "주황", value: "#F97316" },
+  { name: "빨강", value: "#EF4444" },
+  { name: "분홍", value: "#EC4899" },
+  { name: "보라", value: "#A855F7" },
+  { name: "슬레이트", value: "#64748B" },
 ];
 
 function resolveCssColor(token, subject) {
+  if (typeof token === "string" && HEX7_RE.test(token)) return token;
+  if (typeof subject === "string" && HEX7_RE.test(subject)) return subject;
+
   if (token && TOKEN_TO_CSS[token]) return TOKEN_TO_CSS[token];
   if (subject && TOKEN_TO_CSS[subject]) return TOKEN_TO_CSS[subject];
-  return "hsl(var(--subject-etc))";
+
+  if (typeof token === "string" && SUBJECT_COLORS[token]) return SUBJECT_COLORS[token];
+  if (typeof subject === "string" && SUBJECT_COLORS[subject]) return SUBJECT_COLORS[subject];
+
+  return SUBJECT_COLORS.ETC;
 }
 
 export function StudyInputModal({
   isOpen,
   onClose,
   onConfirm,
-  onDelete, // ✅ 추가: 있으면 삭제 버튼 표시
   tasks = [],
   initialTaskId = null,
-  initialColor = null, // token
+  initialColor = null,
 }) {
   const [selectedTaskId, setSelectedTaskId] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[0].value); // token
+  const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[0].value);
 
   React.useEffect(() => {
     if (isOpen) {
       setSelectedTaskId(initialTaskId);
-      setSelectedColor(initialColor || PRESET_COLORS[0].value);
+
+      if (initialColor) {
+        setSelectedColor(resolveCssColor(initialColor, null));
+      } else {
+        setSelectedColor(PRESET_COLORS[0].value);
+      }
     }
   }, [isOpen, initialTaskId, initialColor]);
 
@@ -65,23 +73,18 @@ export function StudyInputModal({
   const handleTaskSelect = (taskId) => {
     setSelectedTaskId(taskId);
     const task = tasks.find((t) => t.id === taskId);
-    const token = SUBJECT_TO_TOKEN[task?.subject] || "ACCENT";
-    setSelectedColor(token);
+
+    // 과목 자동색: legacy hex도 유지
+    const autoColor = resolveCssColor(task?.color, task?.subject);
+    if (autoColor) setSelectedColor(autoColor);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedTaskId) return;
-    onConfirm(selectedTaskId, selectedColor); // ✅ token 저장
+    onConfirm(selectedTaskId, selectedColor);
     setSelectedTaskId(null);
     setSelectedColor(PRESET_COLORS[0].value);
-  };
-
-  const handleDelete = async () => {
-    if (!onDelete) return;
-    const ok = window.confirm("이 공부 세션을 삭제할까요?");
-    if (!ok) return;
-    await onDelete();
   };
 
   return (
@@ -97,12 +100,11 @@ export function StudyInputModal({
         </div>
 
         <form onSubmit={handleSubmit} className="flex-1 flex flex-col min-h-0">
-          <div className="flex-1 overflow-y-auto p-4 space-y-2">
+          <div className="flex-1 overflow-y-auto p-4 space-y-2 scrollbar-hide">
             {tasks.length > 0 ? (
               tasks.map((task) => {
                 const isSelected = selectedTaskId === task.id;
-                const token = SUBJECT_TO_TOKEN[task.subject] || "ACCENT";
-                const taskColor = resolveCssColor(token, task.subject);
+                const taskColor = resolveCssColor(task?.color, task?.subject);
 
                 return (
                   <button
@@ -115,8 +117,15 @@ export function StudyInputModal({
                         : "border-slate-100 hover:border-slate-200 hover:bg-slate-50"
                     }`}
                   >
-                    <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: taskColor }} />
-                    <span className={`flex-1 text-sm font-medium ${isSelected ? "text-indigo-700" : "text-slate-700"}`}>
+                    <span
+                      className="w-3 h-3 rounded-full flex-shrink-0"
+                      style={{ backgroundColor: taskColor }}
+                    />
+                    <span
+                      className={`flex-1 text-sm font-medium ${
+                        isSelected ? "text-indigo-700" : "text-slate-700"
+                      }`}
+                    >
                       {task.title}
                     </span>
                     {isSelected && <Check size={18} className="text-indigo-600" />}
@@ -142,10 +151,12 @@ export function StudyInputModal({
                     type="button"
                     onClick={() => setSelectedColor(color.value)}
                     className="w-6 h-6 rounded-full flex items-center justify-center transition-transform hover:scale-110 active:scale-95"
-                    style={{ backgroundColor: resolveCssColor(color.value) }}
+                    style={{ backgroundColor: color.value }}
                     title={color.name}
                   >
-                    {selectedColor === color.value && <Check size={12} className="text-white drop-shadow-md" />}
+                    {selectedColor === color.value && (
+                      <Check size={12} className="text-white drop-shadow-md" />
+                    )}
                   </button>
                 ))}
               </div>
@@ -153,17 +164,6 @@ export function StudyInputModal({
           )}
 
           <div className="flex gap-3 p-4 border-t border-slate-100">
-            {onDelete && (
-              <button
-                type="button"
-                onClick={handleDelete}
-                className="py-3 px-3 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 transition-colors font-semibold flex items-center justify-center gap-2"
-              >
-                <Trash2 size={18} />
-                삭제
-              </button>
-            )}
-
             <button
               type="button"
               onClick={onClose}
@@ -171,12 +171,11 @@ export function StudyInputModal({
             >
               취소
             </button>
-
             <button
               type="submit"
               disabled={!selectedTaskId}
               className="flex-1 py-3 text-white rounded-xl font-bold shadow-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-transform active:scale-95"
-              style={{ backgroundColor: resolveCssColor(selectedColor) }}
+              style={{ backgroundColor: resolveCssColor(selectedColor, null) }}
             >
               확인
             </button>

@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 import { ChevronLeft, Plus, Trash2, ClipboardList, X } from "lucide-react";
 import { TimeTableGrid } from "./TimeTableGrid";
 
+const HEX7_RE = /^#([0-9A-Fa-f]{6})$/;
+
 const TOKEN_TO_CSS = {
   KOR: "hsl(var(--subject-kor))",
   MATH: "hsl(var(--subject-math))",
@@ -17,8 +19,12 @@ const TOKEN_TO_CSS = {
 };
 
 function resolveCssColor(token, subject) {
+  if (typeof token === "string" && HEX7_RE.test(token)) return token;
+  if (typeof subject === "string" && HEX7_RE.test(subject)) return subject;
+
   if (token && TOKEN_TO_CSS[token]) return TOKEN_TO_CSS[token];
   if (subject && TOKEN_TO_CSS[subject]) return TOKEN_TO_CSS[subject];
+
   return "hsl(var(--subject-etc))";
 }
 
@@ -30,7 +36,7 @@ export function TimeTableOverlay({
   onDeleteTask,
   onSlotClick,
   selectedStart,
-  selectionMode, // 'SELECT_START' | 'SELECT_END' | null
+  selectionMode,
 }) {
   const [portalRoot, setPortalRoot] = useState(null);
   const [showRecords, setShowRecords] = useState(false);
@@ -42,25 +48,6 @@ export function TimeTableOverlay({
     setPortalRoot(root);
   }, []);
 
-  useEffect(() => {
-    if (isOpen) {
-      setIsVisible(true);
-      setIsClosing(false);
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (isVisible) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isVisible]);
-
-  useEffect(() => {
-    if (!isOpen) setShowRecords(false);
-  }, [isOpen]);
-
   const handleClose = useCallback(() => {
     setIsClosing(true);
     setTimeout(() => {
@@ -70,12 +57,37 @@ export function TimeTableOverlay({
     }, 300);
   }, [onClose]);
 
+  // ✅ isOpen true -> open
+  // ✅ isOpen false -> start closing sequence (300ms animation) via handleClose()
+  useEffect(() => {
+    if (isOpen) {
+      setIsVisible(true);
+      setIsClosing(false);
+      return;
+    }
+    if (!isOpen && isVisible) {
+      handleClose();
+    }
+  }, [isOpen, isVisible, handleClose]);
+
+  useEffect(() => {
+    if (isVisible) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isVisible]);
+
+  // 유지: 오픈 닫힐 때 기록 시트 닫기
+  useEffect(() => {
+    if (!isOpen) setShowRecords(false);
+  }, [isOpen]);
+
   if (!isVisible) return null;
 
-  // ✅ 플로팅 버튼(기록 버튼 + 우하단 벨 버튼)에 가리지 않도록
-  // spacer div를 추가하면 높이가 초과해서 화면을 벗어나는 문제가 생길 수 있으니,
-  // paddingBottom으로만 처리.
-  const FLOATING_BUTTON_GUARD_PX = 132;
+  // ✅ 플로팅 버튼(좌하단 기록 버튼 + 우하단 벨 버튼)에 가리지 않도록.
+  // spacer div를 추가하면 전체 높이가 튀는 케이스가 생겨서 paddingBottom 방식으로만 처리.
+  const FLOATING_BUTTON_GUARD_PX = 148;
 
   const overlayContent = (
     <div
@@ -99,6 +111,7 @@ export function TimeTableOverlay({
           >
             <ChevronLeft size={28} />
           </button>
+
           <h2 className="flex-1 text-lg font-bold text-center pr-10">공부 시간</h2>
         </div>
 
@@ -125,14 +138,18 @@ export function TimeTableOverlay({
           </div>
         )}
 
-        {/* ✅ Grid Area: 남은 높이를 꽉 채우되, 아래 버튼 영역은 padding-bottom으로만 확보 */}
+        {/* Grid */}
         <div className="flex-1 min-h-0 overflow-hidden overflow-x-hidden">
           <div
             className="h-full p-4 animate-content-fade-in"
             style={!selectionMode ? { paddingBottom: `${FLOATING_BUTTON_GUARD_PX}px` } : undefined}
           >
             <div className="h-full min-h-0">
-              <TimeTableGrid data={tasks} onSlotClick={onSlotClick} selectedStart={selectedStart} />
+              <TimeTableGrid
+                data={tasks}
+                onSlotClick={onSlotClick}
+                selectedStart={selectedStart}
+              />
             </div>
           </div>
         </div>
@@ -181,7 +198,7 @@ export function TimeTableOverlay({
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4 pb-24">
+              <div className="flex-1 overflow-y-auto p-4 pb-24 scrollbar-hide">
                 {tasks.length > 0 ? (
                   <div className="space-y-3">
                     {tasks.map((task) => (
@@ -195,7 +212,9 @@ export function TimeTableOverlay({
                             style={{ backgroundColor: resolveCssColor(task.color, task.subject) }}
                           />
                           <div>
-                            <span className="text-sm font-semibold text-slate-700 block">{task.content}</span>
+                            <span className="text-sm font-semibold text-slate-700 block">
+                              {task.content}
+                            </span>
                             <span className="text-xs text-slate-400">
                               {task.startTime} ~ {task.endTime}
                             </span>
@@ -215,7 +234,9 @@ export function TimeTableOverlay({
                   <div className="text-center py-8 text-slate-400">
                     <ClipboardList size={48} className="mx-auto mb-3 opacity-50" />
                     <p className="text-sm">아직 기록된 공부가 없습니다.</p>
-                    <p className="text-xs mt-1">상단의 '추가' 버튼을 눌러 첫 기록을 추가해보세요.</p>
+                    <p className="text-xs mt-1">
+                      상단의 '추가' 버튼을 눌러 첫 기록을 추가해보세요.
+                    </p>
                   </div>
                 )}
               </div>

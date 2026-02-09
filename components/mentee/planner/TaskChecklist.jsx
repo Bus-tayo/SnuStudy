@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import TaskRow from './TaskRow';
+import { useMemo, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import TaskRow from "./TaskRow";
 
-import { addMenteeTask, deleteTasks, updateTaskStatus } from '@/lib/repositories/tasksRepo';
-import { Plus, ChevronDown, Trash2, AlignLeft } from 'lucide-react';
+import { addMenteeTask, deleteTasks, updateTaskStatus } from "@/lib/repositories/tasksRepo";
+import { Plus, ChevronDown, Trash2, AlignLeft } from "lucide-react";
 
 const SUBJECT_OPTIONS = [
-  { value: 'KOR', label: '국어' },
-  { value: 'MATH', label: '수학' },
-  { value: 'ENG', label: '영어' },
-  { value: 'ETC', label: '기타' },
+  { value: "KOR", label: "국어" },
+  { value: "MATH", label: "수학" },
+  { value: "ENG", label: "영어" },
+  { value: "ETC", label: "기타" },
 ];
 
-const CALENDAR_TAB_HREF = '/mentee/planner';
+const CALENDAR_TAB_HREF = "/mentee/planner";
 
 function TaskListSkeleton() {
   return (
@@ -37,16 +37,16 @@ export default function TaskChecklist({
   tasks,
   secondsByTaskId,
   onMutated,
-  mode = 'view', // 'view' | 'manage'
-  title = '오늘의 할 일',
-  comment = '',
+  mode = "view",
+  title = "오늘의 할 일",
+  comment = "",
   loading = false,
 }) {
   const router = useRouter();
 
-  const [newTitle, setNewTitle] = useState('');
-  const [newDescription, setNewDescription] = useState('');
-  const [newSubject, setNewSubject] = useState('ETC');
+  const [newTitle, setNewTitle] = useState("");
+  const [newDescription, setNewDescription] = useState("");
+  const [newSubject, setNewSubject] = useState("ETC");
   const [adding, setAdding] = useState(false);
 
   const [isDeleteMode, setIsDeleteMode] = useState(false);
@@ -55,7 +55,7 @@ export default function TaskChecklist({
   const [navigatingTaskId, setNavigatingTaskId] = useState(null);
   const [togglingIds, setTogglingIds] = useState(new Set());
 
-  const isManage = mode === 'manage';
+  const isManage = mode === "manage";
 
   const safeMenteeId = useMemo(() => {
     const n = Number(menteeId);
@@ -76,7 +76,7 @@ export default function TaskChecklist({
       setIsDeleteMode(false);
       onMutated?.();
     } catch (e) {
-      alert('삭제 중 오류가 발생했습니다.');
+      alert("삭제 중 오류가 발생했습니다.");
     }
   }
 
@@ -93,11 +93,11 @@ export default function TaskChecklist({
         goal: newDescription,
         subject: newSubject,
       });
-      setNewTitle('');
-      setNewDescription('');
+      setNewTitle("");
+      setNewDescription("");
       onMutated?.();
     } catch (e) {
-      alert(e?.message ?? '할 일 추가 실패');
+      alert(e?.message ?? "할 일 추가 실패");
     } finally {
       setAdding(false);
     }
@@ -106,8 +106,23 @@ export default function TaskChecklist({
   const openTaskDetail = (taskId) => {
     if (!taskId) return;
     setNavigatingTaskId(taskId);
-    router.push(`/mentee/tasks/${taskId}`);
+    Promise.resolve(router.push(`/mentee/tasks/${taskId}`)).finally(() => setNavigatingTaskId(null));
   };
+
+  // ✅ pages router가 섞여 있거나 router.events가 존재하는 환경까지 커버
+  useEffect(() => {
+    const events = router?.events;
+    if (!events?.on || !events?.off) return;
+
+    const clear = () => setNavigatingTaskId(null);
+    events.on("routeChangeComplete", clear);
+    events.on("routeChangeError", clear);
+
+    return () => {
+      events.off("routeChangeComplete", clear);
+      events.off("routeChangeError", clear);
+    };
+  }, [router]);
 
   const goToCalendarTab = () => {
     router.push(CALENDAR_TAB_HREF);
@@ -115,7 +130,7 @@ export default function TaskChecklist({
 
   const toggleDone = async (task) => {
     if (!task?.id) return;
-    const nextStatus = task.status === 'DONE' ? 'TODO' : 'DONE';
+    const nextStatus = task.status === "DONE" ? "TODO" : "DONE";
 
     setTogglingIds((prev) => {
       const n = new Set(prev);
@@ -127,7 +142,7 @@ export default function TaskChecklist({
       await updateTaskStatus({ taskId: task.id, status: nextStatus });
       onMutated?.();
     } catch (e) {
-      alert(e?.message ?? '상태 변경 실패');
+      alert(e?.message ?? "상태 변경 실패");
     } finally {
       setTogglingIds((prev) => {
         const n = new Set(prev);
@@ -147,15 +162,14 @@ export default function TaskChecklist({
   }, [tasks]);
 
   const subjectConfig = {
-    KOR: { label: '국어', color: 'text-subject-kor', borderColor: 'border-subject-kor' },
-    MATH: { label: '수학', color: 'text-subject-math', borderColor: 'border-subject-math' },
-    ENG: { label: '영어', color: 'text-subject-eng', borderColor: 'border-subject-eng' },
-    ETC: { label: '기타/탐구', color: 'text-subject-etc', borderColor: 'border-subject-etc' },
+    KOR: { label: "국어", color: "text-subject-kor", borderColor: "border-subject-kor" },
+    MATH: { label: "수학", color: "text-subject-math", borderColor: "border-subject-math" },
+    ENG: { label: "영어", color: "text-subject-eng", borderColor: "border-subject-eng" },
+    ETC: { label: "기타/탐구", color: "text-subject-etc", borderColor: "border-subject-etc" },
   };
 
   return (
     <div className="w-full min-w-0 overflow-x-hidden flex flex-col gap-4 px-1 pb-8">
-      {/* 상세 이동 로딩 오버레이 */}
       {navigatingTaskId ? (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/20">
           <div className="rounded-2xl bg-white/90 border border-white/40 px-5 py-4 shadow-lg">
@@ -167,7 +181,6 @@ export default function TaskChecklist({
         </div>
       ) : null}
 
-      {/* 헤더 */}
       <div className="flex items-start justify-between gap-2">
         <h2 className="text-base font-bold text-foreground">{title}</h2>
 
@@ -187,7 +200,7 @@ export default function TaskChecklist({
                 onClick={handleDelete}
                 disabled={selectedIds.length === 0}
                 className={`px-3 py-1.5 text-xs font-bold text-white rounded-lg flex items-center gap-1 transition-colors ${
-                  selectedIds.length > 0 ? 'bg-red-600 hover:bg-red-700 shadow-sm' : 'bg-red-300 cursor-not-allowed'
+                  selectedIds.length > 0 ? "bg-red-600 hover:bg-red-700 shadow-sm" : "bg-red-300 cursor-not-allowed"
                 }`}
               >
                 <span>삭제</span>
@@ -208,14 +221,12 @@ export default function TaskChecklist({
         ) : null}
       </div>
 
-      {/* ✅ 오늘의 코멘트: 제목 바로 아래 */}
       {comment ? (
         <div className="w-full rounded-xl border border-border bg-white/70 px-4 py-3 text-sm text-foreground/80 leading-relaxed">
           {comment}
         </div>
       ) : null}
 
-      {/* ✅ task list 로딩 */}
       {loading ? (
         <TaskListSkeleton />
       ) : !tasks || tasks.length === 0 ? (
@@ -257,7 +268,6 @@ export default function TaskChecklist({
         </div>
       )}
 
-      {/* view 모드: 할일수정 버튼 */}
       {!isManage ? (
         <button
           onClick={goToCalendarTab}
@@ -267,7 +277,6 @@ export default function TaskChecklist({
         </button>
       ) : null}
 
-      {/* manage 모드: 추가 섹션 */}
       {isManage && !isDeleteMode ? (
         <div className="mt-4 pt-4 border-t border-border">
           <h3 className="text-sm font-semibold text-muted-foreground mb-3 px-1">새로운 할 일 추가</h3>
@@ -321,7 +330,7 @@ export default function TaskChecklist({
               )}
             </button>
           </div>
-          <div style={{height:"32px",}}></div>
+          <div style={{ height: "32px" }} />
         </div>
       ) : null}
     </div>
