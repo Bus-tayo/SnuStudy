@@ -30,9 +30,7 @@ export default function ProfileCard() {
         if (alive) setLoading(false);
       }
     })();
-    return () => {
-      alive = false;
-    };
+    return () => { alive = false; };
   }, []);
 
   const onPickFile = () => fileInputRef.current?.click();
@@ -53,7 +51,6 @@ export default function ProfileCard() {
       setErr(ex?.message ?? "이미지 업로드에 실패했습니다.");
       setToast("");
     } finally {
-      // 같은 파일 다시 선택 가능하도록 리셋
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
@@ -69,7 +66,6 @@ export default function ProfileCard() {
       const newName = nameInput.trim();
       await updateMyName(newName);
       setProfile((prev) => ({ ...prev, name: newName }));
-      // localStorage 보정
       if (profile) {
         persistAppUserToStorage({
           appUserId: profile.userId,
@@ -90,34 +86,35 @@ export default function ProfileCard() {
   const avatarFallback = profile?.name?.[0]?.toUpperCase() ?? "U";
 
   return (
-    <div className="border rounded p-3 space-y-3">
+    <div className="card-base p-3 space-y-3">
       <div className="flex items-center gap-3">
         {profile?.avatarUrl ? (
           <img
             src={profile.avatarUrl}
             alt="avatar"
-            className="w-16 h-16 rounded-full object-cover border"
+            className="w-16 h-16 rounded-full object-cover border border-border"
           />
         ) : (
-          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-200 to-emerald-400 text-white flex items-center justify-center text-xl font-bold border">
+          <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xl font-extrabold border border-border">
             {avatarFallback}
           </div>
         )}
 
         <div className="flex-1">
-          <div className="text-xs text-neutral-500">마이페이지</div>
-          <div className="text-base font-semibold">
+          <div className="text-xs text-foreground/60">마이페이지</div>
+          <div className="text-base font-extrabold">
             {loading ? "불러오는 중..." : profile?.name || "닉네임"}
           </div>
         </div>
 
         <button
           onClick={onPickFile}
-          className="text-sm px-3 py-2 border rounded bg-white shadow-sm"
+          className="btn-primary"
           disabled={loading}
         >
           이미지 변경
         </button>
+
         <input
           ref={fileInputRef}
           type="file"
@@ -128,10 +125,10 @@ export default function ProfileCard() {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-semibold">닉네임</label>
+        <label className="text-sm font-extrabold">닉네임</label>
         <div className="flex gap-2">
           <input
-            className="flex-1 border rounded px-3 py-2 text-sm"
+            className="flex-1 border border-border rounded-xl px-3 py-2 text-sm bg-background"
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value)}
             placeholder="닉네임을 입력하세요"
@@ -139,14 +136,14 @@ export default function ProfileCard() {
           <button
             onClick={onSaveName}
             disabled={savingName || loading}
-            className="px-4 py-2 text-sm font-semibold rounded bg-blue-500 hover:bg-blue-600 text-white disabled:opacity-60"
+            className="btn-primary disabled:opacity-60"
           >
             {savingName ? "저장 중..." : "저장"}
           </button>
         </div>
       </div>
 
-      {toast ? <div className="text-xs text-emerald-700">{toast}</div> : null}
+      {toast ? <div className="text-xs text-foreground/70">{toast}</div> : null}
       {err ? <div className="text-xs text-red-600">{err}</div> : null}
     </div>
   );

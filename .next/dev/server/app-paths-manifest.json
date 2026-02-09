@@ -1,6 +1,4 @@
 {
-  "/login/page": "app/login/page.js",
   "/mentor/page": "app/mentor/page.js",
-  "/mentor/mentee/[menteeId]/page": "app/mentor/mentee/[menteeId]/page.js",
-  "/(mentee)/mentee/page": "app/(mentee)/mentee/page.js"
+  "/mentor/mentee/[menteeId]/page": "app/mentor/mentee/[menteeId]/page.js"
 }

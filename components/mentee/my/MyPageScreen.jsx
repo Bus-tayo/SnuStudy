@@ -1,3 +1,5 @@
+"use client";
+
 import SubjectProgressCards from "./SubjectProgressCards";
 import FloatingConsultButton from "./FloatingConsultButton";
 import StreakBanner from "@/components/mentee/streak/StreakBanner";
@@ -13,7 +15,7 @@ export default function MyPageScreen() {
 
       <StreakBanner />
       <HeatmapCalendar />
-      
+
       <FloatingConsultButton />
     </div>
   );
