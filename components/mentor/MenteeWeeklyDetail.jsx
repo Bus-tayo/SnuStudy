@@ -360,10 +360,23 @@ function TaskItem({ task, minutes, isExpanded, onToggle }) {
     const varName = getSubjectColorVar(task.subject);
     const subjectKorean = getSubjectKorean(task.subject);
     const isTaskDone = task.status === "DONE";
+    const taskTitle = task.title || "할 일";
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onToggle();
+        }
+    };
 
     return (
         <li
             onClick={onToggle}
+            onKeyDown={handleKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-expanded={isExpanded}
+            aria-label={`${taskTitle} 상세 ${isExpanded ? "접기" : "펼치기"}`}
             className={`flex flex-col rounded-xl border transition-all cursor-pointer shadow-sm active:scale-[0.99] touch-manipulation ${
             isTaskDone
                 ? "border-green-200 bg-green-50"

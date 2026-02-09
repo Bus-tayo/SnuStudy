@@ -37,6 +37,14 @@ export default function MenteeCard({ mentee, snapshot }) {
 
   const goDetail = () => router.push(`/mentor/mentee/${mentee.id}`);
 
+  const handleCardKeyDown = (e) => {
+    if (e.currentTarget !== e.target) return;
+    if (e.key === "Enter" || e.key === " ") {
+      if (e.key === " ") e.preventDefault();
+      goDetail();
+    }
+  };
+
   const handleToggleTask = (e, taskId) => {
     e.stopPropagation();
     setExpandedTaskId(prev => prev === taskId ? null : taskId);
@@ -47,7 +55,9 @@ export default function MenteeCard({ mentee, snapshot }) {
       role="button"
       tabIndex={0}
       onClick={goDetail}
-      className="group relative flex flex-col p-5 bg-white rounded-2xl border border-gray-200 shadow-sm active:scale-[0.99] transition-all cursor-pointer hover:border-blue-300 hover:shadow-md"
+      onKeyDown={handleCardKeyDown}
+      aria-label={`${displayName} 상세 보기`}
+      className="group relative flex flex-col p-5 bg-white rounded-2xl border border-gray-200 shadow-sm active:scale-[0.99] transition-all cursor-pointer hover:border-blue-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2"
     >
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-3">
@@ -112,6 +122,8 @@ export default function MenteeCard({ mentee, snapshot }) {
               e.stopPropagation(); 
               setIsOpen(!isOpen);
             }}
+            aria-label={`할 일 목록 ${isOpen ? "접기" : "펼치기"}`}
+            aria-expanded={isOpen}
             className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors focus:outline-none"
           >
             <svg 
@@ -157,11 +169,24 @@ function TaskItem({ task, isExpanded, onToggle }) {
   const varName = getSubjectColorVar(task.subject);
   const subjectKorean = getSubjectKorean(task.subject);
   const isTaskDone = task.status === "DONE";
+  const taskTitle = task.title || "할 일";
+
+  const handleTaskKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      if (e.key === " ") e.preventDefault();
+      onToggle(e);
+    }
+  };
 
   return (
     <div
       onClick={onToggle}
-      className={`flex flex-col rounded-xl border transition-all cursor-pointer shadow-sm hover:shadow-md ${
+      onKeyDown={handleTaskKeyDown}
+      role="button"
+      tabIndex={0}
+      aria-expanded={isExpanded}
+      aria-label={`${taskTitle} 상세 ${isExpanded ? "접기" : "펼치기"}`}
+      className={`flex flex-col rounded-xl border transition-all cursor-pointer shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 ${
         isTaskDone
           ? "border-green-200 bg-green-50"
           : "border-gray-200 bg-white hover:bg-gray-50"
