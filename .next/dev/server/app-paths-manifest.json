@@ -1,4 +1,3 @@
 {
-  "/mentor/page": "app/mentor/page.js",
   "/mentor/mentee/[menteeId]/page": "app/mentor/mentee/[menteeId]/page.js"
 }
