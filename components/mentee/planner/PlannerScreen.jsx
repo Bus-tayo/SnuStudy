@@ -2,17 +2,15 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
 
-import PlannerHeader from './PlannerHeader';
-import WeekMiniCalendar from './WeekMiniCalendar';
+import { CalendarRoot } from "@/components/calendar/CalendarRoot";
 import TaskChecklist from './TaskChecklist';
 
 import { getMenteeIdFromStorage } from '@/lib/utils/menteeSession';
-import { fetchDailyPlanner } from '@/lib/repositories/plannerRepo';
+import { fetchDailyPlanner, upsertDailyPlannerHeader } from '@/lib/repositories/plannerRepo';
 import { fetchTasksByDate } from '@/lib/repositories/tasksRepo';
 import { fetchTimeLogsForTasksInDay, sumSecondsByTaskId } from '@/lib/repositories/timeLogsRepo';
-
-const MENTOR_ID = 100;
 
 export default function PlannerScreen() {
   const router = useRouter();
@@ -23,7 +21,7 @@ export default function PlannerScreen() {
   const [errorMsg, setErrorMsg] = useState('');
 
   const [headerNote, setHeaderNote] = useState('');
-
+  const [tasksForCalendar, setTasksForCalendar] = useState([]); // For Calendar Dots
   const [tasksForDay, setTasksForDay] = useState([]);
   const [secondsByTaskId, setSecondsByTaskId] = useState(new Map());
   const [isTaskListLoading, setIsTaskListLoading] = useState(false);
@@ -40,7 +38,20 @@ export default function PlannerScreen() {
     setBootstrapped(true);
   }, [router]);
 
-  async function loadTasks(date, mid) {
+  async function loadRange(date, mid) {
+    if (!mid) return [];
+    // 기본적으로 Week view로 로딩 (Home screen과 동일)
+    const start = startOfWeek(date);
+    const end = endOfWeek(date);
+    const days = eachDayOfInterval({ start, end });
+
+    const results = await Promise.all(
+      days.map((d) => fetchTasksByDate({ menteeId: mid, date: d }).catch(() => []))
+    );
+    return results.flat();
+  }
+
+  async function loadDayTasks(date, mid) {
     const t = await fetchTasksByDate({ menteeId: mid, date }).catch(() => []);
     const ids = t.map((x) => x.id);
     const logs =
@@ -55,9 +66,10 @@ export default function PlannerScreen() {
     setIsTaskListLoading(true);
 
     try {
-      const [planner, dayBundle] = await Promise.all([
+      const [planner, dayBundle, rangeTasks] = await Promise.all([
         fetchDailyPlanner({ menteeId: mid, date }),
-        loadTasks(date, mid),
+        loadDayTasks(date, mid),
+        loadRange(date, mid),
       ]);
 
       if (inflightRef.current !== ticket) return;
@@ -65,6 +77,7 @@ export default function PlannerScreen() {
       setHeaderNote(planner?.header_note ?? '');
       setTasksForDay(dayBundle.tasks);
       setSecondsByTaskId(dayBundle.secondsByTaskId);
+      setTasksForCalendar(rangeTasks);
       setErrorMsg('');
     } catch (e) {
       console.error('[PlannerScreen/reloadAll]', e);
@@ -72,6 +85,19 @@ export default function PlannerScreen() {
       setErrorMsg(e?.message ?? '플래너 데이터를 불러오지 못했습니다.');
     } finally {
       if (inflightRef.current === ticket) setIsTaskListLoading(false);
+    }
+  }
+
+  async function handleSaveHeaderNote() {
+    if (!menteeId) return;
+    try {
+      await upsertDailyPlannerHeader({
+        menteeId,
+        date: selectedDate,
+        headerNote: headerNote?.trim() ?? '',
+      });
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -85,31 +111,35 @@ export default function PlannerScreen() {
   if (!bootstrapped || !menteeId) return null;
 
   return (
-    <div className="w-full overflow-x-hidden flex flex-col gap-4 px-4 py-4">
-      <PlannerHeader
-        menteeId={menteeId}
-        mentorId={MENTOR_ID}
-        date={selectedDate}
-        headerNote={headerNote}
-        onChangeHeaderNote={setHeaderNote}
-        onChangeDate={setSelectedDate}
-        onSaved={() => reloadAll(selectedDate, menteeId)}
-      />
-
-      <WeekMiniCalendar selectedDate={selectedDate} onSelectDate={setSelectedDate} />
-
-      <div className="w-full min-w-0 overflow-x-hidden bg-white/50 rounded-2xl border border-white/20 p-4">
-        <TaskChecklist
-          menteeId={menteeId}
-          date={selectedDate}
-          tasks={tasksForDay}
-          secondsByTaskId={secondsByTaskId}
-          onMutated={() => reloadAll(selectedDate, menteeId)}
-          mode="manage"
-          title="할 일 관리"
-          comment={headerNote}
-          loading={isTaskListLoading}
+    <div className="w-full h-full flex flex-col overflow-hidden bg-slate-50">
+      {/* Calendar Area: Fixed Height (similar to Home) */}
+      <div className="w-full shrink-0 bg-white border-b border-border/60">
+        <CalendarRoot
+          tasks={tasksForCalendar}
+          title="플래너"
+          height="420px" // Fixed height to match Home screen
+          onDateClick={(d) => setSelectedDate(d)}
         />
+      </div>
+
+      {/* Scrollable Content Area */}
+      <div className="flex-1 min-h-0 overflow-y-auto p-4 custom-scrollbar">
+        <div className="w-full max-w-3xl mx-auto flex flex-col gap-4">
+          <TaskChecklist
+            menteeId={menteeId}
+            date={selectedDate}
+            tasks={tasksForDay}
+            secondsByTaskId={secondsByTaskId}
+            onMutated={() => reloadAll(selectedDate, menteeId)}
+            mode="manage"
+            title="오늘의 할 일"
+            comment={headerNote}
+            loading={isTaskListLoading}
+            isEditable={true}
+            onCommentChange={setHeaderNote}
+            onCommentBlur={handleSaveHeaderNote}
+          />
+        </div>
       </div>
     </div>
   );
