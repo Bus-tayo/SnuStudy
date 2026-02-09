@@ -39,8 +39,8 @@ export default function MenteeCard({ mentee, snapshot }) {
 
   const handleCardKeyDown = (e) => {
     if (e.currentTarget !== e.target) return;
-    if (e.key === "Enter" || e.key === " ") {
-      if (e.key === " ") e.preventDefault();
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+      if (e.key === " " || e.key === "Spacebar") e.preventDefault();
       goDetail();
     }
   };
@@ -172,8 +172,8 @@ function TaskItem({ task, isExpanded, onToggle }) {
   const taskTitle = task.title || "할 일";
 
   const handleTaskKeyDown = (e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      if (e.key === " ") e.preventDefault();
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+      if (e.key === " " || e.key === "Spacebar") e.preventDefault();
       onToggle(e);
     }
   };
