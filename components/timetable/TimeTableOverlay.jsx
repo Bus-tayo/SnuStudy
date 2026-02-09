@@ -91,9 +91,8 @@ export function TimeTableOverlay({
 
   const overlayContent = (
     <div
-      className={`fixed inset-0 z-[70] flex justify-center ${
-        isClosing ? "animate-overlay-slide-out" : "animate-overlay-slide-in"
-      }`}
+      className={`fixed inset-0 z-[70] flex justify-center ${isClosing ? "animate-overlay-slide-out" : "animate-overlay-slide-in"
+        }`}
     >
       <div className="w-full max-w-[430px] flex flex-col bg-slate-50 overflow-hidden relative">
         {/* Header */}
@@ -142,7 +141,7 @@ export function TimeTableOverlay({
         <div className="flex-1 min-h-0 overflow-hidden overflow-x-hidden">
           <div
             className="h-full p-4 animate-content-fade-in"
-            style={!selectionMode ? { paddingBottom: `${FLOATING_BUTTON_GUARD_PX}px` } : undefined}
+            style={{ paddingBottom: `${FLOATING_BUTTON_GUARD_PX}px` }}
           >
             <div className="h-full min-h-0">
               <TimeTableGrid
@@ -220,13 +219,7 @@ export function TimeTableOverlay({
                             </span>
                           </div>
                         </div>
-                        <button
-                          onClick={() => onDeleteTask?.(task.id)}
-                          className="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                          type="button"
-                        >
-                          <Trash2 size={18} />
-                        </button>
+
                       </div>
                     ))}
                   </div>
