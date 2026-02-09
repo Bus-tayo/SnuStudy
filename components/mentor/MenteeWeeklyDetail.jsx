@@ -224,9 +224,21 @@ function DayCard({ day }) {
 
   const dateLabel = format(day.date, "MM.dd (EEE)");
   const header = day.planner?.header_note?.trim();
+  const toggleLabel = `${dateLabel} 할 일 목록 ${isListOpen ? "접기" : "펼치기"}`;
 
   const handleToggleTask = (taskId) => {
     setExpandedTaskId(prev => prev === taskId ? null : taskId);
+  };
+
+  const handleToggleList = () => {
+    setIsListOpen((prev) => !prev);
+  };
+
+  const handleListHeaderKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+      if (e.key === " " || e.key === "Spacebar") e.preventDefault();
+      handleToggleList();
+    }
   };
 
   const containerBorderClass = isAllDone
@@ -247,9 +259,14 @@ function DayCard({ day }) {
 
   return (
     <div className={`border bg-white rounded-xl shadow-sm overflow-hidden transition-all ${containerBorderClass}`}>
-      <div 
-        onClick={() => setIsListOpen(!isListOpen)}
-        className={`flex items-center justify-between p-4 border-b cursor-pointer select-none transition-colors ${headerBgClass}`}
+      <div
+        role="button"
+        tabIndex={0}
+        aria-expanded={isListOpen}
+        aria-label={toggleLabel}
+        onClick={handleToggleList}
+        onKeyDown={handleListHeaderKeyDown}
+        className={`flex items-center justify-between p-4 border-b cursor-pointer select-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-inset ${headerBgClass}`}
       >
         <div className="flex items-center gap-3">
             <div className={`text-base font-bold ${dateTextClass}`}>
@@ -360,11 +377,24 @@ function TaskItem({ task, minutes, isExpanded, onToggle }) {
     const varName = getSubjectColorVar(task.subject);
     const subjectKorean = getSubjectKorean(task.subject);
     const isTaskDone = task.status === "DONE";
+    const taskTitle = task.title || "할 일";
+
+    const handleTaskKeyDown = (e) => {
+        if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+            if (e.key === " " || e.key === "Spacebar") e.preventDefault();
+            onToggle();
+        }
+    };
 
     return (
         <li
             onClick={onToggle}
-            className={`flex flex-col rounded-xl border transition-all cursor-pointer shadow-sm active:scale-[0.99] touch-manipulation ${
+            onKeyDown={handleTaskKeyDown}
+            role="button"
+            tabIndex={0}
+            aria-expanded={isExpanded}
+            aria-label={`${taskTitle} 상세 ${isExpanded ? "접기" : "펼치기"}`}
+            className={`flex flex-col rounded-xl border transition-all cursor-pointer shadow-sm active:scale-[0.99] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 ${
             isTaskDone
                 ? "border-green-200 bg-green-50"
                 : "border-gray-200 bg-white"
