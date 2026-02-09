@@ -1,17 +1,26 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+
 import { TimeTableGrid } from "./TimeTableGrid";
 import { TimeTableOverlay } from "./TimeTableOverlay";
 import { StudyInputModal } from "./StudyInputModal";
 import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
 import { fetchStudySessions, addStudySession, deleteStudySession, updateStudySession } from "@/lib/repositories/studySessionsRepo";
 import { fetchTasksByDate } from "@/lib/repositories/tasksRepo";
-import { createIsoDateForPlannerTime, dateToGridTime, DEFAULT_STUDY_COLOR, findTaskForSlot } from "@/lib/utils/timeUtils";
+import {
+    createIsoDateForPlannerTime,
+    dateToGridTime,
+    DEFAULT_STUDY_COLOR,
+    findTaskForSlot,
+    timeToMinutes,
+    adjustMinutesForPlannerDay
+} from "@/lib/utils/timeUtils";
 
 export default function TimeTableContainer({ selectedDate }) {
     // State Machine: 'IDLE', 'OVERLAY_OPEN', 'INPUT_MODAL', 'SELECT_START', 'SELECT_END', 'EDIT_MODAL'
     const [mode, setMode] = useState("IDLE");
+    const isProcessing = useRef(false);
 
     // Data State
     const [tasks, setTasks] = useState([]); // Study sessions
@@ -72,11 +81,9 @@ export default function TimeTableContainer({ selectedDate }) {
                 setTempTaskId(existingTask.taskId);
                 setTempColor(existingTask.color);
                 setMode("EDIT_MODAL");
-            } else {
-                // Start Selection for New Task
-                setTempStart(timeId);
-                setMode("SELECT_END");
             }
+            // Do nothing on empty slot click (must use Add button)
+            return;
             return;
         }
 
@@ -98,46 +105,80 @@ export default function TimeTableContainer({ selectedDate }) {
         }
 
         if (mode === "SELECT_END") {
-            if (!tempStart) return;
-
-            // Create ISO strings
-            const startTimeIso = createIsoDateForPlannerTime(tempStart, currentDate);
-            const endTimeIso = createIsoDateForPlannerTime(timeId, currentDate);
+            if (isProcessing.current) return;
+            isProcessing.current = true;
 
             try {
-                const saved = await addStudySession({
-                    menteeId,
-                    taskId: tempTaskId,
-                    startTime: startTimeIso,
-                    endTime: endTimeIso,
-                    color: tempColor
+                if (!tempStart) return;
+
+                // Validate Time Range
+                const startMinutes = adjustMinutesForPlannerDay(timeToMinutes(tempStart));
+                const endMinutes = adjustMinutesForPlannerDay(timeToMinutes(timeId));
+
+                if (endMinutes <= startMinutes) {
+                    alert("종료 시간은 시작 시간보다 이후여야 합니다.");
+                    return;
+                }
+
+                // Validate Overlap with existing tasks
+                const hasOverlap = tasks.some(task => {
+                    const taskStart = adjustMinutesForPlannerDay(timeToMinutes(task.startTime));
+                    const taskEnd = adjustMinutesForPlannerDay(timeToMinutes(task.endTime));
+
+                    // Check intersection: (NewStart < OldEnd) && (NewEnd > OldStart)
+                    // Using strictly less than/greater than because start/end times can touch (e.g. 10:00-11:00 and 11:00-12:00 is fine)
+                    return (startMinutes < taskEnd) && (endMinutes > taskStart);
                 });
 
-                // Optimistic UI Update or Refetch
-                const newTask = {
-                    id: saved.id,
-                    taskId: saved.taskId,
-                    content: saved.content,
-                    subject: saved.subject,
-                    startTime: tempStart, // Grid ID format
-                    endTime: timeId,      // Grid ID format
-                    color: saved.color,
-                };
-                setTasks(prev => [...prev, newTask]);
+                if (hasOverlap) {
+                    alert("이미 존재하는 공부 시간과 겹칩니다.");
+                    return;
+                }
 
-            } catch (e) {
-                alert("Failed to save session");
-                console.error(e);
+                // Create ISO strings
+                const startTimeIso = createIsoDateForPlannerTime(tempStart, currentDate);
+                const endTimeIso = createIsoDateForPlannerTime(timeId, currentDate);
+
+                try {
+                    const saved = await addStudySession({
+                        menteeId,
+                        taskId: tempTaskId,
+                        startTime: startTimeIso,
+                        endTime: endTimeIso,
+                        color: tempColor
+                    });
+
+                    // Optimistic UI Update or Refetch
+                    const newTask = {
+                        id: saved.id,
+                        taskId: saved.taskId,
+                        content: saved.content,
+                        subject: saved.subject,
+                        startTime: tempStart, // Grid ID format
+                        endTime: timeId,      // Grid ID format
+                        color: saved.color,
+                    };
+                    setTasks(prev => [...prev, newTask]);
+
+                } catch (e) {
+                    alert("Failed to save session");
+                    console.error(e);
+                }
+
+                // Reset
+                setTempStart(null);
+                setTempTaskId(null);
+                setTempColor(DEFAULT_STUDY_COLOR);
+                // We want to stay in Overlay. 
+                // If mode is IDLE, Overlay is closed.
+                // If we are in Overlay, mode should be 'OVERLAY_OPEN'.
+                setMode("OVERLAY_OPEN");
+            } finally {
+                // Add cooldown to prevent rapid double-clicks triggering multiple alerts
+                setTimeout(() => {
+                    isProcessing.current = false;
+                }, 300);
             }
-
-            // Reset
-            setTempStart(null);
-            setTempTaskId(null);
-            setTempColor(DEFAULT_STUDY_COLOR);
-            // We want to stay in Overlay. 
-            // If mode is IDLE, Overlay is closed.
-            // If we are in Overlay, mode should be 'OVERLAY_OPEN'.
-            setMode("OVERLAY_OPEN");
         }
     };
 
