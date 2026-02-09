@@ -21,7 +21,118 @@ import {
   adjustMinutesForPlannerDay,
 } from "@/lib/utils/timeUtils";
 
-const DEFAULT_COLOR_TOKEN = "ETC";
+const HEX7_RE = /^#([0-9A-Fa-f]{6})$/;
+
+const SUBJECT_TOKEN_TO_CSS_VAR = {
+  KOR: "--subject-kor",
+  MATH: "--subject-math",
+  ENG: "--subject-eng",
+  ETC: "--subject-etc",
+};
+
+function clamp01(x) {
+  return Math.min(1, Math.max(0, x));
+}
+
+function hslToRgb(h, s, l) {
+  const hh = ((Number(h) % 360) + 360) % 360;
+  const ss = clamp01(Number(s) / 100);
+  const ll = clamp01(Number(l) / 100);
+
+  const c = (1 - Math.abs(2 * ll - 1)) * ss;
+  const x = c * (1 - Math.abs(((hh / 60) % 2) - 1));
+  const m = ll - c / 2;
+
+  let r1 = 0;
+  let g1 = 0;
+  let b1 = 0;
+
+  if (hh < 60) {
+    r1 = c;
+    g1 = x;
+  } else if (hh < 120) {
+    r1 = x;
+    g1 = c;
+  } else if (hh < 180) {
+    g1 = c;
+    b1 = x;
+  } else if (hh < 240) {
+    g1 = x;
+    b1 = c;
+  } else if (hh < 300) {
+    r1 = x;
+    b1 = c;
+  } else {
+    r1 = c;
+    b1 = x;
+  }
+
+  const r = Math.round((r1 + m) * 255);
+  const g = Math.round((g1 + m) * 255);
+  const b = Math.round((b1 + m) * 255);
+  return { r, g, b };
+}
+
+function rgbToHex7(r, g, b) {
+  const to2 = (n) => String(Math.max(0, Math.min(255, n)).toString(16)).padStart(2, "0");
+  return `#${to2(r)}${to2(g)}${to2(b)}`.toUpperCase();
+}
+
+function parseHslTriplet(str) {
+  if (!str) return null;
+  const s = String(str).trim();
+  const cleaned = s
+    .replace(/^hsl\(/i, "")
+    .replace(/\)$/g, "")
+    .replace(/\s*\/\s*/g, " ")
+    .replace(/,/g, " ")
+    .trim();
+
+  const parts = cleaned.split(/\s+/).filter(Boolean);
+  if (parts.length < 3) return null;
+
+  const h = Number(parts[0]);
+  const sPct = Number(String(parts[1]).replace("%", ""));
+  const lPct = Number(String(parts[2]).replace("%", ""));
+  if (!Number.isFinite(h) || !Number.isFinite(sPct) || !Number.isFinite(lPct)) return null;
+  return { h, s: sPct, l: lPct };
+}
+
+function cssVarToHex7(varName) {
+  if (typeof window === "undefined") return null;
+  if (!varName) return null;
+  const v = String(varName).trim();
+  const key = v.startsWith("--") ? v : `--${v}`;
+  const raw = window.getComputedStyle(document.documentElement).getPropertyValue(key);
+  const triplet = parseHslTriplet(raw);
+  if (!triplet) return null;
+  const { r, g, b } = hslToRgb(triplet.h, triplet.s, triplet.l);
+  return rgbToHex7(r, g, b);
+}
+
+function normalizeToHex7(value) {
+  if (!value) return null;
+  if (typeof value === "string" && HEX7_RE.test(value)) return value.toUpperCase();
+  const v = String(value).trim();
+
+  if (SUBJECT_TOKEN_TO_CSS_VAR[v]) return cssVarToHex7(SUBJECT_TOKEN_TO_CSS_VAR[v]);
+
+  const varMatch = v.match(/var\(\s*(--[A-Za-z0-9_-]+)\s*\)/);
+  if (varMatch?.[1]) return cssVarToHex7(varMatch[1]);
+  if (v.startsWith("--")) return cssVarToHex7(v);
+
+  const triplet = parseHslTriplet(v);
+  if (triplet) {
+    const { r, g, b } = hslToRgb(triplet.h, triplet.s, triplet.l);
+    return rgbToHex7(r, g, b);
+  }
+
+  return null;
+}
+
+function resolveColorHex(value) {
+  return normalizeToHex7(value) || cssVarToHex7("--subject-etc") || "#000000";
+}
 
 function minutesToTimeId(totalMinutes) {
   const m = ((totalMinutes % 1440) + 1440) % 1440;
@@ -34,15 +145,23 @@ export default function TimeTableContainer({ selectedDate }) {
   const [mode, setMode] = useState("IDLE");
   const isProcessing = useRef(false);
 
+  const [defaultColorHex, setDefaultColorHex] = useState("#000000");
+
   const [tasks, setTasks] = useState([]);
   const [dailyTasks, setDailyTasks] = useState([]);
   const [tempTaskId, setTempTaskId] = useState(null);
-  const [tempColor, setTempColor] = useState(DEFAULT_COLOR_TOKEN); // token
+  const [tempColor, setTempColor] = useState("#000000"); // HEX7 only
   const [tempStart, setTempStart] = useState(null);
   const [editingSessionId, setEditingSessionId] = useState(null);
   const currentDate = selectedDate || new Date();
 
   const menteeId = useMemo(() => getMenteeIdFromStorage(), []);
+
+  useEffect(() => {
+    // theme.css 기반 기본값(ETC) HEX 확보
+    setDefaultColorHex(resolveColorHex("ETC"));
+    setTempColor(resolveColorHex("ETC"));
+  }, []);
 
   useEffect(() => {
     if (!menteeId) return;
@@ -80,7 +199,7 @@ export default function TimeTableContainer({ selectedDate }) {
       if (existingTask) {
         setEditingSessionId(existingTask.id);
         setTempTaskId(existingTask.taskId);
-        setTempColor(existingTask.color || DEFAULT_COLOR_TOKEN);
+        setTempColor(resolveColorHex(existingTask.color || "ETC"));
         setMode("EDIT_MODAL");
       }
       return;
@@ -128,7 +247,7 @@ export default function TimeTableContainer({ selectedDate }) {
             taskId: tempTaskId,
             startTime: startTimeIso,
             endTime: endTimeIso,
-            color: tempColor,
+            color: resolveColorHex(tempColor),
           });
 
           const newTask = {
@@ -148,7 +267,7 @@ export default function TimeTableContainer({ selectedDate }) {
 
         setTempStart(null);
         setTempTaskId(null);
-        setTempColor(DEFAULT_COLOR_TOKEN);
+        setTempColor(defaultColorHex);
         setMode("OVERLAY_OPEN");
       } finally {
         setTimeout(() => {
@@ -164,7 +283,7 @@ export default function TimeTableContainer({ selectedDate }) {
 
   const handleInputConfirm = (taskId, colorToken) => {
     setTempTaskId(taskId);
-    setTempColor(colorToken || DEFAULT_COLOR_TOKEN);
+    setTempColor(resolveColorHex(colorToken || defaultColorHex));
     setMode("SELECT_START");
   };
 
@@ -175,7 +294,7 @@ export default function TimeTableContainer({ selectedDate }) {
       const updated = await updateStudySession({
         sessionId: editingSessionId,
         taskId,
-        color: colorToken || DEFAULT_COLOR_TOKEN,
+        color: resolveColorHex(colorToken || defaultColorHex),
       });
 
       setTasks((prev) =>
@@ -199,6 +318,7 @@ export default function TimeTableContainer({ selectedDate }) {
     setMode("OVERLAY_OPEN");
     setEditingSessionId(null);
     setTempTaskId(null);
+    setTempColor(defaultColorHex);
   };
 
   const handleEditDelete = async () => {

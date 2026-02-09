@@ -1,6 +1,349 @@
-[00:00:16.777] Server  LOG     ✓ Ready in 14.7s
-[00:00:33.216] Server  LOG     ○ Compiling /mentee/feedback ...
-[00:01:04.495] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:01:16.915] Server  LOG     ○ Compiling /mentee/planner ...
-[00:01:37.718] Server  LOG     ○ Compiling /mentee ...
-[00:02:20.171] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:05.514] Server  LOG     ✓ Ready in 4.6s
+[00:00:08.663] Server  LOG     ○ Compiling /mentee/planner ...
+[00:00:24.482] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:37.525] Server  LOG     ○ Compiling /mentee ...
+[00:01:02.486] Server  LOG     ○ Compiling /mentee/feedback ...
+[00:01:07.924] Server  LOG     ○ Compiling /mentee/my ...
+[00:01:18.088] Browser ERROR   {}
+[00:03:47.434] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:32.995] Server  LOG     ○ Compiling /mentee/feedback ...
+[00:08:19.687] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:11:22.974] Browser ERROR   Error updating study session: {"code":"22001","details":null,"hint":null,"message":"value too long for type character varying(7)"}
+[00:11:22.974] Browser ERROR   {"code":"22001","details":null,"hint":null,"message":"value too long for type character varying(7)"}
+[00:44:06.162] Browser ERROR   ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:06.979] Server  ERROR   ⨯ ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:06.993] Browser ERROR   ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:30.388] Browser ERROR   ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:32.996] Browser ERROR   ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:34.533] Server  LOG     ○ Compiling /_error ...
+[00:44:39.514] Browser ERROR   ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:39.514] Browser ERROR   ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:42.365] Browser ERROR   ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:42.926] Browser ERROR   ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:43.079] Server  ERROR   ⨯ ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:49.579] Browser ERROR   uncaughtError: Error: Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:44:50.070] Browser ERROR   ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:45:14.863] Browser ERROR   ./components/mentee/my-page/report/ReportGeneratorModal.jsx:6:1
+Module not found: Can't resolve '@/lib/utils/pdfExport'
+  4 | import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
+  5 | import { fetchReportData } from "@/lib/repositories/reportRepo";
+> 6 | import { exportPagesToPdf } from "@/lib/utils/pdfExport";
+    | ^
+  7 | import ReportPagesHost from "./ReportPagesHost";
+  8 |
+  9 | function ymd(d) {
+
+https://nextjs.org/docs/messages/module-not-found
+
+Import trace for requested module:
+./components/mentee/my/MyPageScreen.jsx
+[00:45:16.991] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:45:19.828] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:55:45.259] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:55:45.259] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:55:47.225] Server  WARN    ⚠ ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+
+./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+
+./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+
+./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:55:47.848] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:55:47.848] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:55:50.892] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: './TimeTableOverlay' does not contain a default export (imported as 'TimeTableOverlay').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:55:51.424] Server  WARN    ⚠ ./components/timetable/TimeTableContainer.jsx
+Attempted import error: './TimeTableOverlay' does not contain a default export (imported as 'TimeTableOverlay').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+
+./components/timetable/TimeTableContainer.jsx
+Attempted import error: './TimeTableOverlay' does not contain a default export (imported as 'TimeTableOverlay').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:55:52.835] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: './TimeTableOverlay' does not contain a default export (imported as 'TimeTableOverlay').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:55:54.839] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: './TimeTableOverlay' does not contain a default export (imported as 'TimeTableOverlay').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:55:55.489] Server  WARN    ⚠ ./components/timetable/TimeTableContainer.jsx
+Attempted import error: './TimeTableOverlay' does not contain a default export (imported as 'TimeTableOverlay').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+
+./components/timetable/TimeTableContainer.jsx
+Attempted import error: './TimeTableOverlay' does not contain a default export (imported as 'TimeTableOverlay').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:55:56.864] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: './TimeTableOverlay' does not contain a default export (imported as 'TimeTableOverlay').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:56:03.277] Browser ERROR   uncaughtError: Error: Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.
+
+Check the render method of `TimeTableContainer`.
+[00:56:09.577] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:56:09.577] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:56:09.577] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:56:11.005] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:56:12.044] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:56:12.044] Browser WARN    ./components/timetable/TimeTableContainer.jsx
+Attempted import error: 'StudyInputModal' is not exported from './StudyInputModal' (imported as 'StudyInputModal').
+
+Import trace for requested module:
+./components/timetable/TimeTableContainer.jsx
+./components/mentee/planner/CalendarPlannerScreen.jsx
+./app/(mentee)/mentee/page.js
+[00:56:14.747] Server  WARN    ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+[00:56:21.473] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:19:51.306] Server  LOG     ○ Compiling /mentee/tasks/[taskId] ...
