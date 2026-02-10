@@ -19,9 +19,9 @@ const CALENDAR_TAB_HREF = "/mentee/planner";
 function TaskListSkeleton() {
   return (
     <div className="w-full min-w-0 overflow-x-hidden">
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="w-full min-w-0 rounded-xl border border-slate-100 bg-white p-3">
+          <div key={i} className="w-full min-w-0 rounded-xl border border-slate-100 bg-white p-2.5">
             <div className="h-4 w-2/3 animate-pulse rounded bg-slate-200" />
             <div className="mt-2 h-3 w-1/3 animate-pulse rounded bg-slate-200" />
           </div>
@@ -66,7 +66,6 @@ export default function TaskChecklist({
   }, [menteeId]);
 
   const handleSelectTask = (id) => {
-    // 멘토 할당 과제는 선택 불가 (방어 로직)
     const targetTask = tasks.find((t) => t.id === id);
     if (targetTask?.is_fixed_by_mentor) return;
 
@@ -76,7 +75,6 @@ export default function TaskChecklist({
   async function handleDelete() {
     if (selectedIds.length === 0) return;
 
-    // 만약 선택된 것 중에 멘토 과제가 있다면 제거 (방어 로직)
     const validIds = selectedIds.filter((id) => {
       const t = tasks.find((task) => task.id === id);
       return !t?.is_fixed_by_mentor;
@@ -128,7 +126,6 @@ export default function TaskChecklist({
     Promise.resolve(router.push(`/mentee/tasks/${taskId}`)).finally(() => setNavigatingTaskId(null));
   };
 
-  // ✅ pages router가 섞여 있거나 router.events가 존재하는 환경까지 커버
   useEffect(() => {
     const events = router?.events;
     if (!events?.on || !events?.off) return;
@@ -188,7 +185,7 @@ export default function TaskChecklist({
   };
 
   return (
-    <div className="w-full min-w-0 overflow-x-hidden flex flex-col gap-4 px-1 pb-8">
+    <div className="w-full min-w-0 overflow-x-hidden flex flex-col gap-3 px-0 pb-6">
       {navigatingTaskId ? (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/20">
           <div className="rounded-2xl bg-white/90 border border-white/40 px-5 py-4 shadow-lg">
@@ -218,8 +215,9 @@ export default function TaskChecklist({
               <button
                 onClick={handleDelete}
                 disabled={selectedIds.length === 0}
-                className={`px-3 py-1.5 text-xs font-bold text-white rounded-lg flex items-center gap-1 transition-colors ${selectedIds.length > 0 ? "bg-red-600 hover:bg-red-700 shadow-sm" : "bg-red-300 cursor-not-allowed"
-                  }`}
+                className={`px-3 py-1.5 text-xs font-bold text-white rounded-lg flex items-center gap-1 transition-colors ${
+                  selectedIds.length > 0 ? "bg-red-600 hover:bg-red-700 shadow-sm" : "bg-red-300 cursor-not-allowed"
+                }`}
               >
                 <span>삭제</span>
                 {selectedIds.length > 0 ? (
@@ -247,10 +245,10 @@ export default function TaskChecklist({
               onChange={(e) => onCommentChange?.(e.target.value)}
               onBlur={onCommentBlur}
               placeholder="오늘의 코멘트 / 질문"
-              className="w-full min-h-[50px] resize-none rounded-xl border border-border bg-slate-50 p-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm leading-relaxed"
+              className="w-full min-h-[46px] resize-none rounded-xl border border-border bg-slate-50 p-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm leading-relaxed"
             />
           ) : (
-            <div className="w-full rounded-xl border border-border bg-white/70 px-4 py-3 text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">
+            <div className="w-full rounded-xl border border-border bg-white/70 px-3 py-2.5 text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">
               {comment}
             </div>
           )}
@@ -260,7 +258,7 @@ export default function TaskChecklist({
       {loading ? (
         <TaskListSkeleton />
       ) : !tasks || tasks.length === 0 ? (
-        <div className="py-8 text-center text-sm text-muted-foreground bg-slate-50 rounded-xl border border-dashed border-border">
+        <div className="py-7 text-center text-sm text-muted-foreground bg-slate-50 rounded-xl border border-dashed border-border">
           등록된 할 일이 없습니다.
         </div>
       ) : (
@@ -271,12 +269,12 @@ export default function TaskChecklist({
 
             return (
               <div key={subjectKey} className="flex flex-col gap-2 w-full min-w-0 overflow-x-hidden">
-                <div className="flex items-center gap-2 mb-1 mt-2 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5 mt-1.5 min-w-0">
                   <ChevronDown className={`w-5 h-5 ${config.color} shrink-0`} />
                   <span className={`text-base font-bold ${config.color} truncate`}>{config.label}</span>
                 </div>
 
-                <div className="flex flex-col gap-3 pl-1 w-full min-w-0 overflow-x-hidden">
+                <div className="flex flex-col gap-2 pl-0 w-full min-w-0 overflow-x-hidden">
                   {subjectTasks.map((task) => (
                     <TaskRow
                       key={task.id}
