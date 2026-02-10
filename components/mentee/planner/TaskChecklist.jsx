@@ -66,15 +66,31 @@ export default function TaskChecklist({
   }, [menteeId]);
 
   const handleSelectTask = (id) => {
+    // 멘토 할당 과제는 선택 불가 (방어 로직)
+    const targetTask = tasks.find((t) => t.id === id);
+    if (targetTask?.is_fixed_by_mentor) return;
+
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   };
 
   async function handleDelete() {
     if (selectedIds.length === 0) return;
-    if (!confirm(`${selectedIds.length}개의 할 일을 삭제하시겠습니까?`)) return;
+
+    // 만약 선택된 것 중에 멘토 과제가 있다면 제거 (방어 로직)
+    const validIds = selectedIds.filter((id) => {
+      const t = tasks.find((task) => task.id === id);
+      return !t?.is_fixed_by_mentor;
+    });
+
+    if (validIds.length === 0) {
+      alert("삭제할 수 있는 할 일이 없습니다.");
+      return;
+    }
+
+    if (!confirm(`${validIds.length}개의 할 일을 삭제하시겠습니까?`)) return;
 
     try {
-      await deleteTasks(selectedIds);
+      await deleteTasks(validIds);
       setSelectedIds([]);
       setIsDeleteMode(false);
       onMutated?.();
