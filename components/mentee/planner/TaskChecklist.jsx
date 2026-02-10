@@ -47,6 +47,9 @@ export default function TaskChecklist({
 }) {
   const router = useRouter();
 
+  // ✅ 과목별 접힘/펼침
+  const [collapsedSubjects, setCollapsedSubjects] = useState(() => new Set());
+
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newSubject, setNewSubject] = useState("ETC");
@@ -177,6 +180,17 @@ export default function TaskChecklist({
     return groups;
   }, [tasks]);
 
+  const isCollapsed = (subjectKey) => collapsedSubjects.has(subjectKey);
+
+  const toggleSubject = (subjectKey) => {
+    setCollapsedSubjects((prev) => {
+      const next = new Set(prev);
+      if (next.has(subjectKey)) next.delete(subjectKey);
+      else next.add(subjectKey);
+      return next;
+    });
+  };
+
   const subjectConfig = {
     KOR: { label: "국어", color: "text-subject-kor", borderColor: "border-subject-kor" },
     MATH: { label: "수학", color: "text-subject-math", borderColor: "border-subject-math" },
@@ -266,30 +280,44 @@ export default function TaskChecklist({
           {Object.entries(groupedTasks).map(([subjectKey, subjectTasks]) => {
             if (subjectTasks.length === 0) return null;
             const config = subjectConfig[subjectKey] || subjectConfig.ETC;
+            const collapsed = isCollapsed(subjectKey);
 
             return (
               <div key={subjectKey} className="flex flex-col gap-2 w-full min-w-0 overflow-x-hidden">
-                <div className="flex items-center gap-2 mb-0.5 mt-1.5 min-w-0">
-                  <ChevronDown className={`w-5 h-5 ${config.color} shrink-0`} />
+                {/* ✅ 헤더 클릭하면 접힘/펼침 */}
+                <button
+                  type="button"
+                  onClick={() => toggleSubject(subjectKey)}
+                  className="flex items-center gap-2 mb-0.5 mt-1.5 min-w-0 text-left select-none"
+                  aria-expanded={!collapsed}
+                >
+                  <ChevronDown
+                    className={`w-5 h-5 ${config.color} shrink-0 transition-transform ${collapsed ? "-rotate-90" : "rotate-0"}`}
+                  />
                   <span className={`text-base font-bold ${config.color} truncate`}>{config.label}</span>
-                </div>
+                  <span className="ml-auto text-xs text-muted-foreground shrink-0">
+                    {collapsed ? "" : ""}
+                  </span>
+                </button>
 
-                <div className="flex flex-col gap-2 pl-0 w-full min-w-0 overflow-x-hidden">
-                  {subjectTasks.map((task) => (
-                    <TaskRow
-                      key={task.id}
-                      task={task}
-                      studiedSeconds={secondsByTaskId?.get?.(task.id) ?? 0}
-                      subjectBorderColor={config.borderColor}
-                      isDeleteMode={isManage ? isDeleteMode : false}
-                      isSelected={isManage ? selectedIds.includes(task.id) : false}
-                      onSelect={isManage ? () => handleSelectTask(task.id) : undefined}
-                      onOpenDetail={() => openTaskDetail(task.id)}
-                      onToggleDone={() => toggleDone(task)}
-                      isTogglingDone={togglingIds.has(task.id)}
-                    />
-                  ))}
-                </div>
+                {!collapsed ? (
+                  <div className="flex flex-col gap-2 pl-0 w-full min-w-0 overflow-x-hidden">
+                    {subjectTasks.map((task) => (
+                      <TaskRow
+                        key={task.id}
+                        task={task}
+                        studiedSeconds={secondsByTaskId?.get?.(task.id) ?? 0}
+                        subjectBorderColor={config.borderColor}
+                        isDeleteMode={isManage ? isDeleteMode : false}
+                        isSelected={isManage ? selectedIds.includes(task.id) : false}
+                        onSelect={isManage ? () => handleSelectTask(task.id) : undefined}
+                        onOpenDetail={() => openTaskDetail(task.id)}
+                        onToggleDone={() => toggleDone(task)}
+                        isTogglingDone={togglingIds.has(task.id)}
+                      />
+                    ))}
+                  </div>
+                ) : null}
               </div>
             );
           })}
@@ -358,7 +386,7 @@ export default function TaskChecklist({
               )}
             </button>
           </div>
-          <div style={{ height: "32px" }} />
+          <div style={{ height: "62px" }} />
         </div>
       ) : null}
     </div>
