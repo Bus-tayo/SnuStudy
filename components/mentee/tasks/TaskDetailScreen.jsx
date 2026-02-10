@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
-import { fetchTaskById } from "@/lib/repositories/taskDetailRepo";
+import { fetchAvailableSubjects, fetchTaskById, updateTaskMeta } from "@/lib/repositories/taskDetailRepo";
 import { fetchTaskPdfMaterials } from "@/lib/repositories/taskMaterialsRepo";
 import { fetchTaskSubmissions, createTaskSubmission } from "@/lib/repositories/taskSubmissionsRepo";
 import { uploadTaskSubmissionImageJpg } from "@/lib/storage/taskSubmissionStorage";
@@ -35,6 +35,14 @@ export default function TaskDetailScreen({ taskId }) {
 
   const menteeId = useMemo(() => getMenteeIdFromStorage(), []);
   const [task, setTask] = useState(null);
+  const [subjects, setSubjects] = useState([]);
+
+  const [isEditingMeta, setIsEditingMeta] = useState(false);
+  const [draftTitle, setDraftTitle] = useState("");
+  const [draftSubject, setDraftSubject] = useState("ETC");
+  const [draftGoal, setDraftGoal] = useState("");
+  const [savingMeta, setSavingMeta] = useState(false);
+
   const [pdfs, setPdfs] = useState([]);
   const [submissions, setSubmissions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -42,13 +50,13 @@ export default function TaskDetailScreen({ taskId }) {
   const [feedback, setFeedback] = useState(null);
 
   const [allTags, setAllTags] = useState([]);
-  const [tagRows, setTagRows] = useState([]); 
+  const [tagRows, setTagRows] = useState([]);
   const [manualTagIds, setManualTagIds] = useState([]);
   const [newTagName, setNewTagName] = useState("");
 
-  const [selectedFile, setSelectedFile] = useState(null); 
-  const [previewUrl, setPreviewUrl] = useState(null);     
-  const [note, setNote] = useState("");                   
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [note, setNote] = useState("");
 
   const [busy, setBusy] = useState(false);
   const [errMsg, setErrMsg] = useState("");
@@ -78,9 +86,17 @@ export default function TaskDetailScreen({ taskId }) {
           fetchAllTags().catch(() => []),
         ]);
 
+        const subjList = await fetchAvailableSubjects({ menteeId }).catch(() => ["ETC"]);
+
         if (!alive) return;
 
         setTask(t);
+        setSubjects(Array.isArray(subjList) && subjList.length ? subjList : ["ETC"]);
+        setIsEditingMeta(false);
+        setDraftTitle(t?.title ?? "");
+        setDraftSubject(t?.subject ?? "ETC");
+        setDraftGoal(t?.goal ?? "");
+
         setPdfs(pList);
         setSubmissions(Array.isArray(s) ? s : []);
         setActiveIndex(0);
@@ -109,6 +125,53 @@ export default function TaskDetailScreen({ taskId }) {
 
   const activeSubmission = submissions?.[activeIndex] ?? null;
 
+  const startEditMeta = () => {
+    setErrMsg("");
+    setIsEditingMeta(true);
+    setDraftTitle(task?.title ?? "");
+    setDraftSubject(task?.subject ?? "ETC");
+    setDraftGoal(task?.goal ?? "");
+  };
+
+  const cancelEditMeta = () => {
+    setErrMsg("");
+    setIsEditingMeta(false);
+    setDraftTitle(task?.title ?? "");
+    setDraftSubject(task?.subject ?? "ETC");
+    setDraftGoal(task?.goal ?? "");
+  };
+
+  const saveMeta = async () => {
+    try {
+      if (!task?.id) return;
+
+      const nextTitle = String(draftTitle ?? "").trim();
+      if (!nextTitle) {
+        setErrMsg("과제명을 입력해주세요.");
+        return;
+      }
+
+      const nextGoal = typeof draftGoal === "string" ? draftGoal.trim() : "";
+
+      setSavingMeta(true);
+      setErrMsg("");
+
+      const updated = await updateTaskMeta({
+        taskId: task.id,
+        title: nextTitle,
+        subject: draftSubject,
+        goal: nextGoal,
+      });
+
+      setTask(updated);
+      setIsEditingMeta(false);
+    } catch (e) {
+      setErrMsg(e?.message || "과제 정보 수정에 실패했습니다.");
+    } finally {
+      setSavingMeta(false);
+    }
+  };
+
   const openPicker = () => {
     setErrMsg("");
     inputRef.current?.click();
@@ -117,12 +180,12 @@ export default function TaskDetailScreen({ taskId }) {
   const onPickFile = (file) => {
     if (!file) return;
     setErrMsg("");
-    
+
     if (previewUrl) URL.revokeObjectURL(previewUrl);
 
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
-    setNote(""); 
+    setNote("");
   };
 
   const onCancelDraft = () => {
@@ -155,9 +218,8 @@ export default function TaskDetailScreen({ taskId }) {
       const next = [inserted, ...submissions];
       setSubmissions(next);
       setActiveIndex(0);
-      
-      onCancelDraft(); 
 
+      onCancelDraft();
     } catch (e) {
       setErrMsg(e?.message || "업로드에 실패했습니다.");
     } finally {
@@ -173,7 +235,10 @@ export default function TaskDetailScreen({ taskId }) {
   }, [allTags, tagRows]);
 
   const onAddManualTag = async () => {
-    if (!feedback?.id) { setErrMsg("피드백이 아직 없어서 태그를 달 수 없어요."); return; }
+    if (!feedback?.id) {
+      setErrMsg("피드백이 아직 없어서 태그를 달 수 없어요.");
+      return;
+    }
     const name = newTagName.trim();
     if (!name) return;
     try {
@@ -185,7 +250,9 @@ export default function TaskDetailScreen({ taskId }) {
       const rows = await fetchFeedbackTags({ taskFeedbackId: feedback.id });
       setTagRows(rows);
       setNewTagName("");
-    } catch (e) { setErrMsg(e?.message ?? "태그 추가 실패"); }
+    } catch (e) {
+      setErrMsg(e?.message ?? "태그 추가 실패");
+    }
   };
 
   const onRemoveManualTag = async (tagId) => {
@@ -196,19 +263,107 @@ export default function TaskDetailScreen({ taskId }) {
       await syncManualTags({ taskFeedbackId: feedback.id, tagIds: next, actorUserId: menteeId });
       const rows = await fetchFeedbackTags({ taskFeedbackId: feedback.id });
       setTagRows(rows);
-    } catch (e) { setErrMsg(e?.message ?? "태그 삭제 실패"); }
+    } catch (e) {
+      setErrMsg(e?.message ?? "태그 삭제 실패");
+    }
   };
 
   return (
     <div className="flex flex-col h-full bg-white relative">
       <TaskDetailTopBar
         title={task?.title ?? "과제"}
-        subtitle={task?.date ? `${task.date} · ${task.subject}` : (task?.subject ?? "")}
+        subtitle={task?.date ? `${task.date} · ${task.subject}` : task?.subject ?? ""}
         onBack={() => router.back()}
+        rightSlot={
+          !task ? null : isEditingMeta ? (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="h-9 px-3 rounded border text-sm"
+                onClick={cancelEditMeta}
+                disabled={savingMeta}
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                className="h-9 px-3 rounded border text-sm font-semibold"
+                onClick={saveMeta}
+                disabled={savingMeta}
+              >
+                {savingMeta ? "저장중" : "저장"}
+              </button>
+            </div>
+          ) : (
+            <button type="button" className="h-9 px-3 rounded border text-sm" onClick={startEditMeta}>
+              수정
+            </button>
+          )
+        }
       />
 
       <div className="flex-1 overflow-y-auto px-4 pb-64 pt-3 space-y-4">
         {errMsg ? <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{errMsg}</div> : null}
+
+        {/* ✅ goal 표시 (편집 아닐 때) */}
+        {!isEditingMeta ? (
+          <div className="card-base p-3 rounded-xl border border-gray-100 shadow-sm bg-white space-y-2">
+            <div className="text-sm font-extrabold text-gray-800">과제 설명</div>
+            {task?.goal ? (
+              <div className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">{task.goal}</div>
+            ) : (
+              <div className="text-sm text-gray-400">설명이 아직 없어요.</div>
+            )}
+          </div>
+        ) : null}
+
+        {/* ✅ title/subject/goal 편집 카드 */}
+        {isEditingMeta ? (
+          <div className="card-base p-3 rounded-xl border border-gray-100 shadow-sm bg-white space-y-3">
+            <div className="text-sm font-extrabold text-gray-800">과제 정보 수정</div>
+
+            <div className="space-y-2">
+              <div className="text-xs text-foreground/60">과제명</div>
+              <input
+                className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-background focus:outline-none focus:border-blue-500 transition-colors"
+                placeholder="과제명을 입력하세요"
+                value={draftTitle}
+                onChange={(e) => setDraftTitle(e.target.value)}
+                disabled={savingMeta}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-xs text-foreground/60">과목</div>
+              <select
+                className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-background focus:outline-none focus:border-blue-500 transition-colors"
+                value={draftSubject}
+                onChange={(e) => setDraftSubject(e.target.value)}
+                disabled={savingMeta}
+              >
+                {(subjects ?? ["ETC"]).map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* ✅ goal 수정 */}
+            <div className="space-y-2">
+              <div className="text-xs text-foreground/60">과제 설명(goal)</div>
+              <textarea
+                className="w-full min-h-[120px] border border-border rounded-xl px-3 py-2 text-sm bg-background focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                placeholder="과제 설명을 입력하세요"
+                value={draftGoal}
+                onChange={(e) => setDraftGoal(e.target.value)}
+                disabled={savingMeta}
+              />
+            </div>
+
+            <div className="text-xs text-foreground/60">※ 저장을 누르면 과제명/과목/설명이 함께 업데이트돼요.</div>
+          </div>
+        ) : null}
 
         <TaskPdfSection pdfs={pdfs} />
 
@@ -226,9 +381,7 @@ export default function TaskDetailScreen({ taskId }) {
 
           {feedback?.body ? (
             <div className="prose prose-sm max-w-none text-gray-600">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {feedback.body}
-              </ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{feedback.body}</ReactMarkdown>
             </div>
           ) : (
             <div className="text-sm text-foreground/60">멘토가 피드백을 남기면 여기에 표시돼요.</div>
@@ -242,12 +395,13 @@ export default function TaskDetailScreen({ taskId }) {
               ) : (
                 resolvedTags.map((r) => (
                   <span key={r.id} className="px-2.5 py-1 rounded-full text-xs border border-border bg-background">
-                    #{r.tag.name}{r.source === "AUTO" ? "" : " · 수동"}
+                    #{r.tag.name}
+                    {r.source === "AUTO" ? "" : " · 수동"}
                   </span>
                 ))
               )}
             </div>
-            
+
             <div className="flex items-center gap-2 mt-1">
               <input
                 className="flex-1 border border-border rounded-xl px-3 py-2 text-sm bg-background focus:outline-none focus:border-blue-500 transition-colors"
@@ -255,23 +409,30 @@ export default function TaskDetailScreen({ taskId }) {
                 value={newTagName}
                 onChange={(e) => setNewTagName(e.target.value)}
               />
-              <button className="px-3 py-2 rounded-xl text-xs font-bold bg-gray-100 text-gray-600" onClick={onAddManualTag}>추가</button>
+              <button className="px-3 py-2 rounded-xl text-xs font-bold bg-gray-100 text-gray-600" onClick={onAddManualTag}>
+                추가
+              </button>
             </div>
             <div className="flex flex-wrap gap-2">
               {(manualTagIds ?? []).map((id) => {
-                 const t = (allTags ?? []).find((x) => x.id === id);
-                 if (!t) return null;
-                 return <button key={id} type="button" className="px-2.5 py-1 rounded-full text-xs border border-border bg-secondary text-secondary-foreground" onClick={() => onRemoveManualTag(id)}>#{t.name} ✕</button>;
+                const t = (allTags ?? []).find((x) => x.id === id);
+                if (!t) return null;
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    className="px-2.5 py-1 rounded-full text-xs border border-border bg-secondary text-secondary-foreground"
+                    onClick={() => onRemoveManualTag(id)}
+                  >
+                    #{t.name} ✕
+                  </button>
+                );
               })}
             </div>
           </div>
         </div>
 
-        <SubmissionCarousel
-          submissions={submissions}
-          activeIndex={activeIndex}
-          onChangeIndex={setActiveIndex}
-        />
+        <SubmissionCarousel submissions={submissions} activeIndex={activeIndex} onChangeIndex={setActiveIndex} />
 
         {activeSubmission?.submitted_at ? (
           <div className="text-xs text-foreground/60 text-right pr-1">
@@ -292,14 +453,11 @@ export default function TaskDetailScreen({ taskId }) {
         <div className="fixed bottom-[90px] left-0 right-0 z-50 flex justify-center pointer-events-none">
           <div className="w-full max-w-[430px] px-4 pointer-events-auto">
             <div className="bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.2)] border border-gray-100 p-4 animate-in slide-in-from-bottom-5 fade-in duration-300">
-              
               <div className="flex gap-4 mb-4">
                 <div className="relative w-24 h-24 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
-                  {previewUrl && (
-                    <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />
-                  )}
+                  {previewUrl && <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />}
                 </div>
-                
+
                 <textarea
                   className="flex-1 bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 resize-none"
                   placeholder="코멘트를 적어주세요 (선택)"
@@ -332,7 +490,6 @@ export default function TaskDetailScreen({ taskId }) {
                   )}
                 </button>
               </div>
-
             </div>
           </div>
         </div>

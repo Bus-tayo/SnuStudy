@@ -13,6 +13,14 @@ const SUBJECT_LABEL = {
   ETC: "기타",
 };
 
+const TIER_ICON_SRC = {
+  BRONZE: "/bronze.png",
+  SILVER: "/silver.png",
+  GOLD: "/gold.png",
+  PLATINUM: "/pletinum.png",
+  DIAMOND: "/dia.png",
+};
+
 function tierFromRate(rate) {
   if (rate >= 90) return "DIAMOND";
   if (rate >= 75) return "PLATINUM";
@@ -23,20 +31,29 @@ function tierFromRate(rate) {
 
 function tierLabel(tier) {
   switch (tier) {
-    case "DIAMOND": return "다이아";
-    case "PLATINUM": return "플래티넘";
-    case "GOLD": return "골드";
-    case "SILVER": return "실버";
-    default: return "브론즈";
+    case "DIAMOND":
+      return "다이아";
+    case "PLATINUM":
+      return "플래티넘";
+    case "GOLD":
+      return "골드";
+    case "SILVER":
+      return "실버";
+    default:
+      return "브론즈";
   }
 }
 
 function subjectHslVar(subject) {
   switch (subject) {
-    case "KOR": return "hsl(var(--subject-kor))";
-    case "ENG": return "hsl(var(--subject-eng))";
-    case "MATH": return "hsl(var(--subject-math))";
-    default: return "hsl(var(--subject-etc))";
+    case "KOR":
+      return "hsl(var(--subject-kor))";
+    case "ENG":
+      return "hsl(var(--subject-eng))";
+    case "MATH":
+      return "hsl(var(--subject-math))";
+    default:
+      return "hsl(var(--subject-etc))";
   }
 }
 
@@ -57,7 +74,12 @@ async function fetchSubjectRates30d(menteeId) {
 
   if (error) throw error;
 
-  const base = { KOR: { total: 0, done: 0 }, ENG: { total: 0, done: 0 }, MATH: { total: 0, done: 0 }, ETC: { total: 0, done: 0 } };
+  const base = {
+    KOR: { total: 0, done: 0 },
+    ENG: { total: 0, done: 0 },
+    MATH: { total: 0, done: 0 },
+    ETC: { total: 0, done: 0 },
+  };
 
   for (const row of data ?? []) {
     const s = row?.subject ?? "ETC";
@@ -99,8 +121,9 @@ export default function SubjectProgressCards(props) {
   const [points, setPoints] = useState(0);
   const [pointsLoading, setPointsLoading] = useState(true);
 
-  // menteeId 결정 (prop이 우선, 없으면 스토리지)
-  const [resolvedMenteeId, setResolvedMenteeId] = useState(props.menteeId || null);
+  const [resolvedMenteeId, setResolvedMenteeId] = useState(
+    props.menteeId || null
+  );
 
   useEffect(() => {
     if (props.menteeId) {
@@ -134,7 +157,9 @@ export default function SubjectProgressCards(props) {
         if (alive) setLoading(false);
       }
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [resolvedMenteeId, props.menteeId]);
 
   useEffect(() => {
@@ -150,13 +175,18 @@ export default function SubjectProgressCards(props) {
         if (alive) setPointsLoading(false);
       }
     })();
-    return () => { alive = false; };
+    return () => {
+      alive = false;
+    };
   }, [resolvedMenteeId]);
 
   const entries = useMemo(() => {
     const r = rates ?? {};
     const keys = ["KOR", "ENG", "MATH", "ETC"];
-    return keys.map((k) => ({ subject: k, ...(r[k] ?? { rate: 0, tier: "BRONZE", total: 0, done: 0 }) }));
+    return keys.map((k) => ({
+      subject: k,
+      ...(r[k] ?? { rate: 0, tier: "BRONZE", total: 0, done: 0 }),
+    }));
   }, [rates]);
 
   return (
@@ -174,23 +204,35 @@ export default function SubjectProgressCards(props) {
         {entries.map((it) => {
           const color = subjectHslVar(it.subject);
           return (
-            <div
-              key={it.subject}
-              className="card-base p-3 space-y-2 relative group"
-            >
+            <div key={it.subject} className="card-base p-3 space-y-2 relative group">
               <div className="flex items-center justify-between">
-                <div className="text-xs text-foreground/60">{SUBJECT_LABEL[it.subject] ?? it.subject}</div>
-                <div className="badge-base border-border bg-background" style={{ borderColor: color, color }}>
+                <div className="text-xs text-foreground/60">
+                  {SUBJECT_LABEL[it.subject] ?? it.subject}
+                </div>
+                <div
+                  className="badge-base border-border bg-background flex items-center gap-1"
+                  style={{ borderColor: color, color }}
+                >
+                  <img
+                    src={TIER_ICON_SRC[it.tier]}
+                    alt={it.tier}
+                    className="w-4 h-4"
+                  />
                   {tierLabel(it.tier)}
                 </div>
               </div>
 
-              <div className="text-xl font-extrabold">{loading ? "…" : `${it.rate}%`}</div>
+              <div className="text-xl font-extrabold">
+                {loading ? "…" : `${it.rate}%`}
+              </div>
 
               <div className="h-2 rounded-full bg-secondary overflow-hidden">
                 <div
                   className="h-full rounded-full"
-                  style={{ width: `${Math.max(0, Math.min(100, it.rate))}%`, background: color }}
+                  style={{
+                    width: `${Math.max(0, Math.min(100, it.rate))}%`,
+                    background: color,
+                  }}
                 />
               </div>
 
