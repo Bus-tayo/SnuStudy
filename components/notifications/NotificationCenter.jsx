@@ -6,6 +6,7 @@ import {
   fetchUnreadCount,
   markNotificationRead,
   markAllNotificationsRead,
+  deleteNotification,
   subscribeNotificationEvents,
 } from '@/lib/repositories/notificationsRepo';
 import { getAppUserIdFromStorage } from '@/lib/utils/appUser';
@@ -112,6 +113,19 @@ export default function NotificationCenter() {
     }
   }
 
+  async function handleDeleteItem(item) {
+    if (!item || !userId) return;
+    try {
+      await deleteNotification(item.id, userId);
+      setList((prev) => prev.filter((n) => n.id !== item.id));
+      if (!item.is_read) {
+        setUnread((prev) => Math.max(0, prev - 1));
+      }
+    } catch (e) {
+      console.error('[NotificationCenter] 개별 삭제 실패', e);
+    }
+  }
+
   const panel = useMemo(() => {
     if (!open) return null;
 
@@ -163,28 +177,41 @@ export default function NotificationCenter() {
                   const badgeCls = TYPE_BADGE[n.type] ?? 'bg-slate-100 text-slate-600 border-slate-200';
                   const label = TYPE_LABEL[n.type] ?? n.type;
                   return (
-                    <button
-                      key={n.id}
-                      onClick={() => handleClickItem(n)}
-                      className={`w-full text-left px-4 py-3 transition-colors ${
-                        n.is_read ? 'bg-white' : 'bg-primary/5'
-                      } hover:bg-primary/10`}
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="mt-0.5">
-                          <div className={`text-[11px] font-semibold px-2 py-1 rounded-full border ${badgeCls}`}>
-                            {label}
+                    <div key={n.id} className="relative">
+                      <button
+                        onClick={() => handleClickItem(n)}
+                        className={`w-full text-left px-4 py-3 pr-12 transition-colors ${
+                          n.is_read ? 'bg-white' : 'bg-primary/5'
+                        } hover:bg-primary/10`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="mt-0.5">
+                            <div className={`text-[11px] font-semibold px-2 py-1 rounded-full border ${badgeCls}`}>
+                              {label}
+                            </div>
+                          </div>
+                          <div className="flex-1">
+                            <div className="text-sm font-semibold text-slate-900">{n.title}</div>
+                            <div className="text-xs text-slate-600 mt-1 whitespace-pre-wrap leading-relaxed">
+                              {n.body}
+                            </div>
+                            <div className="text-[11px] text-slate-400 mt-2">{fromNow(n.created_at)}</div>
                           </div>
                         </div>
-                        <div className="flex-1">
-                          <div className="text-sm font-semibold text-slate-900">{n.title}</div>
-                          <div className="text-xs text-slate-600 mt-1 whitespace-pre-wrap leading-relaxed">
-                            {n.body}
-                          </div>
-                          <div className="text-[11px] text-slate-400 mt-2">{fromNow(n.created_at)}</div>
-                        </div>
-                      </div>
-                    </button>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteItem(n);
+                        }}
+                        aria-label="알림 삭제"
+                        className="absolute right-3 top-3 p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
                   );
                 })
               )}

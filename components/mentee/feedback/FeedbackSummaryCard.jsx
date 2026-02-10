@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { ChevronDown, MessageSquareQuote } from 'lucide-react';
 import SubjectBadge from '@/components/common/SubjectBadge';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function FeedbackSummaryCard({ item }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,9 +45,11 @@ export default function FeedbackSummaryCard({ item }) {
       >
         <div className="flex gap-3">
           <MessageSquareQuote className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-          <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-            {item.body}
-          </p>
+          <div className="prose prose-sm max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {item.body}
+            </ReactMarkdown>
+          </div>
         </div>
 
         {/* 장식용 서명 */}

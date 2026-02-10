@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import SubjectProgressCards from "./SubjectProgressCards";
 import FloatingConsultButton from "./FloatingConsultButton";
 import StreakBanner from "@/components/mentee/streak/StreakBanner";
@@ -10,6 +11,7 @@ import ReportGeneratorModal from "@/components/mentee/my-page/report/ReportGener
 
 export default function MyPageScreen() {
   const [reportOpen, setReportOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="p-4 pb-20 space-y-4">
@@ -35,6 +37,17 @@ export default function MyPageScreen() {
 
       <StreakBanner />
       <HeatmapCalendar />
+
+      {/* ✅ 로그아웃 버튼 (하단) */}
+      <div className="card-base p-3">
+        <button
+          type="button"
+          onClick={() => router.push("/login")}
+          className="w-full h-12 rounded-xl border border-border bg-white text-foreground font-semibold shadow-sm hover:bg-slate-50 active:scale-[0.99] transition"
+        >
+          로그아웃
+        </button>
+      </div>
 
       <FloatingConsultButton />
       <div style={{ height: "64px" }} />

@@ -393,6 +393,92 @@ export default function ReportGeneratorModal({ open, onClose }) {
                     footerRight: "3",
                   });
 
+                  // Page 4+: Subject feedback (card)
+                  const feedbacks = Array.isArray(report.feedbacks) ? report.feedbacks : [];
+                  const feedbackItemsBySubject = { KOR: [], ENG: [], MATH: [], ETC: [] };
+                  for (const fb of feedbacks) {
+                    const subj = fb.subject ?? "ETC";
+                    const summary = cleanText(fb.summary || "").trim();
+                    const body = cleanText(fb.body || "").trim();
+                    const content = summary && body ? `${summary}\n${body}` : (summary || body);
+                    if (!content) continue;
+                    if (!feedbackItemsBySubject[subj]) feedbackItemsBySubject[subj] = [];
+                    feedbackItemsBySubject[subj].push({
+                      key: `fb-${fb.id ?? `${fb.date}-${subj}`}`,
+                      date: fb.date,
+                      subject: subj,
+                      content,
+                    });
+                  }
+                  for (const s of subjects) {
+                    feedbackItemsBySubject[s].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+                  }
+
+                  const FEEDBACK_CARDS_PER_PAGE = 8; // 2 columns × 4 rows
+                  const feedbackPages = [];
+                  for (const s of subjects) {
+                    const items = feedbackItemsBySubject[s] || [];
+                    if (!items.length) continue;
+                    const chunks = [];
+                    for (let i = 0; i < items.length; i += FEEDBACK_CARDS_PER_PAGE) chunks.push(items.slice(i, i + FEEDBACK_CARDS_PER_PAGE));
+                    for (let i = 0; i < chunks.length; i += 1) {
+                      feedbackPages.push({
+                        subject: s,
+                        partIndex: i + 1,
+                        partTotal: chunks.length,
+                        items: chunks[i],
+                      });
+                    }
+                  }
+
+                  // Page ?: Tag stats
+                  const tagStats = Array.isArray(report.tagStats) ? report.tagStats : [];
+                  const TAG_ROWS_PER_PAGE = 18;
+                  const tagChunks = [];
+                  for (let i = 0; i < tagStats.length; i += TAG_ROWS_PER_PAGE) tagChunks.push(tagStats.slice(i, i + TAG_ROWS_PER_PAGE));
+
+                  let pageNo = 4;
+                  for (const fp of feedbackPages) {
+                    pagesBuilt.push({
+                      key: `p-subject-feedback-${fp.subject}-${fp.partIndex}`,
+                      type: "subject-feedback",
+                      watermark: "FEEDBACK",
+                      brandName: "설스터디",
+                      headerTag: "학습 리포트 · 피드백",
+                      pill: "피드백",
+                      metaRightTop: rangeLabel,
+                      metaRightBottom: createdLabel,
+                      title: "과목별 피드백",
+                      subtitle:
+                        fp.partTotal > 1
+                          ? `${subjectLabel(fp.subject)} (${fp.partIndex}/${fp.partTotal})`
+                          : `${subjectLabel(fp.subject)}`,
+                      profileBlock: null,
+                      groups: [{ subject: fp.subject, items: fp.items }],
+                      footerLeft: "설스터디 · 학습 리포트",
+                      footerRight: String(pageNo++),
+                    });
+                  }
+
+                  for (let i = 0; i < tagChunks.length; i += 1) {
+                    pagesBuilt.push({
+                      key: `p-tag-stats-${i + 1}`,
+                      type: "tag-stats",
+                      watermark: "TAGS",
+                      brandName: "설스터디",
+                      headerTag: "학습 리포트 · 태그",
+                      pill: "태그",
+                      metaRightTop: rangeLabel,
+                      metaRightBottom: createdLabel,
+                      title: "태그 통계",
+                      subtitle: tagChunks.length > 1 ? `(${i + 1}/${tagChunks.length})` : "",
+                      profileBlock: null,
+                      rows: tagChunks[i],
+                      footerLeft: "설스터디 · 학습 리포트",
+                      footerRight: String(pageNo++),
+                    });
+                  }
+
                   // ✅ 타임테이블 페이지 생성은 제거(요구사항 반영)
                   setPages(pagesBuilt);
                   await new Promise((r) => requestAnimationFrame(r));
@@ -421,9 +507,7 @@ export default function ReportGeneratorModal({ open, onClose }) {
             </button>
           </div>
 
-          <div className="text-[11px] text-foreground/60 leading-relaxed">
-            * 이 버전은 3페이지(요약/차트/과제)까지만 생성합니다.
-          </div>
+          <div className="text-[11px] text-foreground/60 leading-relaxed"></div>
         </div>
       </div>
 
