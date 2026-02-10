@@ -8,7 +8,7 @@ import { getAuthSession, resolveAppUserFromSession, persistAppUserToStorage } fr
 import { fetchMenteesByMentorId } from "@/lib/repositories/usersRepository";
 import { fetchDailyPlanner } from "@/lib/repositories/plannerRepo";
 import { fetchTasksByDate } from "@/lib/repositories/tasksRepo";
-import { fetchTimeLogsForTasksInDay, sumSecondsByTaskId } from "@/lib/repositories/timeLogsRepo";
+import { fetchStudySessions } from "@/lib/repositories/studySessionsRepo";
 
 import LogoutButton from "@/components/auth/LogoutButton";
 import MenteeCard from "./MenteeCard";
@@ -80,14 +80,17 @@ export default function MentorDashboard() {
   }
 
   async function buildSnapshot(menteeId) {
-    const [planner, tasks] = await Promise.all([
+    const [planner, tasks, sessions] = await Promise.all([
       fetchDailyPlanner({ menteeId, date: today }),
       fetchTasksByDate({ menteeId, date: today }),
+      fetchStudySessions({ menteeId, date: today }),
     ]);
-    const taskIds = tasks.map((t) => t.id);
-    const timeLogs = await fetchTimeLogsForTasksInDay({ taskIds, date: today });
-    const secondsByTaskId = sumSecondsByTaskId(timeLogs);
-    const totalSeconds = Array.from(secondsByTaskId.values()).reduce((acc, cur) => acc + cur, 0);
+    // study_sessions의 started_at/ended_at 차이로 초 합산
+    const totalSeconds = sessions.reduce((acc, s) => {
+      if (!s.startTime || !s.endTime) return acc;
+      const diffMs = new Date(s.endTime) - new Date(s.startTime);
+      return acc + Math.max(0, Math.floor(diffMs / 1000));
+    }, 0);
     const doneCount = tasks.filter((t) => t.status === "DONE").length;
 
     return {
@@ -95,12 +98,12 @@ export default function MentorDashboard() {
       totalCount: tasks.length,
       doneCount,
       studyMinutes: Math.floor(totalSeconds / 60),
-      tasks: tasks.map(t => ({ 
-        id: t.id, 
-        title: t.title, 
+      tasks: tasks.map(t => ({
+        id: t.id,
+        title: t.title,
         description: t.description,
-        subject: t.subject, 
-        status: t.status 
+        subject: t.subject,
+        status: t.status
       })),
     };
   }
@@ -126,44 +129,44 @@ export default function MentorDashboard() {
 
       <main className="flex-1 overflow-y-auto pb-10">
         <div className="px-4 py-3 bg-white border-b border-gray-100 flex items-center justify-between mb-4 sticky top-0 z-10">
-            <div className="flex items-baseline gap-1.5">
-                <span className="text-sm text-gray-800 font-medium">오늘 완료</span>
-                <span className="text-lg font-bold text-blue-600 leading-none">{completedCount}</span>
-                <span className="text-sm text-gray-400 font-medium">/ {mentees.length}명</span>
-            </div>
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-sm text-gray-800 font-medium">오늘 완료</span>
+            <span className="text-lg font-bold text-blue-600 leading-none">{completedCount}</span>
+            <span className="text-sm text-gray-400 font-medium">/ {mentees.length}명</span>
+          </div>
 
-            <button
-                onClick={() => reload(mentorId)}
-                disabled={loading}
-                className="flex items-center gap-1.5 text-xs px-3 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg active:bg-gray-100 transition-colors disabled:opacity-50 font-medium shadow-sm touch-manipulation"
+          <button
+            onClick={() => reload(mentorId)}
+            disabled={loading}
+            className="flex items-center gap-1.5 text-xs px-3 py-2 bg-gray-50 border border-gray-200 text-gray-600 rounded-lg active:bg-gray-100 transition-colors disabled:opacity-50 font-medium shadow-sm touch-manipulation"
+          >
+            <svg
+              className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-                <svg 
-                    className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                {loading ? "로딩중" : "새로고침"}
-            </button>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            {loading ? "로딩중" : "새로고침"}
+          </button>
         </div>
 
         <div className="px-4 space-y-4">
-            {mentees.length === 0 ? (
+          {mentees.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 text-gray-400 text-sm">
-                <p>담당 멘티가 없습니다.</p>
-                <p className="mt-1">Supabase 연결을 확인하세요.</p>
+              <p>담당 멘티가 없습니다.</p>
+              <p className="mt-1">Supabase 연결을 확인하세요.</p>
             </div>
-            ) : (
+          ) : (
             mentees.map((mentee) => (
-                <MenteeCard
-                    key={mentee.id}
-                    mentee={mentee}
-                    snapshot={snapshots[mentee.id]}
-                />
+              <MenteeCard
+                key={mentee.id}
+                mentee={mentee}
+                snapshot={snapshots[mentee.id]}
+              />
             ))
-            )}
+          )}
         </div>
       </main>
     </div>
