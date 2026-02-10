@@ -41,6 +41,9 @@ export default function TaskChecklist({
   title = "오늘의 할 일",
   comment = "",
   loading = false,
+  isEditable = false,
+  onCommentChange,
+  onCommentBlur,
 }) {
   const router = useRouter();
 
@@ -63,15 +66,31 @@ export default function TaskChecklist({
   }, [menteeId]);
 
   const handleSelectTask = (id) => {
+    // 멘토 할당 과제는 선택 불가 (방어 로직)
+    const targetTask = tasks.find((t) => t.id === id);
+    if (targetTask?.is_fixed_by_mentor) return;
+
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   };
 
   async function handleDelete() {
     if (selectedIds.length === 0) return;
-    if (!confirm(`${selectedIds.length}개의 할 일을 삭제하시겠습니까?`)) return;
+
+    // 만약 선택된 것 중에 멘토 과제가 있다면 제거 (방어 로직)
+    const validIds = selectedIds.filter((id) => {
+      const t = tasks.find((task) => task.id === id);
+      return !t?.is_fixed_by_mentor;
+    });
+
+    if (validIds.length === 0) {
+      alert("삭제할 수 있는 할 일이 없습니다.");
+      return;
+    }
+
+    if (!confirm(`${validIds.length}개의 할 일을 삭제하시겠습니까?`)) return;
 
     try {
-      await deleteTasks(selectedIds);
+      await deleteTasks(validIds);
       setSelectedIds([]);
       setIsDeleteMode(false);
       onMutated?.();
@@ -199,9 +218,8 @@ export default function TaskChecklist({
               <button
                 onClick={handleDelete}
                 disabled={selectedIds.length === 0}
-                className={`px-3 py-1.5 text-xs font-bold text-white rounded-lg flex items-center gap-1 transition-colors ${
-                  selectedIds.length > 0 ? "bg-red-600 hover:bg-red-700 shadow-sm" : "bg-red-300 cursor-not-allowed"
-                }`}
+                className={`px-3 py-1.5 text-xs font-bold text-white rounded-lg flex items-center gap-1 transition-colors ${selectedIds.length > 0 ? "bg-red-600 hover:bg-red-700 shadow-sm" : "bg-red-300 cursor-not-allowed"
+                  }`}
               >
                 <span>삭제</span>
                 {selectedIds.length > 0 ? (
@@ -221,9 +239,21 @@ export default function TaskChecklist({
         ) : null}
       </div>
 
-      {comment ? (
-        <div className="w-full rounded-xl border border-border bg-white/70 px-4 py-3 text-sm text-foreground/80 leading-relaxed">
-          {comment}
+      {comment || isEditable ? (
+        <div className="w-full">
+          {isEditable ? (
+            <textarea
+              value={comment}
+              onChange={(e) => onCommentChange?.(e.target.value)}
+              onBlur={onCommentBlur}
+              placeholder="오늘의 코멘트 / 질문"
+              className="w-full min-h-[50px] resize-none rounded-xl border border-border bg-slate-50 p-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary transition-all shadow-sm leading-relaxed"
+            />
+          ) : (
+            <div className="w-full rounded-xl border border-border bg-white/70 px-4 py-3 text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">
+              {comment}
+            </div>
+          )}
         </div>
       ) : null}
 

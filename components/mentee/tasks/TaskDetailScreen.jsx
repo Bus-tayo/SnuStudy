@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { getMenteeIdFromStorage } from "@/lib/utils/menteeSession";
-import { fetchTaskById } from "@/lib/repositories/taskDetailRepo";
+import { fetchAvailableSubjects, fetchTaskById, updateTaskMeta } from "@/lib/repositories/taskDetailRepo";
 import { fetchTaskPdfMaterials } from "@/lib/repositories/taskMaterialsRepo";
 import { fetchTaskSubmissions, createTaskSubmission } from "@/lib/repositories/taskSubmissionsRepo";
 import { uploadTaskSubmissionImageJpg } from "@/lib/storage/taskSubmissionStorage";
@@ -20,7 +20,6 @@ import TaskDetailTopBar from "./parts/TaskDetailTopBar";
 import TaskPdfSection from "./parts/TaskPdfSection";
 import SubmissionCarousel from "./parts/SubmissionCarousel";
 import SubmissionUploadBar from "./parts/SubmissionUploadBar";
-import NoteInput from "./parts/NoteInput";
 
 function difficultyLabel(v) {
   if (v === "DIAMOND") return "다이아";
@@ -36,6 +35,14 @@ export default function TaskDetailScreen({ taskId }) {
 
   const menteeId = useMemo(() => getMenteeIdFromStorage(), []);
   const [task, setTask] = useState(null);
+  const [subjects, setSubjects] = useState([]);
+
+  const [isEditingMeta, setIsEditingMeta] = useState(false);
+  const [draftTitle, setDraftTitle] = useState("");
+  const [draftSubject, setDraftSubject] = useState("ETC");
+  const [draftGoal, setDraftGoal] = useState("");
+  const [savingMeta, setSavingMeta] = useState(false);
+
   const [pdfs, setPdfs] = useState([]);
   const [submissions, setSubmissions] = useState([]);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -43,11 +50,14 @@ export default function TaskDetailScreen({ taskId }) {
   const [feedback, setFeedback] = useState(null);
 
   const [allTags, setAllTags] = useState([]);
-  const [tagRows, setTagRows] = useState([]); // join rows
+  const [tagRows, setTagRows] = useState([]);
   const [manualTagIds, setManualTagIds] = useState([]);
   const [newTagName, setNewTagName] = useState("");
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const [note, setNote] = useState("");
+
   const [busy, setBusy] = useState(false);
   const [errMsg, setErrMsg] = useState("");
 
@@ -76,9 +86,17 @@ export default function TaskDetailScreen({ taskId }) {
           fetchAllTags().catch(() => []),
         ]);
 
+        const subjList = await fetchAvailableSubjects({ menteeId }).catch(() => ["ETC"]);
+
         if (!alive) return;
 
         setTask(t);
+        setSubjects(Array.isArray(subjList) && subjList.length ? subjList : ["ETC"]);
+        setIsEditingMeta(false);
+        setDraftTitle(t?.title ?? "");
+        setDraftSubject(t?.subject ?? "ETC");
+        setDraftGoal(t?.goal ?? "");
+
         setPdfs(pList);
         setSubmissions(Array.isArray(s) ? s : []);
         setActiveIndex(0);
@@ -107,22 +125,85 @@ export default function TaskDetailScreen({ taskId }) {
 
   const activeSubmission = submissions?.[activeIndex] ?? null;
 
+  const startEditMeta = () => {
+    setErrMsg("");
+    setIsEditingMeta(true);
+    setDraftTitle(task?.title ?? "");
+    setDraftSubject(task?.subject ?? "ETC");
+    setDraftGoal(task?.goal ?? "");
+  };
+
+  const cancelEditMeta = () => {
+    setErrMsg("");
+    setIsEditingMeta(false);
+    setDraftTitle(task?.title ?? "");
+    setDraftSubject(task?.subject ?? "ETC");
+    setDraftGoal(task?.goal ?? "");
+  };
+
+  const saveMeta = async () => {
+    try {
+      if (!task?.id) return;
+
+      const nextTitle = String(draftTitle ?? "").trim();
+      if (!nextTitle) {
+        setErrMsg("과제명을 입력해주세요.");
+        return;
+      }
+
+      const nextGoal = typeof draftGoal === "string" ? draftGoal.trim() : "";
+
+      setSavingMeta(true);
+      setErrMsg("");
+
+      const updated = await updateTaskMeta({
+        taskId: task.id,
+        title: nextTitle,
+        subject: draftSubject,
+        goal: nextGoal,
+      });
+
+      setTask(updated);
+      setIsEditingMeta(false);
+    } catch (e) {
+      setErrMsg(e?.message || "과제 정보 수정에 실패했습니다.");
+    } finally {
+      setSavingMeta(false);
+    }
+  };
+
   const openPicker = () => {
     setErrMsg("");
     inputRef.current?.click();
   };
 
-  const onPickFile = async (file) => {
+  const onPickFile = (file) => {
     if (!file) return;
     setErrMsg("");
 
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setNote("");
+  };
+
+  const onCancelDraft = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setNote("");
+    if (inputRef.current) inputRef.current.value = "";
+  };
+
+  const onSubmitDraft = async () => {
+    if (!selectedFile) return;
+
     try {
       setBusy(true);
-
       if (!menteeId) throw new Error("로그인이 필요합니다.");
 
       const { publicUrl } = await uploadTaskSubmissionImageJpg({
-        file,
+        file: selectedFile,
         taskId,
         menteeId,
       });
@@ -137,12 +218,12 @@ export default function TaskDetailScreen({ taskId }) {
       const next = [inserted, ...submissions];
       setSubmissions(next);
       setActiveIndex(0);
-      setNote("");
+
+      onCancelDraft();
     } catch (e) {
       setErrMsg(e?.message || "업로드에 실패했습니다.");
     } finally {
       setBusy(false);
-      if (inputRef.current) inputRef.current.value = "";
     }
   };
 
@@ -160,19 +241,12 @@ export default function TaskDetailScreen({ taskId }) {
     }
     const name = newTagName.trim();
     if (!name) return;
-
     try {
       setErrMsg("");
       const tag = await upsertTagByName({ name });
       const next = Array.from(new Set([...(manualTagIds ?? []), tag.id]));
       setManualTagIds(next);
-
-      await syncManualTags({
-        taskFeedbackId: feedback.id,
-        tagIds: next,
-        actorUserId: menteeId, // ✅ 멘티도 수동 태그 가능
-      });
-
+      await syncManualTags({ taskFeedbackId: feedback.id, tagIds: next, actorUserId: menteeId });
       const rows = await fetchFeedbackTags({ taskFeedbackId: feedback.id });
       setTagRows(rows);
       setNewTagName("");
@@ -186,11 +260,7 @@ export default function TaskDetailScreen({ taskId }) {
     try {
       const next = (manualTagIds ?? []).filter((x) => x !== tagId);
       setManualTagIds(next);
-      await syncManualTags({
-        taskFeedbackId: feedback.id,
-        tagIds: next,
-        actorUserId: menteeId,
-      });
+      await syncManualTags({ taskFeedbackId: feedback.id, tagIds: next, actorUserId: menteeId });
       const rows = await fetchFeedbackTags({ taskFeedbackId: feedback.id });
       setTagRows(rows);
     } catch (e) {
@@ -199,24 +269,109 @@ export default function TaskDetailScreen({ taskId }) {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-white relative">
       <TaskDetailTopBar
         title={task?.title ?? "과제"}
-        subtitle={task?.date ? `${task.date} · ${task.subject}` : (task?.subject ?? "")}
+        subtitle={task?.date ? `${task.date} · ${task.subject}` : task?.subject ?? ""}
         onBack={() => router.back()}
+        rightSlot={
+          !task ? null : isEditingMeta ? (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="h-9 px-3 rounded border text-sm"
+                onClick={cancelEditMeta}
+                disabled={savingMeta}
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                className="h-9 px-3 rounded border text-sm font-semibold"
+                onClick={saveMeta}
+                disabled={savingMeta}
+              >
+                {savingMeta ? "저장중" : "저장"}
+              </button>
+            </div>
+          ) : (
+            <button type="button" className="h-9 px-3 rounded border text-sm" onClick={startEditMeta}>
+              수정
+            </button>
+          )
+        }
       />
 
-      <div className="flex-1 overflow-y-auto px-4 pb-28 pt-3 space-y-4">
-        {errMsg ? <div className="text-sm text-red-600">{errMsg}</div> : null}
+      <div className="flex-1 overflow-y-auto px-4 pb-64 pt-3 space-y-4">
+        {errMsg ? <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{errMsg}</div> : null}
+
+        {/* ✅ goal 표시 (편집 아닐 때) */}
+        {!isEditingMeta ? (
+          <div className="card-base p-3 rounded-xl border border-gray-100 shadow-sm bg-white space-y-2">
+            <div className="text-sm font-extrabold text-gray-800">과제 설명</div>
+            {task?.goal ? (
+              <div className="text-sm text-gray-700 whitespace-pre-line leading-relaxed">{task.goal}</div>
+            ) : (
+              <div className="text-sm text-gray-400">설명이 아직 없어요.</div>
+            )}
+          </div>
+        ) : null}
+
+        {/* ✅ title/subject/goal 편집 카드 */}
+        {isEditingMeta ? (
+          <div className="card-base p-3 rounded-xl border border-gray-100 shadow-sm bg-white space-y-3">
+            <div className="text-sm font-extrabold text-gray-800">과제 정보 수정</div>
+
+            <div className="space-y-2">
+              <div className="text-xs text-foreground/60">과제명</div>
+              <input
+                className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-background focus:outline-none focus:border-blue-500 transition-colors"
+                placeholder="과제명을 입력하세요"
+                value={draftTitle}
+                onChange={(e) => setDraftTitle(e.target.value)}
+                disabled={savingMeta}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="text-xs text-foreground/60">과목</div>
+              <select
+                className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-background focus:outline-none focus:border-blue-500 transition-colors"
+                value={draftSubject}
+                onChange={(e) => setDraftSubject(e.target.value)}
+                disabled={savingMeta}
+              >
+                {(subjects ?? ["ETC"]).map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* ✅ goal 수정 */}
+            <div className="space-y-2">
+              <div className="text-xs text-foreground/60">과제 설명(goal)</div>
+              <textarea
+                className="w-full min-h-[120px] border border-border rounded-xl px-3 py-2 text-sm bg-background focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                placeholder="과제 설명을 입력하세요"
+                value={draftGoal}
+                onChange={(e) => setDraftGoal(e.target.value)}
+                disabled={savingMeta}
+              />
+            </div>
+
+            <div className="text-xs text-foreground/60">※ 저장을 누르면 과제명/과목/설명이 함께 업데이트돼요.</div>
+          </div>
+        ) : null}
 
         <TaskPdfSection pdfs={pdfs} />
 
-        {/* ✅ 멘토 피드백 */}
-        <div className="card-base p-3 space-y-2">
+        <div className="card-base p-3 space-y-2 rounded-xl border border-gray-100 shadow-sm bg-white">
           <div className="flex items-center justify-between">
-            <div className="text-sm font-extrabold">멘토 피드백</div>
+            <div className="text-sm font-extrabold text-gray-800">멘토 피드백</div>
             {feedback?.difficulty ? (
-              <div className="badge-base bg-secondary text-secondary-foreground border-border">
+              <div className="badge-base bg-secondary text-secondary-foreground border-border px-2 py-0.5 rounded-md text-xs font-semibold">
                 난이도 · {difficultyLabel(feedback.difficulty)}
               </div>
             ) : (
@@ -225,46 +380,39 @@ export default function TaskDetailScreen({ taskId }) {
           </div>
 
           {feedback?.body ? (
-            <div className="prose prose-sm max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {feedback.body}
-              </ReactMarkdown>
+            <div className="prose prose-sm max-w-none text-gray-600">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{feedback.body}</ReactMarkdown>
             </div>
           ) : (
             <div className="text-sm text-foreground/60">멘토가 피드백을 남기면 여기에 표시돼요.</div>
           )}
 
-          {/* 태그 표시 */}
-          <div className="pt-2 space-y-2">
+          <div className="pt-2 space-y-2 border-t border-gray-50 mt-2">
             <div className="text-xs text-foreground/60">태그</div>
             <div className="flex flex-wrap gap-2">
               {resolvedTags.length === 0 ? (
                 <div className="text-xs text-foreground/60">태그 없음</div>
               ) : (
                 resolvedTags.map((r) => (
-                  <span
-                    key={r.id}
-                    className="px-2.5 py-1 rounded-full text-xs border border-border bg-background"
-                  >
-                    #{r.tag.name}{r.source === "AUTO" ? "" : " · 수동"}
+                  <span key={r.id} className="px-2.5 py-1 rounded-full text-xs border border-border bg-background">
+                    #{r.tag.name}
+                    {r.source === "AUTO" ? "" : " · 수동"}
                   </span>
                 ))
               )}
             </div>
 
-            {/* ✅ 멘티도 수동 태그 추가/삭제 가능 */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mt-1">
               <input
-                className="flex-1 border border-border rounded-xl px-3 py-2 text-sm bg-background"
-                placeholder="수동 태그 추가 (예: 적분)"
+                className="flex-1 border border-border rounded-xl px-3 py-2 text-sm bg-background focus:outline-none focus:border-blue-500 transition-colors"
+                placeholder="수동 태그 추가"
                 value={newTagName}
                 onChange={(e) => setNewTagName(e.target.value)}
               />
-              <button className="btn-secondary" onClick={onAddManualTag}>
+              <button className="px-3 py-2 rounded-xl text-xs font-bold bg-gray-100 text-gray-600" onClick={onAddManualTag}>
                 추가
               </button>
             </div>
-
             <div className="flex flex-wrap gap-2">
               {(manualTagIds ?? []).map((id) => {
                 const t = (allTags ?? []).find((x) => x.id === id);
@@ -284,22 +432,68 @@ export default function TaskDetailScreen({ taskId }) {
           </div>
         </div>
 
-        <NoteInput value={note} onChange={setNote} />
-
-        <SubmissionCarousel
-          submissions={submissions}
-          activeIndex={activeIndex}
-          onChangeIndex={setActiveIndex}
-        />
+        <SubmissionCarousel submissions={submissions} activeIndex={activeIndex} onChangeIndex={setActiveIndex} />
 
         {activeSubmission?.submitted_at ? (
-          <div className="text-xs text-foreground/60">
+          <div className="text-xs text-foreground/60 text-right pr-1">
             최근 제출: {String(activeSubmission.submitted_at).replace("T", " ").slice(0, 19)}
           </div>
         ) : null}
       </div>
 
-      <SubmissionUploadBar busy={busy} onCameraOrUpload={openPicker} />
+      {!selectedFile ? (
+        <div className="fixed bottom-[90px] left-0 right-0 z-50 flex justify-center pointer-events-none">
+          <div className="w-full max-w-[430px] px-4 pointer-events-auto">
+            <div className="relative bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.12)] border border-gray-100/50 p-2.5 active:scale-[0.97] transition-transform">
+              <SubmissionUploadBar busy={busy} onCameraOrUpload={openPicker} />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="fixed bottom-[90px] left-0 right-0 z-50 flex justify-center pointer-events-none">
+          <div className="w-full max-w-[430px] px-4 pointer-events-auto">
+            <div className="bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.2)] border border-gray-100 p-4 animate-in slide-in-from-bottom-5 fade-in duration-300">
+              <div className="flex gap-4 mb-4">
+                <div className="relative w-24 h-24 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+                  {previewUrl && <img src={previewUrl} alt="Preview" className="w-full h-full object-cover" />}
+                </div>
+
+                <textarea
+                  className="flex-1 bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-300 resize-none"
+                  placeholder="코멘트를 적어주세요 (선택)"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  disabled={busy}
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={onCancelDraft}
+                  disabled={busy}
+                  className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl font-bold text-sm transition-colors"
+                >
+                  취소
+                </button>
+                <button
+                  onClick={onSubmitDraft}
+                  disabled={busy}
+                  className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm shadow-md active:scale-[0.98] transition-all flex justify-center items-center gap-2"
+                >
+                  {busy ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      업로드 중...
+                    </>
+                  ) : (
+                    "인증 완료"
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <input
         ref={inputRef}

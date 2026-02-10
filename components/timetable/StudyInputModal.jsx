@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Check, AlertCircle } from "lucide-react";
+import { X, Check, AlertCircle, Trash2 } from "lucide-react";
 
 const HEX7_RE = /^#([0-9A-Fa-f]{6})$/;
 
@@ -148,6 +148,7 @@ export function StudyInputModal({
   isOpen,
   onClose,
   onConfirm,
+  onDelete,
   tasks = [],
   initialTaskId = null,
   initialColor = null,
@@ -222,20 +223,18 @@ export function StudyInputModal({
                     key={task.id}
                     type="button"
                     onClick={() => handleTaskSelect(task.id)}
-                    className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
-                      isSelected
-                        ? "border-[hsl(var(--primary))] bg-[hsl(var(--primary)/0.08)]"
-                        : "border-slate-100 hover:border-slate-200 hover:bg-slate-50"
-                    }`}
+                    className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${isSelected
+                      ? "border-[hsl(var(--primary))] bg-[hsl(var(--primary)/0.08)]"
+                      : "border-slate-100 hover:border-slate-200 hover:bg-slate-50"
+                      }`}
                   >
                     <span
                       className="w-3 h-3 rounded-full flex-shrink-0"
                       style={{ backgroundColor: taskColor }}
                     />
                     <span
-                      className={`flex-1 text-sm font-medium ${
-                        isSelected ? "text-[hsl(var(--primary))]" : "text-slate-700"
-                      }`}
+                      className={`flex-1 text-sm font-medium ${isSelected ? "text-[hsl(var(--primary))]" : "text-slate-700"
+                        }`}
                     >
                       {task.title}
                     </span>
@@ -276,13 +275,6 @@ export function StudyInputModal({
 
           <div className="flex gap-3 p-4 border-t border-slate-100">
             <button
-              type="button"
-              onClick={onClose}
-              className="flex-1 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-colors font-medium"
-            >
-              취소
-            </button>
-            <button
               type="submit"
               disabled={!selectedTaskId}
               className="flex-1 py-3 text-white rounded-xl font-bold shadow-md hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-transform active:scale-95"
@@ -290,6 +282,23 @@ export function StudyInputModal({
             >
               확인
             </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="flex-1 py-3 text-slate-500 hover:bg-slate-50 rounded-xl transition-colors font-medium"
+            >
+              취소
+            </button>
+            {initialTaskId && onDelete && (
+              <button
+                type="button"
+                onClick={onDelete}
+                className="px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl transition-colors font-medium flex items-center justify-center"
+                title="삭제"
+              >
+                <Trash2 size={20} />
+              </button>
+            )}
           </div>
         </form>
       </div>

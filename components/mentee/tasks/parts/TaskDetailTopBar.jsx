@@ -1,6 +1,6 @@
 "use client";
 
-export default function TaskDetailTopBar({ title, subtitle, onBack }) {
+export default function TaskDetailTopBar({ title, subtitle, onBack, rightSlot = null }) {
   return (
     <div className="px-4 py-3 border-b bg-white flex items-center gap-3">
       <button
@@ -15,6 +15,8 @@ export default function TaskDetailTopBar({ title, subtitle, onBack }) {
         <div className="text-base font-semibold truncate">{title}</div>
         {subtitle ? <div className="text-xs text-neutral-500 truncate">{subtitle}</div> : null}
       </div>
+
+      {rightSlot}
     </div>
   );
 }
