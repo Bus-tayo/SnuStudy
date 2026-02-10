@@ -245,6 +245,7 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
 
       setFeedback(saved);
       setAutoTagIds(autoIds);
+      router.back();
     } catch (e) {
       console.error("[MentorTaskFeedbackScreen/save]", e);
       setErr(e?.message ?? "저장에 실패했습니다.");
