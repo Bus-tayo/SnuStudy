@@ -9,7 +9,7 @@ import { getAuthSession, resolveAppUserFromSession, persistAppUserToStorage } fr
 import { fetchAppUserById } from "@/lib/repositories/usersRepository";
 import { fetchDailyPlanner } from "@/lib/repositories/plannerRepo";
 import { fetchTasksByDate, addMentorTask } from "@/lib/repositories/tasksRepo";
-import { fetchTimeLogsForTasksInDay, sumSecondsByTaskId } from "@/lib/repositories/timeLogsRepo";
+import { fetchStudySessions } from "@/lib/repositories/studySessionsRepo";
 
 import SubjectProgressCards from "@/components/mentee/my/SubjectProgressCards";
 
@@ -94,21 +94,24 @@ export default function MenteeWeeklyDetail({ menteeId }) {
         Array.from({ length: 7 }).map(async (_, idx) => {
           const date = new Date(base);
           date.setDate(base.getDate() + idx);
-          const [planner, tasks] = await Promise.all([
+          const [planner, tasks, sessions] = await Promise.all([
             fetchDailyPlanner({ menteeId, date }),
             fetchTasksByDate({ menteeId, date }),
+            fetchStudySessions({ menteeId, date }),
           ]);
-          const taskIds = tasks.map((t) => t.id);
-          const logs = await fetchTimeLogsForTasksInDay({ taskIds, date });
-          const map = sumSecondsByTaskId(logs);
+          // study_sessions의 started_at/ended_at로 과제별 분 합산
+          const minutesByTaskId = new Map();
+          for (const s of sessions) {
+            if (!s.startTime || !s.endTime || !s.taskId) continue;
+            const diffSec = Math.max(0, Math.floor((new Date(s.endTime) - new Date(s.startTime)) / 1000));
+            minutesByTaskId.set(s.taskId, (minutesByTaskId.get(s.taskId) ?? 0) + Math.floor(diffSec / 60));
+          }
 
           return {
             date,
             planner,
             tasks,
-            minutesByTaskId: new Map(
-              Array.from(map.entries()).map(([k, v]) => [k, Math.floor(v / 60)])
-            ),
+            minutesByTaskId,
             onAddTask: async (title, subject, description, cb) => {
               const t = title?.trim();
               if (!t) return;
