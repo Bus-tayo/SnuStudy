@@ -86,8 +86,6 @@ export default function CalendarPlannerScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menteeId, anchorDate, viewMode]);
 
-  // ✅ 하단 고정 네비 높이(대략). “캘린더 아래~nav 위”를 딱 채우기 위해 뺌.
-  // 실제와 다르면 이 값만 조절하면 됨.
   const NAV_PX = 96;
 
   return (
@@ -97,7 +95,6 @@ export default function CalendarPlannerScreen() {
     >
       {err ? <div className="p-4 text-sm text-red-600">{err}</div> : null}
 
-      {/* 캘린더는 고정 높이(420px) */}
       <div className="w-full overflow-x-hidden shrink-0">
         <CalendarRoot
           tasks={tasksForCalendar}
@@ -107,32 +104,29 @@ export default function CalendarPlannerScreen() {
         />
       </div>
 
-      {/* ✅ 캘린더 아래 영역을 남은 높이로 딱 채움 */}
-      {/* ✅ 캘린더 아래 영역 */}
-<div className="mt-4 flex flex-1 min-h-0 w-full flex-row gap-2 px-2 overflow-hidden">
-  {/* ✅ 왼쪽: 할일목록은 스크롤 가능 */}
-  <div className="basis-0 flex-1 min-w-0 min-h-0 bg-white/50 rounded-2xl border border-white/20 p-4 overflow-hidden">
-    <div className="h-full min-h-0 overflow-y-auto pr-2 custom-scrollbar scrollbar-hide">
-      <TaskChecklist
-        menteeId={menteeId}
-        date={anchorDate}
-        tasks={tasksForDay}
-        secondsByTaskId={secondsByTaskId}
-        onMutated={() => reloadAll(anchorDate, viewMode)}
-        mode="view"
-        title="오늘의 할 일"
-        comment={todayComment}
-        loading={isTaskListLoading}
-      />
-    </div>
-  </div>
+      <div className="mt-4 flex flex-1 min-h-0 w-full flex-row gap-2 px-0 overflow-hidden">
+        {/* ✅ 오늘의 할 일: 가로폭 더 넓게 + 내부 패딩 더 줄임 */}
+        <div className="basis-0 flex-[1.25] min-w-0 min-h-0 bg-white/50 rounded-2xl border border-white/20 p-3 overflow-hidden">
+          <div className="h-full min-h-0 overflow-y-auto pr-0.5 custom-scrollbar">
+            <TaskChecklist
+              menteeId={menteeId}
+              date={anchorDate}
+              tasks={tasksForDay}
+              secondsByTaskId={secondsByTaskId}
+              onMutated={() => reloadAll(anchorDate, viewMode)}
+              mode="view"
+              title="오늘의 할 일"
+              comment={todayComment}
+              loading={isTaskListLoading}
+            />
+          </div>
+        </div>
 
-  {/* ✅ 오른쪽: 타임테이블은 스크롤 없음(부모 높이를 꽉 채움) */}
-  <div className="basis-0 flex-1 min-w-0 min-h-0 overflow-hidden relative">
-    <TimeTableContainer selectedDate={anchorDate} />
-  </div>
-</div>
-
+        {/* ✅ 타임테이블: 상대적으로 조금 줄임 */}
+        <div className="basis-0 flex-[0.75] min-w-0 min-h-0 overflow-hidden relative">
+          <TimeTableContainer selectedDate={anchorDate} />
+        </div>
+      </div>
     </div>
   );
 }
