@@ -5,6 +5,9 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft, Send, Clock, User, Pencil, X } from "lucide-react";
 import { createFeedback, fetchFeedbacks, updateFeedback } from "@/lib/repositories/feedbacksRepo";
 import { getAuthSession, resolveAppUserFromSession } from "@/lib/auth/session";
+import MarkdownEditor from "@/components/mentor/task-feedback/MarkdownEditor";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const SUBJECT_LABEL = {
     KOR: "국어",
@@ -135,12 +138,9 @@ export default function SubjectFeedbackScreen({ menteeId, subject, readOnly = fa
                                 className="w-full p-3 rounded-xl border border-border bg-card text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                                 disabled={submitting}
                             />
-                            <textarea
+                            <MarkdownEditor
                                 value={feedback}
-                                onChange={(e) => setFeedback(e.target.value)}
-                                placeholder={`${subjectName} 학습에 대한 피드백을 남겨주세요. (500자 이내)`}
-                                className="w-full h-32 p-3 pb-10 rounded-xl border border-border bg-card text-sm resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-                                disabled={submitting}
+                                onChange={setFeedback}
                             />
                             <button
                                 type="submit"
@@ -188,9 +188,11 @@ export default function SubjectFeedbackScreen({ menteeId, subject, readOnly = fa
                                             {item.summary}
                                         </h3>
                                     )}
-                                    <p className="text-sm whitespace-pre-wrap leading-relaxed">
-                                        {item.body}
-                                    </p>
+                                    <div className="prose prose-sm max-w-none">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                            {item.body}
+                                        </ReactMarkdown>
+                                    </div>
                                 </div>
                             ))
                         ) : (
