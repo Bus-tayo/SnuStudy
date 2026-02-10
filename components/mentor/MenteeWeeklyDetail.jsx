@@ -119,7 +119,7 @@ export default function MenteeWeeklyDetail({ menteeId }) {
                   date,
                   title: t,
                   subject,
-                  description,
+                  goal: description,
                 });
                 cb?.();
                 await loadWeek(base);
@@ -482,8 +482,8 @@ function TaskItem({ task, minutes, isExpanded, onToggle, menteeId }) {
               피드백 작성
             </button>
           </div>
-          {task.description ? (
-            <p className="whitespace-pre-wrap">{task.description}</p>
+          {task.goal ? (
+            <p className="whitespace-pre-wrap">{task.goal}</p>
           ) : (
             <p className="text-gray-400 italic">작성된 상세 내용이 없습니다.</p>
           )}
