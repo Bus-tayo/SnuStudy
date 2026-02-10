@@ -161,10 +161,18 @@ function PageChrome({ p, children }) {
 /* -------- Summary Page -------- */
 
 function SummaryPageBody({ p }) {
+  const leftBlocks = p.leftBlocks || [];
+  const rightBlocks = p.rightBlocks || [];
+  const rankIdx = leftBlocks.findIndex((b) => b?.kind === "rankTable");
+  const rankBlock = rankIdx >= 0 ? leftBlocks[rankIdx] : null;
+  const leftBefore = rankIdx >= 0 ? leftBlocks.slice(0, rankIdx) : leftBlocks;
+  const leftAfter = rankIdx >= 0 ? leftBlocks.slice(rankIdx + 1) : [];
+
   return (
-    <div className="report-grid">
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {(p.leftBlocks || []).map((blk) => (
+    <div className="report-summaryLayout">
+      <div className="report-grid" style={{ marginTop: 0 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {leftBefore.map((blk) => (
           <div key={blk.title} className="report-card">
             <h2>{blk.title}</h2>
 
@@ -227,11 +235,11 @@ function SummaryPageBody({ p }) {
               <p style={{ fontSize: 11, color: "hsl(var(--foreground) / 0.75)", lineHeight: 1.35 }}>{blk.text}</p>
             ) : null}
           </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {(p.rightBlocks || []).map((blk) => (
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {rightBlocks.map((blk) => (
           <div key={blk.title} className="report-card">
             <h2>{blk.title}</h2>
 
@@ -263,7 +271,167 @@ function SummaryPageBody({ p }) {
               <p style={{ fontSize: 11, color: "hsl(var(--foreground) / 0.75)", lineHeight: 1.35 }}>{blk.text}</p>
             ) : null}
           </div>
-        ))}
+          ))}
+        </div>
+      </div>
+
+      {rankBlock ? (
+        <div className="report-card report-fullWidthCard" style={{ marginTop: 12 }}>
+          <h2>{rankBlock.title}</h2>
+          <table className="report-table report-tableWide">
+            <thead>
+              <tr>
+                <th style={{ width: 90 }}>과목</th>
+                <th style={{ width: 120 }}>공부시간</th>
+                <th style={{ width: 80 }}>완료</th>
+                <th style={{ width: 70 }}>완료율</th>
+                <th style={{ width: 80 }}>등급</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(rankBlock.rows || []).map((r) => (
+                <tr key={r.subject}>
+                  <td>{subjectLabel(r.subject)}</td>
+                  <td>{r.studyTimeLabel}</td>
+                  <td>
+                    {r.done}/{r.total}
+                  </td>
+                  <td>{r.rate}%</td>
+                  <td>
+                    <span className={`report-tier ${r.tier}`}>{r.tier}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+
+      {leftAfter.length ? (
+        <div className="report-grid" style={{ marginTop: 12 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {leftAfter.map((blk) => (
+              <div key={blk.title} className="report-card">
+                <h2>{blk.title}</h2>
+
+                {blk.kind === "list" ? (
+                  <ul className="report-list">{(blk.items || []).map((x, i) => <li key={i}>{x}</li>)}</ul>
+                ) : blk.kind === "text" ? (
+                  <p style={{ fontSize: 11, color: "hsl(var(--foreground) / 0.75)", lineHeight: 1.35 }}>{blk.text}</p>
+                ) : null}
+              </div>
+            ))}
+          </div>
+          <div />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/* -------- Subject Feedback Page -------- */
+
+function FeedbackCard({ it }) {
+  const bg = subjectCssBg(it.subject || "ETC");
+  const bd = subjectCssBorder(it.subject || "ETC");
+  return (
+    <div
+      className="report-feedbackCard"
+      style={{
+        borderRadius: 16,
+        border: `1px solid ${bd}`,
+        background: bg,
+        padding: 12,
+        display: "flex",
+        flexDirection: "column",
+        gap: 6,
+        minHeight: 86,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 10 }}>
+        <div style={{ fontSize: 11, fontWeight: 1000, color: "hsl(var(--foreground) / 0.78)" }}>{it.date}</div>
+        <div style={{ fontSize: 11, fontWeight: 1000, color: "hsl(var(--foreground) / 0.78)" }}>
+          {subjectLabel(it.subject)}
+        </div>
+      </div>
+      <div style={{ fontSize: 12, fontWeight: 900, color: "hsl(var(--foreground) / 0.88)", lineHeight: 1.35, whiteSpace: "pre-wrap" }}>
+        {safeText(it.content, "(내용 없음)")}
+      </div>
+    </div>
+  );
+}
+
+function SubjectFeedbackPageBody({ p }) {
+  const groups = p.groups || [];
+  return (
+    <div className="report-grid full">
+      <div className="report-card">
+        <h2>과목별 피드백</h2>
+        <div style={{ fontSize: 11, color: "hsl(var(--foreground) / 0.65)", marginBottom: 10 }}>
+          기간 내 멘토 피드백을 과목별로 카드 형태로 정리했습니다.
+        </div>
+
+        {groups.length ? (
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {groups.map((g) => (
+              <div key={g.subject}>
+                <div className="report-miniTitle" style={{ marginBottom: 8 }}>
+                  {subjectLabel(g.subject)}
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  {(g.items || []).map((it) => (
+                    <FeedbackCard key={it.key} it={it} />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div style={{ fontSize: 12, color: "hsl(var(--foreground) / 0.55)" }}>(피드백 없음)</div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* -------- Tag Stats Page -------- */
+
+function TagStatsPageBody({ p }) {
+  const rows = p.rows || [];
+  return (
+    <div className="report-grid full">
+      <div className="report-card">
+        <h2>태그 통계</h2>
+        <div style={{ fontSize: 11, color: "hsl(var(--foreground) / 0.65)", marginBottom: 10 }}>
+          과제 피드백에 1개 이상 등장한 태그만 집계했습니다.
+        </div>
+
+        {rows.length ? (
+          <table className="report-table report-tableWide">
+            <thead>
+              <tr>
+                <th style={{ width: 240 }}>태그</th>
+                <th style={{ width: 120 }}>등장 횟수</th>
+                <th style={{ width: 120 }}>관련 과목 수</th>
+                <th style={{ width: 120 }}>주요 과목</th>
+                <th style={{ width: 80 }}>비중</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.tagName}>
+                  <td style={{ fontWeight: 900 }}>{r.tagName}</td>
+                  <td>{r.feedbackCount}</td>
+                  <td>{r.subjectCount}</td>
+                  <td>{subjectLabel(r.topSubject)}</td>
+                  <td>{r.sharePct}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div style={{ fontSize: 12, color: "hsl(var(--foreground) / 0.55)" }}>(태그 없음)</div>
+        )}
       </div>
     </div>
   );
@@ -691,6 +859,10 @@ export default function ReportPagesHost({ pages, hostRef }) {
             <TrendsPageBody p={p} />
           ) : p.type === "tasks" ? (
             <TasksPageBody p={p} />
+          ) : p.type === "subject-feedback" ? (
+            <SubjectFeedbackPageBody p={p} />
+          ) : p.type === "tag-stats" ? (
+            <TagStatsPageBody p={p} />
           ) : p.type === "timetable-day" ? (
             <TimetablePageBody p={p} />
           ) : null}
