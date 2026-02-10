@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { addWeeks, format, startOfWeek } from "date-fns";
+import { MessageSquarePlus } from "lucide-react";
 
 import { getAuthSession, resolveAppUserFromSession, persistAppUserToStorage } from "@/lib/auth/session";
 import { fetchAppUserById } from "@/lib/repositories/usersRepository";
@@ -197,7 +198,7 @@ export default function MenteeWeeklyDetail({ menteeId }) {
 
         <div className="space-y-4">
           {days.map((d) => (
-            <DayCard key={d.date.toISOString()} day={d} />
+            <DayCard key={d.date.toISOString()} day={d} menteeId={menteeId} />
           ))}
         </div>
       </main>
@@ -205,7 +206,7 @@ export default function MenteeWeeklyDetail({ menteeId }) {
   );
 }
 
-function DayCard({ day }) {
+function DayCard({ day, menteeId }) {
   const { isToday, isPast } = useMemo(() => {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -318,6 +319,7 @@ function DayCard({ day }) {
                   <TaskItem
                     key={t.id}
                     task={t}
+                    menteeId={menteeId}
                     minutes={day.minutesByTaskId.get(t.id) ?? 0}
                     isExpanded={expandedTaskId === t.id}
                     onToggle={() => handleToggleTask(t.id)}
@@ -382,7 +384,8 @@ function DayCard({ day }) {
   );
 }
 
-function TaskItem({ task, minutes, isExpanded, onToggle }) {
+function TaskItem({ task, minutes, isExpanded, onToggle, menteeId }) {
+  const router = useRouter();
   const varName = getSubjectColorVar(task.subject);
   const subjectKorean = getSubjectKorean(task.subject);
   const isTaskDone = task.status === "DONE";
@@ -466,7 +469,19 @@ function TaskItem({ task, minutes, isExpanded, onToggle }) {
           }`}
       >
         <div className="p-3 bg-opacity-50 bg-gray-50 text-sm text-gray-600 leading-relaxed">
-          <div className="font-semibold mb-1 text-xs text-gray-400 uppercase">상세 내용</div>
+          <div className="flex items-center justify-between mb-2">
+            <div className="font-semibold text-xs text-gray-400 uppercase">상세 내용</div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/mentor/tasks/${task.id}`);
+              }}
+              className="flex items-center gap-1 text-[11px] font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded hover:bg-blue-100 transition-colors"
+            >
+              <MessageSquarePlus className="w-3.5 h-3.5" />
+              피드백 작성
+            </button>
+          </div>
           {task.description ? (
             <p className="whitespace-pre-wrap">{task.description}</p>
           ) : (

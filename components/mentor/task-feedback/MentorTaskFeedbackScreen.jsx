@@ -293,8 +293,8 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
   const saveDisabled = saving || !task?.id;
 
   return (
-    <div className="min-h-dvh flex flex-col">
-      <header className="px-4 py-3 border-b border-border flex items-center justify-between">
+    <div className="min-h-dvh flex flex-col bg-gray-50 w-full max-w-[430px] mx-auto shadow-xl">
+      <header className="px-4 py-3 border-b border-gray-200 bg-white sticky top-0 z-10 flex items-center justify-between">
         <div>
           <div className="text-xs text-foreground/60">{headerSubtitle}</div>
           <div className="text-lg font-extrabold">{task?.title ?? "피드백 작성"}</div>
