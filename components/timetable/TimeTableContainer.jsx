@@ -73,9 +73,55 @@ function hslToRgb(h, s, l) {
   return { r, g, b };
 }
 
+function rgbToHsl(r, g, b) {
+  const rr = clamp01(Number(r) / 255);
+  const gg = clamp01(Number(g) / 255);
+  const bb = clamp01(Number(b) / 255);
+
+  const max = Math.max(rr, gg, bb);
+  const min = Math.min(rr, gg, bb);
+  const delta = max - min;
+
+  let h = 0;
+  if (delta !== 0) {
+    if (max === rr) h = ((gg - bb) / delta) % 6;
+    else if (max === gg) h = (bb - rr) / delta + 2;
+    else h = (rr - gg) / delta + 4;
+    h *= 60;
+    if (h < 0) h += 360;
+  }
+
+  const l = (max + min) / 2;
+  const s = delta === 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+  return { h, s: s * 100, l: l * 100 };
+}
+
 function rgbToHex7(r, g, b) {
   const to2 = (n) => String(Math.max(0, Math.min(255, n)).toString(16)).padStart(2, "0");
   return `#${to2(r)}${to2(g)}${to2(b)}`.toUpperCase();
+}
+
+function hex7ToRgb(hex) {
+  if (typeof hex !== "string") return null;
+  const matched = hex.trim().match(HEX7_RE);
+  if (!matched) return null;
+  const raw = matched[1];
+  return {
+    r: parseInt(raw.slice(0, 2), 16),
+    g: parseInt(raw.slice(2, 4), 16),
+    b: parseInt(raw.slice(4, 6), 16),
+  };
+}
+
+function pastelizeHex(hex) {
+  const rgb = hex7ToRgb(hex);
+  if (!rgb) return hex;
+
+  const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+  const pastelS = Math.max(50, Math.min(hsl.s, 64));
+  const pastelL = Math.max(74, Math.min(hsl.l, 82));
+  const { r, g, b } = hslToRgb(hsl.h, pastelS, pastelL);
+  return rgbToHex7(r, g, b);
 }
 
 function parseHslTriplet(str) {
@@ -131,7 +177,8 @@ function normalizeToHex7(value) {
 }
 
 function resolveColorHex(value) {
-  return normalizeToHex7(value) || cssVarToHex7("--subject-etc") || "#000000";
+  const resolved = normalizeToHex7(value) || cssVarToHex7("--subject-etc") || "#C7D3F6";
+  return pastelizeHex(resolved);
 }
 
 function minutesToTimeId(totalMinutes) {
@@ -145,12 +192,12 @@ export default function TimeTableContainer({ selectedDate }) {
   const [mode, setMode] = useState("IDLE");
   const isProcessing = useRef(false);
 
-  const [defaultColorHex, setDefaultColorHex] = useState("#000000");
+  const [defaultColorHex, setDefaultColorHex] = useState("#C7D3F6");
 
   const [tasks, setTasks] = useState([]);
   const [dailyTasks, setDailyTasks] = useState([]);
   const [tempTaskId, setTempTaskId] = useState(null);
-  const [tempColor, setTempColor] = useState("#000000"); // HEX7 only
+  const [tempColor, setTempColor] = useState("#C7D3F6"); // HEX7 only
   const [tempStart, setTempStart] = useState(null);
   const [editingSessionId, setEditingSessionId] = useState(null);
   const currentDate = selectedDate || new Date();
@@ -177,6 +224,7 @@ export default function TimeTableContainer({ selectedDate }) {
           ...d,
           startTime: dateToGridTime(new Date(d.startTime)),
           endTime: dateToGridTime(new Date(d.endTime)),
+          color: resolveColorHex(d.color || d.subject || "ETC"),
         }));
         setTasks(formattedSessions);
 
@@ -257,7 +305,7 @@ export default function TimeTableContainer({ selectedDate }) {
             subject: saved.subject,
             startTime: tempStart,
             endTime: endTimeIdForDb,
-            color: saved.color,
+            color: resolveColorHex(saved.color || tempColor),
           };
           setTasks((prev) => [...prev, newTask]);
         } catch (e) {
@@ -305,7 +353,7 @@ export default function TimeTableContainer({ selectedDate }) {
                 taskId: updated.taskId,
                 content: updated.content,
                 subject: updated.subject,
-                color: updated.color,
+                color: resolveColorHex(updated.color || colorToken || defaultColorHex),
               }
             : t
         )
@@ -366,7 +414,12 @@ export default function TimeTableContainer({ selectedDate }) {
       )}
 
       <div className="w-full h-full overflow-y-auto pr-2 custom-scrollbar">
-        <TimeTableGrid data={tasks} onSlotClick={handleMainGridClick} selectedStart={tempStart} />
+        <TimeTableGrid
+          data={tasks}
+          onSlotClick={handleMainGridClick}
+          selectedStart={tempStart}
+          labelMode="compact"
+        />
       </div>
 
       <TimeTableOverlay

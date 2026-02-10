@@ -200,28 +200,32 @@ export function TimeTableOverlay({
               <div className="flex-1 overflow-y-auto p-4 pb-24 scrollbar-hide">
                 {tasks.length > 0 ? (
                   <div className="space-y-3">
-                    {tasks.map((task) => (
-                      <div
-                        key={task.id}
-                        className="flex items-center justify-between bg-slate-50 px-4 py-3 rounded-xl border border-slate-100"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span
-                            className="w-3 h-3 rounded-full"
-                            style={{ backgroundColor: resolveCssColor(task.color, task.subject) }}
-                          />
-                          <div>
-                            <span className="text-sm font-semibold text-slate-700 block">
-                              {task.content}
-                            </span>
-                            <span className="text-xs text-slate-400">
-                              {task.startTime} ~ {task.endTime}
-                            </span>
+                    {tasks.map((task) => {
+                      const recordColor = resolveCssColor(task.color, task.subject);
+                      return (
+                        <div
+                          key={task.id}
+                          className="flex items-center justify-between bg-slate-50 px-4 py-3 rounded-xl border border-slate-100"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span
+                              className="w-3 h-3 rounded-full"
+                              style={{
+                                backgroundImage: `linear-gradient(rgba(255,255,255,0.45), rgba(255,255,255,0.45)), linear-gradient(${recordColor}, ${recordColor})`,
+                              }}
+                            />
+                            <div>
+                              <span className="text-sm font-semibold text-slate-700 block">
+                                {task.content}
+                              </span>
+                              <span className="text-xs text-slate-400">
+                                {task.startTime} ~ {task.endTime}
+                              </span>
+                            </div>
                           </div>
                         </div>
-
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="text-center py-8 text-slate-400">

@@ -47,4 +47,27 @@
 
     /* Other Month / Disabled */
     --calendar-disabled-text: rgba(255, 255, 255, 0.3);
+
+    /* Timetable */
+    --timetable-grid-bg: #ffffff;
+    --timetable-grid-border: #cbd5e1;
+    --timetable-hour-bg: #f8fafc;
+    --timetable-hour-text: #94a3b8;
+    --timetable-empty-hover-bg: #f1f5f9;
+    --timetable-selected-bg: rgb(99 102 241 / 0.9);
+    --timetable-selected-hover-bg: #6366f1;
+    --timetable-task-divider: rgba(71, 85, 105, 0.4);
+
+    --timetable-label-offset-x: 0.5rem;
+    --timetable-label-offset-y: 0.375rem;
+    --timetable-label-radius: 0.375rem;
+    --timetable-label-padding-x: 0.375rem;
+    --timetable-label-padding-y: 2px;
+    --timetable-label-font-size: 11px;
+    --timetable-label-font-weight: 600;
+    --timetable-label-text-color: #ffffff;
+    --timetable-label-max-width-offset: 10px;
+    --timetable-label-bg-darken-alpha: 0.12;
+    --timetable-label-border-width: 1px;
+    --timetable-label-border-darken-alpha: 0.22;
 }
