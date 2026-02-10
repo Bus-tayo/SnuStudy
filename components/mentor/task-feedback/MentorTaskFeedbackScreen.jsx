@@ -177,8 +177,10 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
   // auto-tags preview update (local)
   useEffect(() => {
     const next = extractAutoTagIds({ body, tags: allTags });
-    setAutoTagIds(next);
-  }, [body, allTags]);
+    // ✅ 화면에서는 MANUAL이 우선이므로, MANUAL로 선택된 태그는 AUTO 영역에서 숨긴다.
+    const manualSet = new Set(manualTagIds ?? []);
+    setAutoTagIds(next.filter((id) => !manualSet.has(id)));
+  }, [body, allTags, manualTagIds]);
 
   const headerSubtitle = useMemo(() => {
     if (!task) return "";
@@ -397,7 +399,6 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
           </div>
           {uploadingPdf && <div className="text-xs text-blue-500">업로드 중...</div>}
         </div>
-
 
         <div className="card-base p-3 space-y-2">
           <div className="text-sm font-extrabold">태그</div>

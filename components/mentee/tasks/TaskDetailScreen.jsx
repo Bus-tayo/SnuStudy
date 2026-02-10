@@ -302,7 +302,12 @@ export default function TaskDetailScreen({ taskId }) {
         }
       />
 
-      <div className="flex-1 overflow-y-auto px-4 pb-64 pt-3 space-y-4">
+      <div
+  className={`flex-1 overflow-y-auto px-4 pt-3 space-y-4 ${
+    selectedFile ? "pb-64" : "pb-28"
+  }`}
+>
+
         {errMsg ? <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg">{errMsg}</div> : null}
 
         {/* ✅ goal 표시 (편집 아닐 때) */}

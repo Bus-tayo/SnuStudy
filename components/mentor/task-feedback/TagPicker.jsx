@@ -25,13 +25,18 @@ export default function TagPicker({
   const [q, setQ] = useState("");
   const [newTag, setNewTag] = useState("");
 
-  const filtered = useMemo(() => {
+  // ✅ 전체 태그 목록은 노출하지 않고(요구사항),
+  // 입력 중일 때만 상위 몇 개를 "추천" 형태로 보여준다.
+  const suggestions = useMemo(() => {
     const query = q.trim().toLowerCase();
-    if (!query) return allTags ?? [];
-    return (allTags ?? []).filter((t) =>
-      String(t.name ?? "").toLowerCase().includes(query)
-    );
-  }, [allTags, q]);
+    if (!query) return [];
+
+    const picked = new Set([...(autoTagIds ?? []), ...(manualTagIds ?? [])]);
+    return (allTags ?? [])
+      .filter((t) => !picked.has(t.id))
+      .filter((t) => String(t.name ?? "").toLowerCase().includes(query))
+      .slice(0, 8);
+  }, [allTags, q, autoTagIds, manualTagIds]);
 
   const toggleManual = (id) => {
     const set = new Set(manualTagIds ?? []);
@@ -80,26 +85,30 @@ export default function TagPicker({
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="space-y-2">
         <input
-          className="flex-1 border border-border rounded-xl px-3 py-2 text-sm bg-background"
-          placeholder="태그 검색"
+          className="w-full border border-border rounded-xl px-3 py-2 text-sm bg-background"
+          placeholder="태그 추가 (검색해서 선택)"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
-      </div>
 
-      <div className="flex flex-wrap gap-2">
-        {filtered.map((t) => {
-          const inAuto = (autoTagIds ?? []).includes(t.id);
-          const inManual = (manualTagIds ?? []).includes(t.id);
-          if (inAuto) return null;
-          return (
-            <Chip key={t.id} tone="manual" onClick={() => toggleManual(t.id)}>
-              #{t.name} {inManual ? "✓" : "+"}
-            </Chip>
-          );
-        })}
+        {suggestions.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            {suggestions.map((t) => (
+              <Chip
+                key={t.id}
+                tone="manual"
+                onClick={() => {
+                  toggleManual(t.id);
+                  setQ("");
+                }}
+              >
+                #{t.name} +
+              </Chip>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <div className="flex items-center gap-2 pt-1">

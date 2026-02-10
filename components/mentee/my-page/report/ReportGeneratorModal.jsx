@@ -422,7 +422,7 @@ export default function ReportGeneratorModal({ open, onClose }) {
           </div>
 
           <div className="text-[11px] text-foreground/60 leading-relaxed">
-            * 이 버전은 3페이지(요약/차트/과제)까지만 생성합니다.
+            
           </div>
         </div>
       </div>
