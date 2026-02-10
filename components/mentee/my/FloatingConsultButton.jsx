@@ -8,7 +8,7 @@ export default function FloatingConsultButton() {
           rel="noreferrer"
           className="block w-full"
         >
-          <div className="w-full text-center py-3 rounded border bg-white shadow-sm font-semibold transition-transform active:scale-95">
+          <div className="w-full text-center py-3 rounded-xl bg-primary text-primary-foreground shadow-lg font-semibold ring-2 ring-accent/30 ring-offset-2 ring-offset-background transition-transform active:scale-[0.99] hover:scale-[1.01]">
             상담 받아보기
           </div>
         </a>
