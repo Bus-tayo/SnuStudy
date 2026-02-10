@@ -87,6 +87,7 @@ export default function ProfileCard() {
 
   return (
     <div className="card-base p-3 space-y-3">
+      {/* 상단 프로필 이미지 및 이름 영역 */}
       <div className="flex items-center gap-3">
         {profile?.avatarUrl ? (
           <img
@@ -100,16 +101,16 @@ export default function ProfileCard() {
           </div>
         )}
 
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <div className="text-xs text-foreground/60">마이페이지</div>
-          <div className="text-base font-extrabold">
+          <div className="text-base font-extrabold truncate">
             {loading ? "불러오는 중..." : profile?.name || "닉네임"}
           </div>
         </div>
 
         <button
           onClick={onPickFile}
-          className="btn-primary"
+          className="btn-primary shrink-0 text-xs px-3"
           disabled={loading}
         >
           이미지 변경
@@ -124,11 +125,15 @@ export default function ProfileCard() {
         />
       </div>
 
+      <hr className="border-border/50" />
+
+      {/* 닉네임 변경 영역 */}
       <div className="space-y-2">
-        <label className="text-sm font-extrabold">닉네임</label>
+        <label className="text-sm font-extrabold">닉네임 변경</label>
         <div className="flex gap-2">
           <input
-            className="flex-1 border border-border rounded-xl px-3 py-2 text-sm bg-background"
+            // flex-1: 남은 공간 차지, min-w-0: 공간 부족 시 줄어듦
+            className="flex-1 min-w-0 border border-border rounded-xl px-3 py-2 text-sm bg-background"
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value)}
             placeholder="닉네임을 입력하세요"
@@ -136,15 +141,20 @@ export default function ProfileCard() {
           <button
             onClick={onSaveName}
             disabled={savingName || loading}
-            className="btn-primary disabled:opacity-60"
+            // shrink-0: 공간이 부족해도 버튼 크기는 줄어들지 않음
+            className="btn-primary shrink-0 px-4 whitespace-nowrap disabled:opacity-60"
           >
             {savingName ? "저장 중..." : "저장"}
           </button>
         </div>
       </div>
 
-      {toast ? <div className="text-xs text-foreground/70">{toast}</div> : null}
-      {err ? <div className="text-xs text-red-600">{err}</div> : null}
+      {(toast || err) && (
+        <div className="pt-1">
+          {toast ? <div className="text-xs text-blue-600 font-medium">{toast}</div> : null}
+          {err ? <div className="text-xs text-red-600 font-medium">{err}</div> : null}
+        </div>
+      )}
     </div>
   );
 }
