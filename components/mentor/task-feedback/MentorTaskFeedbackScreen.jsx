@@ -11,6 +11,7 @@ import {
 
 import { fetchTaskById } from "@/lib/repositories/taskDetailRepo";
 import { fetchTaskFeedback, upsertTaskFeedback } from "@/lib/repositories/taskFeedbacksRepo";
+import { fetchTaskSubmissions } from "@/lib/repositories/taskSubmissionsRepo";
 
 import { fetchAllTags, upsertTagByName } from "@/lib/repositories/tagsRepo";
 import { fetchFeedbackTags, syncAutoTags, syncManualTags } from "@/lib/repositories/taskFeedbackTagsRepo";
@@ -22,6 +23,7 @@ import DifficultyPicker from "./DifficultyPicker";
 import MarkdownEditor from "./MarkdownEditor";
 import TagPicker from "./TagPicker";
 import MarkdownViewer from "./MarkdownViewer";
+import SubmissionCarousel from "@/components/mentee/tasks/parts/SubmissionCarousel";
 
 function difficultyPoints(tier) {
   if (tier === "DIAMOND") return 50;
@@ -66,6 +68,8 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
   const [task, setTask] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [pdfs, setPdfs] = useState([]);
+  const [submissions, setSubmissions] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const [difficulty, setDifficulty] = useState("BRONZE");
   const [body, setBody] = useState("");
@@ -125,18 +129,23 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
       try {
         setErr("");
 
-        const [t, f, tags, pList] = await Promise.all([
-          fetchTaskById({ taskId: taskIdNum }),
+        const t = await fetchTaskById({ taskId: taskIdNum });
+        setTask(t);
+
+        if (!alive) return;
+        const [f, tags, pList, subList] = await Promise.all([
           fetchTaskFeedback({ taskId: taskIdNum }).catch(() => null),
           fetchAllTags().catch(() => []),
           fetchTaskPdfMaterials({ taskId: taskIdNum }).catch(() => []),
+          fetchTaskSubmissions({ taskId: taskIdNum, menteeId: t.mentee_id }).catch(() => []),
         ]);
 
         if (!alive) return;
 
-        setTask(t);
         setFeedback(f);
         setPdfs(pList);
+        setSubmissions(subList);
+        setActiveIndex(0);
 
         setBody(f?.body ?? "");
         setDifficulty(f?.difficulty ?? "BRONZE");
@@ -236,6 +245,7 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
 
       setFeedback(saved);
       setAutoTagIds(autoIds);
+      router.back();
     } catch (e) {
       console.error("[MentorTaskFeedbackScreen/save]", e);
       setErr(e?.message ?? "저장에 실패했습니다.");
@@ -293,8 +303,8 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
   const saveDisabled = saving || !task?.id;
 
   return (
-    <div className="min-h-dvh flex flex-col">
-      <header className="px-4 py-3 border-b border-border flex items-center justify-between">
+    <div className="min-h-dvh flex flex-col bg-gray-50 w-full max-w-[430px] mx-auto shadow-xl">
+      <header className="px-4 py-3 border-b border-gray-200 bg-white sticky top-0 z-10 flex items-center justify-between">
         <div>
           <div className="text-xs text-foreground/60">{headerSubtitle}</div>
           <div className="text-lg font-extrabold">{task?.title ?? "피드백 작성"}</div>
@@ -322,6 +332,12 @@ export default function MentorTaskFeedbackScreen({ taskId }) {
           <div className="text-sm font-extrabold">난이도</div>
           <DifficultyPicker value={difficulty} onChange={setDifficulty} />
         </div>
+
+        <SubmissionCarousel
+          submissions={submissions}
+          activeIndex={activeIndex}
+          onChangeIndex={setActiveIndex}
+        />
 
         <div className="card-base p-3 space-y-3">
           <div className="flex items-center justify-between">

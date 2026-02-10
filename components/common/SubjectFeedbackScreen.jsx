@@ -95,7 +95,7 @@ export default function SubjectFeedbackScreen({ menteeId, subject, readOnly = fa
     };
 
     return (
-        <div className="min-h-dvh flex flex-col bg-background">
+        <div className="min-h-dvh flex flex-col bg-background max-w-[430px] mx-auto shadow-xl">
             {/* Header */}
             <header className="sticky top-0 z-10 flex items-center gap-3 px-4 py-3 border-b border-border bg-background/80 backdrop-blur-md">
                 <button
