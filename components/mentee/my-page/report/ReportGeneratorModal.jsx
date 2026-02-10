@@ -20,13 +20,12 @@ function addDays(dateStr, delta) {
   return ymd(dt);
 }
 
-function formatMinutesFromSeconds(seconds) {
-  const s = Number(seconds) || 0;
-  const m = Math.round(s / 60);
-  if (m < 60) return `${m}분`;
-  const hh = Math.floor(m / 60);
-  const mm = m % 60;
-  return `${hh}시간 ${mm}분`;
+function fmtMinutes(m) {
+  const mm = Number(m) || 0;
+  if (mm < 60) return `${mm}분`;
+  const h = Math.floor(mm / 60);
+  const r = mm % 60;
+  return r ? `${h}시간 ${r}분` : `${h}시간`;
 }
 
 function tierFromRate(rate) {
@@ -46,45 +45,23 @@ function subjectLabel(s) {
   }
 }
 
-function hslVar(name) {
-  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  // theme.css가 "220 80% 28%" 형태라면 hsl(변수)로 쓰는게 정석
-  return v ? `hsl(${v})` : "hsl(220 80% 28%)";
+function subjBg(subject) {
+  const map = {
+    KOR: "hsl(var(--subject-kor) / 0.12)",
+    ENG: "hsl(var(--subject-eng) / 0.12)",
+    MATH: "hsl(var(--subject-math) / 0.12)",
+    ETC: "hsl(var(--subject-etc) / 0.12)",
+  };
+  return map[subject || "ETC"] || map.ETC;
 }
 
-function cssToRgbTuple(color) {
-  const c = document.createElement("canvas");
-  c.width = 1;
-  c.height = 1;
-  const ctx = c.getContext("2d");
-  ctx.fillStyle = color;
-  const s = ctx.fillStyle;
-  const m = String(s).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
-  if (!m) return [0, 0, 0];
-  return [Number(m[1]), Number(m[2]), Number(m[3])];
-}
-
-async function chartToDataUrl(config, w = 720, h = 300) {
-  const { Chart } = await import("chart.js/auto");
-  const canvas = document.createElement("canvas");
-  canvas.width = w;
-  canvas.height = h;
-  const ctx = canvas.getContext("2d");
-
-  const chart = new Chart(ctx, {
-    ...config,
-    options: {
-      ...(config.options || {}),
-      responsive: false,
-      animation: false,
-    },
-  });
-
-  // 한 프레임 기다려서 렌더 안정화
-  await new Promise((r) => requestAnimationFrame(r));
-  const url = canvas.toDataURL("image/png");
-  chart.destroy();
-  return url;
+function cleanText(s) {
+  return String(s ?? "")
+    .replace(/기관무관/gi, "")
+    .replace(/DB\s*current_streak/gi, "")
+    .replace(/DB\s*current\s*stack/gi, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
 }
 
 export default function ReportGeneratorModal({ open, onClose }) {
@@ -116,7 +93,7 @@ export default function ReportGeneratorModal({ open, onClose }) {
         <div className="p-4 border-b border-border">
           <div className="text-base font-extrabold tracking-tight">보고서 생성</div>
           <div className="text-xs text-foreground/60 mt-1">
-            기간 리포트 PDF (한 일/하지 못한 일/공부시간/연속학습/포인트/과목별 랭크+피드백)
+            기간 리포트 PDF (요약 + 과목별 상세 + 날짜별 타임테이블 전체)
           </div>
         </div>
 
@@ -199,56 +176,34 @@ export default function ReportGeneratorModal({ open, onClose }) {
 
                   const report = await fetchReportData({ menteeId, from, to });
 
+                  const profileName = report.profile?.name ?? "멘티";
+                  const rangeLabel = `${report.range.fromYmd} ~ ${report.range.toYmd}`;
+                  const createdLabel = `생성일: ${ymd(new Date())}`;
+
                   const tasks = report.tasks || [];
-                  const logs = report.timeLogs || [];
+                  const feedbacks = report.feedbacks || [];
+                  const taskFeedbacks = report.taskFeedbacks || [];
 
-                  // time log 합산 (taskId -> seconds)
-                  const secondsByTask = new Map();
-                  for (const log of logs) {
-                    const tid = log.task_id;
-                    const sec = Number(log.duration_seconds ?? 0) || 0;
-                    secondsByTask.set(tid, (secondsByTask.get(tid) ?? 0) + sec);
-                  }
+                  const subjects = ["KOR", "ENG", "MATH", "ETC"];
 
-                  // 일자별 분 합산
-                  const dates = [];
-                  let cur = report.range.fromYmd;
-                  while (cur <= report.range.toYmd) {
-                    dates.push(cur);
-                    cur = addDays(cur, 1);
-                  }
+                  // DONE/TODO
+                  const doneAll = tasks.filter((t) => t.status === "DONE");
+                  const todoAll = tasks.filter((t) => t.status !== "DONE");
 
-                  const minutesByDate = new Map(dates.map((d) => [d, 0]));
-                  for (const t of tasks) {
-                    const d = t.date;
-                    if (!d) continue;
-                    const sec = secondsByTask.get(t.id) ?? 0;
-                    minutesByDate.set(d, (minutesByDate.get(d) ?? 0) + Math.round(sec / 60));
-                  }
+                  // subject stats
+                  const subjectStats = {};
+                  for (const s of subjects) subjectStats[s] = { total: 0, done: 0, minutes: 0 };
 
-                  const dailyMinutes = dates.map((d) => minutesByDate.get(d) ?? 0);
-
-                  const done = tasks.filter((t) => t.status === "DONE");
-                  const notDone = tasks.filter((t) => t.status !== "DONE");
-
-                  const totalSeconds = Array.from(secondsByTask.values()).reduce((a, b) => a + b, 0);
-
-                  const secondsBySubject = { KOR: 0, ENG: 0, MATH: 0, ETC: 0 };
-                  for (const t of tasks) {
-                    const s = t.subject ?? "ETC";
-                    secondsBySubject[s] = (secondsBySubject[s] || 0) + (secondsByTask.get(t.id) ?? 0);
-                  }
-
-                  // 과목별 랭크
-                  const subjectStats = { KOR: { total: 0, done: 0, seconds: 0 }, ENG: { total: 0, done: 0, seconds: 0 }, MATH: { total: 0, done: 0, seconds: 0 }, ETC: { total: 0, done: 0, seconds: 0 } };
                   for (const t of tasks) {
                     const s = t.subject ?? "ETC";
                     subjectStats[s].total += 1;
                     if (t.status === "DONE") subjectStats[s].done += 1;
-                    subjectStats[s].seconds += secondsByTask.get(t.id) ?? 0;
+                  }
+                  for (const s of subjects) {
+                    subjectStats[s].minutes = report.minutesBySubject?.[s] ?? 0;
                   }
 
-                  const subjectRanksRows = Object.keys(subjectStats).map((s) => {
+                  const subjectRanksRows = subjects.map((s) => {
                     const total = subjectStats[s].total;
                     const dn = subjectStats[s].done;
                     const rate = total ? Math.round((dn / total) * 100) : 0;
@@ -258,164 +213,207 @@ export default function ReportGeneratorModal({ open, onClose }) {
                       done: dn,
                       rate,
                       tier: tierFromRate(rate),
-                      studyTimeLabel: formatMinutesFromSeconds(subjectStats[s].seconds),
+                      studyTimeLabel: fmtMinutes(subjectStats[s].minutes),
                     };
                   });
 
-                  // 피드백 정리: 과목별, 멘토별
-                  const feedbackBySubject = { KOR: [], ENG: [], MATH: [], ETC: [] };
-                  const feedbackByMentor = {};
-                  for (const fb of report.feedbacks ?? []) {
-                    const s = fb.subject ?? "ETC";
-                    if (!feedbackBySubject[s]) feedbackBySubject[s] = [];
-                    feedbackBySubject[s].push(fb);
+                  // 요약 피드백(최신 8개)
+                  const feedbackHighlights = feedbacks
+                    .slice()
+                    .sort((a, b) => String(a.date).localeCompare(String(b.date)))
+                    .slice(-8)
+                    .map((fb) => ({
+                      subject: fb.subject ?? "ETC",
+                      author: fb.author ?? "알 수 없음",
+                      summary: cleanText(fb.summary || fb.body || "(내용 없음)").slice(0, 140),
+                    }));
 
-                    const mentor = fb.author ?? "알 수 없음";
-                    if (!feedbackByMentor[mentor]) feedbackByMentor[mentor] = [];
-                    feedbackByMentor[mentor].push(fb);
-                  }
+                  // 과제 피드백+태그(최신 6개)
+                  const taskFeedbackHighlights = taskFeedbacks
+                    .slice()
+                    .sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))
+                    .slice(-6)
+                    .map((tf) => {
+                      const tags = (tf.tags || []).map((t) => t.name).slice(0, 6).join(", ");
+                      const head = `${tf.task_title} · ${tf.mentor_name}`;
+                      const body = cleanText(tf.body || "").slice(0, 120);
+                      return `${head}${tags ? ` · [${tags}]` : ""} — ${body}`;
+                    });
 
-                  // 차트 색
-                  const primary = hslVar("--primary");
-                  const accent = hslVar("--accent");
-                  const [pr, pg, pb] = cssToRgbTuple(primary);
-                  const primaryFill = `rgba(${pr}, ${pg}, ${pb}, 0.18)`;
+                  const subjectSections = (subjList) => subjList.map((s) => {
+                    const sTasks = tasks.filter((t) => (t.subject ?? "ETC") === s);
+                    const sDone = sTasks.filter((t) => t.status === "DONE");
+                    const sTodo = sTasks.filter((t) => t.status !== "DONE");
 
-                  // 1) 일자별 공부시간 라인
-                  const dailyStudy = await chartToDataUrl(
-                    {
-                      type: "line",
-                      data: {
-                        labels: dates.map((d) => d.slice(5)),
-                        datasets: [
-                          {
-                            data: dailyMinutes,
-                            borderColor: primary,
-                            backgroundColor: primaryFill,
-                            fill: true,
-                            tension: 0.35,
-                            pointRadius: 2,
-                          },
-                        ],
-                      },
-                      options: {
-                        plugins: { legend: { display: false } },
-                        scales: { x: { grid: { display: false } }, y: { beginAtZero: true } },
-                      },
-                    },
-                    720,
-                    300
-                  );
+                    const sFeedbacks = feedbacks
+                      .filter((fb) => (fb.subject ?? "ETC") === s)
+                      .slice(-4)
+                      .map((fb) => ({
+                        author: fb.author ?? "알 수 없음",
+                        summary: cleanText(fb.summary || fb.body || "(내용 없음)").slice(0, 180),
+                      }));
 
-                  // 2) 과목별 공부시간 바
-                  const studyBySubject = await chartToDataUrl(
-                    {
-                      type: "bar",
-                      data: {
-                        labels: ["국어", "영어", "수학", "기타"],
-                        datasets: [
-                          {
-                            data: [
-                              Math.round((secondsBySubject.KOR || 0) / 60),
-                              Math.round((secondsBySubject.ENG || 0) / 60),
-                              Math.round((secondsBySubject.MATH || 0) / 60),
-                              Math.round((secondsBySubject.ETC || 0) / 60),
-                            ],
-                            backgroundColor: [primary, accent, "rgba(234,179,8,.65)", "rgba(100,116,139,.55)"],
-                            borderRadius: 10,
-                          },
-                        ],
-                      },
-                      options: {
-                        plugins: { legend: { display: false } },
-                        scales: { x: { grid: { display: false } }, y: { beginAtZero: true } },
-                      },
-                    },
-                    720,
-                    300
-                  );
+                    const sTaskFeedbacks = taskFeedbacks
+                      .filter((tf) => (tf.subject ?? "ETC") === s)
+                      .slice(-3)
+                      .map((tf) => ({
+                        taskTitle: tf.task_title,
+                        mentorName: tf.mentor_name,
+                        body: cleanText(tf.body || "").slice(0, 220),
+                        tags: (tf.tags || []).slice(0, 8),
+                      }));
 
-                  // 3) done vs todo 도넛
-                  const doneVsTodo = await chartToDataUrl(
-                    {
-                      type: "doughnut",
-                      data: {
-                        labels: ["한 일", "하지 못한 일"],
-                        datasets: [{ data: [done.length, notDone.length], backgroundColor: [primary, accent], borderWidth: 0 }],
-                      },
-                      options: { plugins: { legend: { position: "bottom" } }, cutout: "62%" },
-                    },
-                    520,
-                    320
-                  );
+                    const meta = `공부 ${fmtMinutes(subjectStats[s].minutes)} · 완료 ${sDone.length}/${sTasks.length}`;
 
-                  // 총 포인트(기간 무관)
-                  const totalPoints = report.totalPoints ?? 0;
-                  const totalPointsLabel = `${Number(totalPoints).toLocaleString()} P`;
+                    return {
+                      subject: s,
+                      meta,
+                      done: sDone.slice(-6).map((t) => `[${t.date}] ${t.title}`),
+                      todo: sTodo.slice(-6).map((t) => `[${t.date}] ${t.title}`),
+                      feedbacks: sFeedbacks,
+                      taskFeedbacks: sTaskFeedbacks,
+                    };
+                  });
 
-                  const profileName = report.profile?.name ?? "멘티";
-                  const rangeLabel = `${report.range.fromYmd} ~ ${report.range.toYmd}`;
+                  const pagesBuilt = [];
 
-                  // 페이지 구성 (1p로 구성, 필요하면 2p로 쉽게 확장 가능)
-                  const page1 = {
-                    key: "p1",
+                  // Page 1: Summary (내부 용어 제거 / 텍스트 클리핑 방지 위해 항목 수 제한)
+                  pagesBuilt.push({
+                    key: "p-summary",
+                    type: "summary",
                     watermark: "STUDY REPORT",
                     brandName: "설스터디",
-                    headerTag: "기간 리포트",
-                    pill: "REPORT",
+                    headerTag: "학습 리포트 · 요약",
+                    pill: "리포트",
                     metaRightTop: rangeLabel,
-                    metaRightBottom: `생성일: ${ymd(new Date())}`,
+                    metaRightBottom: createdLabel,
                     title: `${profileName} 학습 리포트`,
-                    subtitle: "일자별 공부시간 · 과목별 랭크/피드백 · 포인트/연속학습/수행현황 요약",
-                    badges: [
-                      { text: "기간 리포트", variant: "primary" },
-                      { text: lowRes ? "LOW-RES" : "HQ", variant: lowRes ? "" : "green" },
-                    ],
+                    subtitle: "기간 동안의 학습 기록을 요약하고, 과목별 수행/피드백을 정리한 보고서입니다.",
+                    badges: [],
                     profileBlock: {
                       avatarUrl: null,
                       name: profileName,
                       subLine1: `멘티 ID: ${report.profile?.id ?? "-"}`,
                       subLine2: rangeLabel,
                       kpis: [
-                        { label: "전체 공부 시간", value: formatMinutesFromSeconds(totalSeconds) },
-                        { label: "연속 학습일", value: `${report.profile?.current_streak ?? 0}일`, hint: "DB current_streak" },
-                        { label: "총 포인트", value: totalPointsLabel, hint: "기간 무관" },
+                        { label: "전체 공부 시간", value: fmtMinutes(report.minutesTotal ?? 0), hint: "타임테이블 기준" },
+                        { label: "연속 학습일(최대)", value: `${report.maxConsecutiveInRange ?? 0}일`, hint: "기간 내 최대 연속" },
+                        { label: "총 포인트", value: `${Number(report.totalPoints ?? 0).toLocaleString()} P`, hint: "누적 포인트" },
                       ],
                     },
                     leftBlocks: [
+                      { title: "과목별 성취 요약", kind: "rankTable", rows: subjectRanksRows },
                       {
-                        title: "한 일 / 하지 못한 일",
+                        title: "최근 과제 진행 상황",
                         kind: "list2col",
-                        left: (done.slice(0, 12).map((t) => `[${t.date}] ${t.title}`)),
-                        right: (notDone.slice(0, 12).map((t) => `[${t.date}] ${t.title}`)),
+                        left: doneAll.slice(-10).map((t) => `[${t.date}] ${t.title}`),
+                        right: todoAll.slice(-10).map((t) => `[${t.date}] ${t.title}`),
                       },
-                      {
-                        title: "과목별 랭크",
-                        kind: "rankTable",
-                        rows: subjectRanksRows,
-                      },
-                      {
-                        title: "멘토 피드백(요약)",
-                        kind: "feedback",
-                        items: (report.feedbacks || []).slice(0, 10).map((fb) => ({
-                          subject: fb.subject ?? "ETC",
-                          author: fb.author ?? "알 수 없음",
-                          summary: fb.summary ?? fb.content ?? "(내용 없음)",
-                        })),
-                      },
+                      { title: "멘토 피드백 하이라이트", kind: "feedback", items: feedbackHighlights },
                     ],
                     rightBlocks: [
-                      { title: "일자별 공부시간(분)", kind: "chart", src: dailyStudy },
-                      { title: "과목별 공부시간(분)", kind: "chart", src: studyBySubject },
-                      { title: "한 일 vs 하지 못한 일", kind: "chart", src: doneVsTodo },
+                      {
+                        title: "과목별 공부시간",
+                        kind: "subjectCards",
+                        items: [
+                          { key: "kor", title: "국어", value: fmtMinutes(subjectStats.KOR.minutes), hint: `완료 ${subjectStats.KOR.done}/${subjectStats.KOR.total}`, bg: subjBg("KOR") },
+                          { key: "eng", title: "영어", value: fmtMinutes(subjectStats.ENG.minutes), hint: `완료 ${subjectStats.ENG.done}/${subjectStats.ENG.total}`, bg: subjBg("ENG") },
+                          { key: "math", title: "수학", value: fmtMinutes(subjectStats.MATH.minutes), hint: `완료 ${subjectStats.MATH.done}/${subjectStats.MATH.total}`, bg: subjBg("MATH") },
+                          { key: "etc", title: "기타", value: fmtMinutes(subjectStats.ETC.minutes), hint: `완료 ${subjectStats.ETC.done}/${subjectStats.ETC.total}`, bg: subjBg("ETC") },
+                        ],
+                      },
+                      {
+                        title: "과제 피드백 & 태그 하이라이트",
+                        kind: "list",
+                        items: taskFeedbackHighlights.length ? taskFeedbackHighlights : ["(기간 내 과제 피드백 없음)"],
+                      },
+                      {
+                        title: "리포트 구성",
+                        kind: "text",
+                        text: `이후 페이지에는 과목별 상세 정리와, 기간 내 모든 날짜의 타임테이블이 포함됩니다. (총 ${report.range.days?.length || 0}일)`,
+                      },
                     ],
-                    footerLeft: "설스터디 · Study Report",
-                    footerRight: "Page 1 / 1",
-                  };
+                    footerLeft: "설스터디 · 학습 리포트",
+                    footerRight: "Page 1",
+                  });
 
-                  setPages([page1]);
+                  // Page 2: 국어/영어
+                  pagesBuilt.push({
+                    key: "p-subjects-1",
+                    type: "subject-group",
+                    watermark: "SUBJECTS",
+                    brandName: "설스터디",
+                    headerTag: "학습 리포트 · 과목별",
+                    pill: "과목",
+                    metaRightTop: rangeLabel,
+                    metaRightBottom: createdLabel,
+                    title: "과목별 상세 (1/2)",
+                    subtitle: "국어 · 영어",
+                    badges: [],
+                    groupTitle: "국어 / 영어",
+                    sections: subjectSections(["KOR", "ENG"]),
+                    footerLeft: "설스터디 · 학습 리포트",
+                    footerRight: "Page 2",
+                  });
 
-                  // host 렌더링 대기
+                  // Page 3: 수학/기타
+                  pagesBuilt.push({
+                    key: "p-subjects-2",
+                    type: "subject-group",
+                    watermark: "SUBJECTS",
+                    brandName: "설스터디",
+                    headerTag: "학습 리포트 · 과목별",
+                    pill: "과목",
+                    metaRightTop: rangeLabel,
+                    metaRightBottom: createdLabel,
+                    title: "과목별 상세 (2/2)",
+                    subtitle: "수학 · 기타",
+                    badges: [],
+                    groupTitle: "수학 / 기타",
+                    sections: subjectSections(["MATH", "ETC"]),
+                    footerLeft: "설스터디 · 학습 리포트",
+                    footerRight: "Page 3",
+                  });
+
+                  // Page 4~: 모든 날짜 타임테이블
+                  const days = report.range.days || [];
+                  for (let idx = 0; idx < days.length; idx += 1) {
+                    const d = days[idx];
+                    const sessions = report.sessionsByDay?.[d] || [];
+                    const totalMinutes = report.minutesByDay?.[d] ?? 0;
+
+                    const dayTasks = tasks.filter((t) => t.date === d);
+                    const dayDone = dayTasks
+                      .filter((t) => t.status === "DONE")
+                      .map((t) => `${subjectLabel(t.subject)} · ${t.title}`);
+
+                    const dayTodo = dayTasks
+                      .filter((t) => t.status !== "DONE")
+                      .map((t) => `${subjectLabel(t.subject)} · ${t.title}`);
+
+                    pagesBuilt.push({
+                      key: `p-day-${d}`,
+                      type: "timetable-day",
+                      watermark: "TIMETABLE",
+                      brandName: "설스터디",
+                      headerTag: "학습 리포트 · 타임테이블",
+                      pill: "일일",
+                      metaRightTop: d,
+                      metaRightBottom: createdLabel,
+                      title: `${d} 타임테이블`,
+                      subtitle: "하루 학습 기록을 시간대별로 정리했습니다.",
+                      badges: [],
+                      dayYmd: d,
+                      sessions,
+                      totalMinutes,
+                      tasksDone: dayDone,
+                      tasksTodo: dayTodo,
+                      footerLeft: "설스터디 · 학습 리포트",
+                      footerRight: `Page ${idx + 4}`,
+                    });
+                  }
+
+                  setPages(pagesBuilt);
                   await new Promise((r) => requestAnimationFrame(r));
 
                   const host = hostRef.current;
@@ -443,13 +441,12 @@ export default function ReportGeneratorModal({ open, onClose }) {
           </div>
 
           <div className="text-[11px] text-foreground/60 leading-relaxed">
-            * “총 포인트/과목별 랭크”는 누적 기준으로 표시됩니다. (기간 무관) <br />
-            * 차트/폰트 로딩을 기다린 뒤 캡처해서 PDF 깨짐을 최대한 방지합니다.
+            * 공부시간은 타임테이블에 기록된 시간 기준으로 집계됩니다. <br />
+            * 기간이 길면 날짜별 타임테이블 페이지 수가 늘어납니다.
           </div>
         </div>
       </div>
 
-      {/* PDF 렌더용 숨김 호스트 */}
       {pages.length ? <ReportPagesHost pages={pages} hostRef={hostRef} /> : null}
     </div>
   );
